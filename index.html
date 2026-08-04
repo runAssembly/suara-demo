@@ -9,12 +9,10 @@
    so these are relative to index.html and verified at the live URL, not just locally. */
 @font-face{font-family:'PJS';src:url('fonts/PlusJakartaSans.ttf') format('truetype');font-weight:200 800;font-display:block}
 @font-face{font-family:'Lora';src:url('fonts/Lora-Bold.ttf') format('truetype');font-weight:700;font-display:block}
-@font-face{font-family:'LoraR';src:url('fonts/Lora-Regular.ttf') format('truetype');font-weight:400;font-display:block}
 @font-face{font-family:'WorkSans';src:url('fonts/WorkSans-Regular.ttf') format('truetype');font-display:block}
 @font-face{font-family:'Gloock';src:url('fonts/Gloock-Regular.ttf') format('truetype');font-display:block}
 @font-face{font-family:'Italiana';src:url('fonts/Italiana-Regular.ttf') format('truetype');font-display:block}
 @font-face{font-family:'Bricolage';src:url('fonts/BricolageGrotesque-Bold.ttf') format('truetype');font-display:block}
-
 :root{
   --ink:#1A1520; --ink-soft:#3B3145; --muted:#6B6270; --muted-2:#9C93A3;
   --cream:#FDF7EF; --cream-2:#F6EFE6; --line:#E9E3DC; --paper:#fff;
@@ -27,79 +25,130 @@ body{font-family:'PJS',system-ui,sans-serif;background:var(--cream);color:var(--
 img{max-width:100%;display:block}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
-/* ---------- chrome ---------- */
 .top{position:sticky;top:0;z-index:40;background:rgba(253,247,239,.94);backdrop-filter:blur(10px);
      border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;
      justify-content:space-between;gap:12px}
 .brandmark{display:flex;align-items:center;gap:9px;min-width:0}
 .brandmark svg{width:26px;height:26px;flex:none}
 .wm{font-weight:800;letter-spacing:-.03em;font-size:19px}
-.who{font-size:11px;color:var(--muted);letter-spacing:.04em;white-space:nowrap;overflow:hidden;
-     text-overflow:ellipsis}
-.wrap{max-width:760px;margin:0 auto;padding:0 18px 120px}
-
-/* ---------- tabs ---------- */
-.tabs{display:flex;gap:4px;margin:16px 0 4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.who{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 130px}
+.tabs{display:flex;gap:4px;margin:14px 0 4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--muted);
      white-space:nowrap;border:1px solid transparent}
 .tab.on{background:var(--ink);color:var(--cream)}
-/* the strip is a scroller by design, but on a 320px phone all four should simply fit */
-@media(max-width:340px){.tab{padding:7px 9px;font-size:11.5px}.wrap{padding-left:14px;padding-right:14px}}
+@media(max-width:380px){.tab{padding:7px 9px;font-size:11.5px}.wrap{padding-left:14px;padding-right:14px}}
+h2.sec{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:20px 0 3px}
+p.sub{color:var(--muted);font-size:13.5px;margin:0 0 15px}
 
-h2.sec{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:22px 0 3px}
-p.sub{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+/* ---------- chat ---------- */
+.chat{display:flex;flex-direction:column;gap:11px;margin-top:16px}
+.msg{max-width:88%;padding:11px 14px;border-radius:16px;font-size:14.3px;line-height:1.5}
+.msg.them{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:5px}
+.msg.me{background:var(--ink);color:var(--cream);align-self:flex-end;border-bottom-right-radius:5px}
+.msgcard{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:14px;
+         padding:9px;display:flex;gap:10px;align-items:center;max-width:270px}
+.msgcard canvas{width:76px;height:76px;border-radius:9px;flex:none}
+.msgcard .mc{min-width:0}
+.msgcard .mcd{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);font-weight:700}
+.msgcard .mct{font-size:12.5px;color:var(--ink-soft);line-height:1.4;margin-top:2px;
+              display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.chip{padding:8px 12px;border:1px solid var(--line);background:var(--paper);border-radius:999px;
+      font-size:12.5px;color:var(--ink-soft);font-weight:500}
+.composer{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(253,247,239,.97);
+          backdrop-filter:blur(12px);border-top:1px solid var(--line);
+          padding:10px 18px calc(10px + env(safe-area-inset-bottom))}
+.composer .in{max-width:760px;margin:0 auto;display:flex;gap:9px;align-items:flex-end}
+.composer textarea{flex:1;font-family:'PJS',sans-serif;font-size:15px;border:1px solid var(--line);
+   border-radius:13px;padding:11px 13px;resize:none;background:var(--paper);max-height:110px;line-height:1.4}
+.composer textarea:focus{outline:2px solid var(--coral);outline-offset:-1px}
+.send{width:44px;height:44px;border-radius:13px;background:var(--ink);color:var(--cream);flex:none;
+      font-size:17px;display:flex;align-items:center;justify-content:center}
 
-/* ---------- week grid ---------- */
+/* ---------- grid ---------- */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:13px;overflow:hidden;
-      text-align:left;width:100%;transition:transform .18s ease,box-shadow .18s ease}
-.card:active{transform:scale(.985)}
+      text-align:left;width:100%}
 .card .thumb{position:relative;aspect-ratio:1;background:var(--cream-2)}
 .card canvas{width:100%;height:100%;display:block}
 .card .meta{padding:9px 11px 11px}
-.card .day{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);
-           font-weight:600}
+.card .day{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);font-weight:600}
 .card .cap{font-size:12.2px;color:var(--ink-soft);margin-top:3px;display:-webkit-box;
            -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-/* top-right, because top-positioned text starts at the left and they collided */
-.pill{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.09em;
-      text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--ink);
-      color:var(--cream);vertical-align:1px;margin-left:5px}
-.pill.posted{background:var(--green)}
-.pill.appr{background:var(--coral-deep)}
+.pill{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+      padding:2px 7px;border-radius:999px;background:var(--ink);color:var(--cream);margin-left:5px;vertical-align:1px}
+.pill.posted{background:var(--green)} .pill.appr{background:var(--coral-deep)}
 
-/* ---------- bar ---------- */
+/* ---------- photos ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:9px}
+.ph{position:relative;aspect-ratio:1;border-radius:11px;overflow:hidden;background:var(--cream-2);
+    border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph .cat{position:absolute;left:5px;bottom:5px;right:5px;font-size:8.8px;font-weight:700;
+   letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(26,21,32,.72);
+   backdrop-filter:blur(3px);padding:3px 6px;border-radius:6px;text-align:center;
+   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drop{border:1.5px dashed var(--line);border-radius:14px;padding:18px 16px;text-align:center;
+      background:var(--paper);margin-bottom:13px}
+.drop .dt{font-weight:700;font-size:14.5px;margin-bottom:3px}
+.drop .ds{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.drop input{width:100%;font-family:'PJS';font-size:13px;border:1px solid var(--line);
+            border-radius:10px;padding:10px 11px;margin-bottom:9px;background:var(--cream)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.filt{padding:6px 11px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);
+      background:var(--paper);color:var(--muted)}
+.filt.on{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+
+/* ---------- panels ---------- */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px;margin-bottom:13px}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.kv:last-child{border-bottom:none}
+.kv span:first-child{color:var(--muted)}
+.kv span:last-child{font-weight:600;text-align:right}
+.lab{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.streakrow{display:flex;gap:7px;margin:14px 0 6px;flex-wrap:wrap}
+.dot{flex:1;min-width:34px;aspect-ratio:1;border-radius:10px;background:var(--cream-2);display:flex;
+     align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--muted-2);
+     border:1px solid var(--line)}
+.dot.hit{background:var(--green);border-color:var(--green);color:#fff}
+.big{font-size:44px;font-weight:800;letter-spacing:-.035em;line-height:1;margin:0}
+.bigsub{color:var(--muted);font-size:13px;margin:5px 0 0}
+.swatches{display:flex;gap:8px;margin-top:4px}
+.swatches div{width:31px;height:31px;border-radius:8px;border:1px solid rgba(0,0,0,.07)}
+.never{font-size:13.5px;color:var(--ink-soft);padding:6px 0 6px 15px;position:relative}
+.never::before{content:'';position:absolute;left:0;top:13px;width:6px;height:2px;background:var(--coral)}
+.note{background:var(--cream-2);border-left:3px solid var(--marigold);border-radius:0 9px 9px 0;
+      padding:11px 13px;font-size:12.5px;color:var(--ink-soft);margin-top:9px}
+.demo{background:#FFF3EF;border:1px solid #FFD9CD;border-radius:11px;padding:12px 14px;
+      font-size:12.5px;color:var(--ink-soft);margin:16px 0 4px}
+.demo b{color:var(--coral-deep)}
+
+/* ---------- bar / editor ---------- */
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(253,247,239,.96);
      backdrop-filter:blur(12px);border-top:1px solid var(--line);
      padding:11px 18px calc(11px + env(safe-area-inset-bottom))}
-.bar .in{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.bar .in{max-width:760px;margin:0 auto;display:flex;gap:10px}
 .btn{flex:1;padding:13px 16px;border-radius:11px;font-weight:700;font-size:14.5px;text-align:center}
 .btn.primary{background:var(--ink);color:var(--cream)}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);flex:0 0 auto}
+.btn.ghost{background:transparent;border:1px solid var(--line);flex:0 0 auto}
 .btn[disabled]{opacity:.4}
-
-/* ---------- editor ---------- */
 .sheet{position:fixed;inset:0;z-index:60;background:var(--cream);overflow-y:auto;
-       transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
-       -webkit-overflow-scrolling:touch}
+       transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .sheet.open{transform:none}
 .sheet .shead{position:sticky;top:0;background:rgba(253,247,239,.95);backdrop-filter:blur(10px);
               border-bottom:1px solid var(--line);padding:12px 18px;display:flex;
               justify-content:space-between;align-items:center;z-index:5}
 .sheet .sbody{max-width:760px;margin:0 auto;padding:16px 18px 130px}
-.preview{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:11px;
-         margin-bottom:6px}
+.preview{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:6px}
 .preview canvas{width:100%;height:auto;display:block;border-radius:7px}
 .hint{font-size:11.5px;color:var(--muted-2);text-align:center;margin:0 0 18px}
-
 .ctl{margin-bottom:17px}
-.lab{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-     color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+.ctl .lab{display:flex;justify-content:space-between}
 textarea,input[type=text]{width:100%;font-family:'PJS',sans-serif;font-size:15px;color:var(--ink);
     background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px;
     resize:vertical;line-height:1.5}
-textarea:focus,input:focus{outline:2px solid var(--coral);outline-offset:-1px;border-color:transparent}
 .opts{display:flex;gap:7px;flex-wrap:wrap}
 .opt{padding:8px 13px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
      font-size:13px;font-weight:600}
@@ -107,35 +156,9 @@ textarea:focus,input:focus{outline:2px solid var(--coral);outline-offset:-1px;bo
 .sw{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);position:relative}
 .sw.on::after{content:'';position:absolute;inset:-4px;border:2px solid var(--ink);border-radius:12px}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.tag{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--cream-2);
-     color:var(--ink-soft);display:flex;align-items:center;gap:6px}
-.tag button{color:var(--muted-2);font-weight:700;line-height:1}
-.note{background:var(--cream-2);border-left:3px solid var(--marigold);border-radius:0 9px 9px 0;
-      padding:11px 13px;font-size:12.5px;color:var(--ink-soft);margin-top:9px}
-
-/* ---------- streak ---------- */
-.streakrow{display:flex;gap:7px;margin:14px 0 6px;flex-wrap:wrap}
-.dot{flex:1;min-width:34px;aspect-ratio:1;border-radius:10px;background:var(--cream-2);
-     display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;
-     color:var(--muted-2);border:1px solid var(--line)}
-.dot.hit{background:var(--green);border-color:var(--green);color:#fff}
-.dot.miss{background:var(--paper)}
-.big{font-size:44px;font-weight:800;letter-spacing:-.035em;line-height:1;margin:0}
-.bigsub{color:var(--muted);font-size:13px;margin:5px 0 0}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px;
-       margin-bottom:13px}
-.kv{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);
-    font-size:13.5px}
-.kv:last-child{border-bottom:none}
-.kv span:first-child{color:var(--muted)}
-.kv span:last-child{font-weight:600;text-align:right}
-.swatches{display:flex;gap:8px;margin-top:4px}
-.swatches div{width:31px;height:31px;border-radius:8px;border:1px solid rgba(0,0,0,.07)}
-.never{font-size:13.5px;color:var(--ink-soft);padding:6px 0 6px 15px;position:relative}
-.never::before{content:'';position:absolute;left:0;top:13px;width:6px;height:2px;background:var(--coral)}
-.demo{background:#FFF3EF;border:1px solid #FFD9CD;border-radius:11px;padding:12px 14px;
-      font-size:12.5px;color:var(--ink-soft);margin:16px 0 4px}
-.demo b{color:var(--coral-deep)}
+.tag{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--cream-2);color:var(--ink-soft);
+     display:flex;align-items:center;gap:6px}
+.tag button{color:var(--muted-2);font-weight:700}
 </style>
 </head>
 <body>
@@ -155,11 +178,7 @@ textarea:focus,input:focus{outline:2px solid var(--coral);outline-offset:-1px;bo
   <div class="who">Melur Kopi · Bangsar</div>
 </div>
 
-<div class="wrap">
-  <div class="tabs" id="tabs"></div>
-  <div id="view"></div>
-</div>
-
+<div class="wrap"><div class="tabs" id="tabs"></div><div id="view"></div></div>
 <div class="bar" id="bar"></div>
 
 <div class="sheet" id="sheet">
@@ -172,331 +191,386 @@ textarea:focus,input:focus{outline:2px solid var(--coral);outline-offset:-1px;bo
 
 <script>
 /* ============================================================================
-   Suara dashboard prototype.
+   Suara prototype.
 
-   The point being demonstrated: a post is a DOCUMENT, not a picture. The image
-   is generated; every piece of type is a LAYER composited over it at render
-   time. That is why editing here is instant and free — nothing is regenerated
-   when you change a word, a font or a colour.
+   Two ideas are being shown:
+   1. A post is a DOCUMENT — a photograph plus text LAYERS composited at render
+      time. That is why editing is instant and costs nothing.
+   2. The primary surface is a CONVERSATION, not a control panel. You tell it
+      what to change. The fine controls still exist, but they are not where you
+      live.
+
+   ⚠️ The replies are SCRIPTED intent-matching, not a language model. This is a
+      prototype of the interaction, not of the intelligence.
    ========================================================================== */
 
-/* ---- the customer's locked brand (theirs, not Suara's) ---- */
 const BRAND = {
-  name: 'Melur Kopi',
-  fonts: [
-    {id:'Lora',      label:'Lora',      css:"'Lora',serif",      brand:true},
-    {id:'WorkSans',  label:'Work Sans', css:"'WorkSans',sans-serif", brand:true},
-    {id:'Gloock',    label:'Gloock',    css:"'Gloock',serif"},
-    {id:'Italiana',  label:'Italiana',  css:"'Italiana',serif"},
-    {id:'Bricolage', label:'Bricolage', css:"'Bricolage',sans-serif"},
-  ],
-  colours: [
-    {id:'green', hex:'#1F3D2B', brand:true},
-    {id:'cream', hex:'#F4EBDD', brand:true},
-    {id:'terra', hex:'#C4653A', brand:true},
-    {id:'black', hex:'#14110F'},
-    {id:'white', hex:'#FFFFFF'},
-  ],
-  sizes: [{id:'s',label:'Small',v:.052},{id:'m',label:'Medium',v:.072},{id:'l',label:'Large',v:.098}],
-  neverSay: ['“Authentic” — they hate the word',
-             'Anything about being cheap',
-             'Never call the kaya “jam”',
-             'No stock photos of other people’s food',
-             'Never promise a wait time'],
+  fonts:[{id:'Lora',label:'Lora',css:"'Lora',serif",brand:true},
+         {id:'WorkSans',label:'Work Sans',css:"'WorkSans',sans-serif",brand:true},
+         {id:'Gloock',label:'Gloock',css:"'Gloock',serif"},
+         {id:'Italiana',label:'Italiana',css:"'Italiana',serif"},
+         {id:'Bricolage',label:'Bricolage',css:"'Bricolage',sans-serif"}],
+  colours:[{id:'green',hex:'#1F3D2B',brand:true},{id:'cream',hex:'#F4EBDD',brand:true},
+           {id:'terra',hex:'#C4653A',brand:true},{id:'black',hex:'#14110F'},{id:'white',hex:'#FFFFFF'}],
+  sizes:[{id:'s',label:'Small',v:.052},{id:'m',label:'Medium',v:.072},{id:'l',label:'Large',v:.098}],
+  neverSay:['&ldquo;Authentic&rdquo; &mdash; they hate the word','Anything about being cheap',
+            'Never call the kaya &ldquo;jam&rdquo;','No stock photos of other people&rsquo;s food',
+            'Never promise a wait time'],
 };
 
-/* ---- the week ---- */
-const POSTS = [
-  { id:1, day:'Monday', img:'img/p1.jpg', status:'posted',
-    layers:[{text:'The 6am cup',font:'Lora',size:'l',colour:'cream',pos:'bottom'}],
-    caption:'We open at six because someone always needs the first cup. White coffee, the way it has been pulled here since 1998.',
-    tags:['melurkopi','bangsar','kopitiam','whitecoffee','kualalumpur'],
-    trace:'F2 — white coffee listed as a signature · F8 — opened 1998' },
-  { id:2, day:'Tuesday', img:'img/p2.jpg', status:'posted',
-    layers:[{text:'Kaya, cut thick',font:'Lora',size:'m',colour:'cream',pos:'bottom'}],
-    caption:'Kaya toast and two soft eggs. Nothing about it has changed and nothing needs to.',
-    tags:['kayatoast','melurkopi','breakfastkl','bangsar'],
-    trace:'F2 — kaya toast listed as a signature' },
-  { id:3, day:'Wednesday', img:'img/p3.jpg', status:'approved',
-    layers:[{text:'Before the room fills',font:'Italiana',size:'m',colour:'white',pos:'top'}],
-    caption:'Quarter past seven, before the room fills. Our favourite twenty minutes of the day.',
-    tags:['melurkopi','bangsar','morning','kopitiam'],
-    trace:'F4 — opening hours · F9 — interior photo supplied by owner' },
-  { id:4, day:'Thursday', img:'img/p1.jpg', status:'draft',
-    layers:[{text:'Two for the table',font:'WorkSans',size:'m',colour:'terra',pos:'bottom'}],
-    caption:'Bring someone. The second cup is always better than the first.',
-    tags:['melurkopi','coffeekl','bangsar'],
-    trace:'F2 — white coffee' },
-  { id:5, day:'Friday', img:'img/p2.jpg', status:'draft',
-    layers:[{text:'Friday, slow',font:'Lora',size:'l',colour:'cream',pos:'bottom'}],
-    caption:'Long breakfast kind of day. We are here until three.',
-    tags:['melurkopi','fridaybreakfast','bangsar','kayatoast'],
-    trace:'F4 — closing time 3pm' },
-  { id:6, day:'Saturday', img:'img/p3.jpg', status:'draft',
-    layers:[{text:'Room for everyone',font:'Gloock',size:'m',colour:'white',pos:'bottom'}],
-    caption:'Weekend mornings fill up fast. Come early, stay long, nobody will rush you.',
-    tags:['melurkopi','weekendkl','bangsar','kopitiam'],
-    trace:'F9 — interior photo supplied by owner' },
-  { id:7, day:'Sunday', img:'img/p1.jpg', status:'draft',
-    layers:[{text:'One more before Monday',font:'WorkSans',size:'m',colour:'cream',pos:'bottom'}],
-    caption:'Sunday afternoon, one more before the week starts again.',
-    tags:['melurkopi','sunday','bangsar','coffee'],
-    trace:'F2 — white coffee · F4 — Sunday hours' },
+const PHOTOS = [
+  {src:'img/p1.jpg', cat:'White coffee', from:'Uploaded'},
+  {src:'img/p2.jpg', cat:'Kaya toast',   from:'Uploaded'},
+  {src:'img/p3.jpg', cat:'The room',     from:'Uploaded'},
+  {src:'img/p4.jpg', cat:'Nasi lemak',   from:'Google Drive'},
+  {src:'img/p5.jpg', cat:'Service',      from:'Google Drive'},
 ];
 
-const F = id => BRAND.fonts.find(f=>f.id===id);
-const C = id => BRAND.colours.find(c=>c.id===id);
-const S = id => BRAND.sizes.find(s=>s.id===id);
+const POSTS = [
+  {id:1,day:'Monday',img:'img/p1.jpg',status:'posted',
+   layers:[{text:'The 6am cup',font:'Lora',size:'l',colour:'cream',pos:'bottom'}],
+   caption:'We open at six because someone always needs the first cup. White coffee, the way it has been pulled here since 1998.',
+   warm:'Somebody is always first through the door at six. We put the kettle on for them. White coffee, same as always since 1998.',
+   tags:['melurkopi','bangsar','kopitiam','whitecoffee','kualalumpur'],
+   trace:'F2 &mdash; white coffee listed as a signature &middot; F8 &mdash; opened 1998'},
+  {id:2,day:'Tuesday',img:'img/p2.jpg',status:'posted',
+   layers:[{text:'Kaya, cut thick',font:'Lora',size:'m',colour:'cream',pos:'bottom'}],
+   caption:'Kaya toast and two soft eggs. Nothing about it has changed and nothing needs to.',
+   warm:'Kaya toast, two soft eggs, and nowhere to be. Nothing about it has changed because nothing needed to.',
+   tags:['kayatoast','melurkopi','breakfastkl','bangsar'],
+   trace:'F2 &mdash; kaya toast listed as a signature'},
+  {id:3,day:'Wednesday',img:'img/p3.jpg',status:'approved',
+   layers:[{text:'Before the room fills',font:'Italiana',size:'m',colour:'white',pos:'top'}],
+   caption:'Quarter past seven, before the room fills. Our favourite twenty minutes of the day.',
+   warm:'Quarter past seven and the room is still quiet. Honestly our favourite twenty minutes of the whole day.',
+   tags:['melurkopi','bangsar','morning','kopitiam'],
+   trace:'F4 &mdash; opening hours &middot; F9 &mdash; interior photo supplied by owner'},
+  {id:4,day:'Thursday',img:'img/p4.jpg',status:'draft',
+   layers:[{text:'Nasi lemak, from eight',font:'WorkSans',size:'m',colour:'cream',pos:'bottom'}],
+   caption:'Nasi lemak from eight in the morning until it runs out, which it does.',
+   warm:'Nasi lemak goes on at eight and stays until it runs out. It always runs out. Come early if you mean it.',
+   tags:['nasilemak','melurkopi','bangsar','breakfastkl'],
+   trace:'F2 &mdash; nasi lemak listed as a signature'},
+  {id:5,day:'Friday',img:'img/p2.jpg',status:'draft',
+   layers:[{text:'Friday, slow',font:'Lora',size:'l',colour:'cream',pos:'bottom'}],
+   caption:'Long breakfast kind of day. We are here until three.',
+   warm:'The kind of Friday that deserves a long breakfast. We are here until three, no rush.',
+   tags:['melurkopi','fridaybreakfast','bangsar','kayatoast'],
+   trace:'F4 &mdash; closing time 3pm'},
+  {id:6,day:'Saturday',img:'img/p3.jpg',status:'draft',
+   layers:[{text:'Room for everyone',font:'Gloock',size:'m',colour:'white',pos:'bottom'}],
+   caption:'Weekend mornings fill up fast. Come early, stay long, nobody will rush you.',
+   warm:'Weekend mornings fill up quick. Come early, stay as long as you like, nobody here will rush you.',
+   tags:['melurkopi','weekendkl','bangsar','kopitiam'],
+   trace:'F9 &mdash; interior photo supplied by owner'},
+  {id:7,day:'Sunday',img:'img/p5.jpg',status:'draft',
+   layers:[{text:'One more before Monday',font:'WorkSans',size:'m',colour:'cream',pos:'bottom'}],
+   caption:'Sunday afternoon, one more before the week starts again.',
+   warm:'Sunday afternoon. One more cup before the week starts again, passed across the counter like always.',
+   tags:['melurkopi','sunday','bangsar','coffee'],
+   trace:'F2 &mdash; white coffee &middot; F9 &mdash; counter photo supplied by owner'},
+];
 
-/* ---- image cache ---- */
-const imgCache = {};
+const F=id=>BRAND.fonts.find(f=>f.id===id), C=id=>BRAND.colours.find(c=>c.id===id),
+      S=id=>BRAND.sizes.find(s=>s.id===id);
+const el=id=>document.getElementById(id);
+
+const imgCache={};
 function loadImg(src){
-  if(imgCache[src]) return imgCache[src];
-  imgCache[src] = new Promise(res=>{ const i=new Image(); i.onload=()=>res(i);
-    i.onerror=()=>res(null); i.src=src; });
+  if(imgCache[src])return imgCache[src];
+  imgCache[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;});
   return imgCache[src];
 }
 
-/* ---- THE RENDERER — the same code draws the thumbnail and the big preview ---- */
-async function render(cv, post, px){
-  cv.width = px; cv.height = px;
-  const g = cv.getContext('2d');
-  g.fillStyle = '#EDE6DC'; g.fillRect(0,0,px,px);
-  const im = await loadImg(post.img);
-  if(im){
-    const s = Math.max(px/im.width, px/im.height);
-    const w = im.width*s, h = im.height*s;
-    g.drawImage(im,(px-w)/2,(px-h)/2,w,h);
-  }
+async function render(cv,post,px){
+  if(!cv)return;
+  cv.width=px;cv.height=px;
+  const g=cv.getContext('2d');
+  g.fillStyle='#EDE6DC';g.fillRect(0,0,px,px);
+  const im=await loadImg(post.img);
+  if(im){const s=Math.max(px/im.width,px/im.height),w=im.width*s,h=im.height*s;
+         g.drawImage(im,(px-w)/2,(px-h)/2,w,h);}
   for(const L of post.layers){
-    const font = F(L.font), col = C(L.colour), sz = S(L.size);
-    const fs = px*sz.v;
-
-    /* Legibility is not left to the customer. We measure the photograph under the text band and
-       lay down whichever scrim actually creates contrast, at whatever strength that combination
-       needs. Otherwise a mid-tone brand colour on a dark photo is unreadable and the owner ships
-       it without noticing — the editor has to make it impossible to produce something illegible,
-       not merely inadvisable. */
-    const bandY = L.pos==='top' ? 0 : Math.round(px*0.45);
-    const bandH = Math.round(px*0.55);
-    let lum = 0.5;
-    try{
-      const d = g.getImageData(0, bandY, px, bandH).data;
-      let s = 0, n = 0;
-      for(let i=0;i<d.length;i+=4*37){ s += (0.2126*d[i] + 0.7152*d[i+1] + 0.0722*d[i+2]); n++; }
-      lum = (s/n)/255;
-    }catch(e){}
-    const hex = col.hex.replace('#','');
-    const tl = (0.2126*parseInt(hex.slice(0,2),16) + 0.7152*parseInt(hex.slice(2,4),16)
-              + 0.0722*parseInt(hex.slice(4,6),16))/255;
-    const goDark = tl > 0.45;                       // light text -> darken the photo, and vice versa
-    const contrast = Math.abs(tl - lum);            // 0 = invisible, 1 = maximal
-    const need = Math.max(0, 0.62 - contrast);      // how much help this pairing actually needs
-    const alpha = Math.min(0.82, 0.20 + need * 1.15);
-    const grd = g.createLinearGradient(0, L.pos==='top'?0:px, 0, L.pos==='top'?px*.42:px*.42);
-    grd.addColorStop(0, (goDark?'rgba(0,0,0,':'rgba(255,255,255,') + alpha + ')');
-    grd.addColorStop(1, goDark?'rgba(0,0,0,0)':'rgba(255,255,255,0)');
-    g.fillStyle = grd; g.fillRect(0, bandY, px, bandH);
-    g.font = `${font.id==='Lora'||font.id==='Bricolage'?'700':'400'} ${fs}px ${font.css.split(',')[0].replace(/'/g,'')}`;
-    g.textBaseline = 'alphabetic';
-    /* A scrim alone cannot rescue a mid-tone colour on a busy photograph without washing the
-       picture out. A soft shadow in the opposite direction does, and costs the image nothing. */
-    g.shadowColor = goDark ? 'rgba(0,0,0,.55)' : 'rgba(255,255,255,.6)';
-    g.shadowBlur = fs*0.30;
-    g.shadowOffsetX = 0; g.shadowOffsetY = fs*0.02;
-    g.fillStyle = col.hex;
-    // wrap
-    const maxW = px*0.84, words = L.text.split(' '), lines = []; let cur='';
-    for(const w of words){ const t = cur?cur+' '+w:w;
-      if(g.measureText(t).width>maxW && cur){lines.push(cur);cur=w;} else cur=t; }
-    if(cur) lines.push(cur);
-    const lh = fs*1.16;
-    let y = L.pos==='top' ? px*0.11+fs : px - px*0.085 - (lines.length-1)*lh;
-    for(const ln of lines){ g.fillText(ln, px*0.08, y); y+=lh; }
-    g.shadowColor='transparent'; g.shadowBlur=0; g.shadowOffsetY=0;
+    const font=F(L.font),col=C(L.colour),sz=S(L.size),fs=px*sz.v;
+    /* Legibility is enforced, not left to the customer: measure the photograph under the text
+       band, pick the scrim direction from the TEXT's luminance, scale it by the measured contrast
+       gap, and add a counter-direction shadow — a scrim strong enough alone washes the photo out. */
+    const bandY=L.pos==='top'?0:Math.round(px*0.45), bandH=Math.round(px*0.55);
+    let lum=0.5;
+    try{const d=g.getImageData(0,bandY,px,bandH).data;let s=0,n=0;
+        for(let i=0;i<d.length;i+=4*37){s+=(0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2]);n++;}
+        lum=(s/n)/255;}catch(e){}
+    const hx=col.hex.replace('#','');
+    const tl=(0.2126*parseInt(hx.slice(0,2),16)+0.7152*parseInt(hx.slice(2,4),16)+0.0722*parseInt(hx.slice(4,6),16))/255;
+    const goDark=tl>0.45, need=Math.max(0,0.62-Math.abs(tl-lum)), alpha=Math.min(0.82,0.20+need*1.15);
+    const grd=g.createLinearGradient(0,L.pos==='top'?0:px,0,px*.42);
+    grd.addColorStop(0,(goDark?'rgba(0,0,0,':'rgba(255,255,255,')+alpha+')');
+    grd.addColorStop(1,goDark?'rgba(0,0,0,0)':'rgba(255,255,255,0)');
+    g.fillStyle=grd;g.fillRect(0,bandY,px,bandH);
+    g.font=`${font.id==='Lora'||font.id==='Bricolage'?'700':'400'} ${fs}px ${font.css.split(',')[0].replace(/'/g,'')}`;
+    g.textBaseline='alphabetic';
+    g.shadowColor=goDark?'rgba(0,0,0,.55)':'rgba(255,255,255,.6)';
+    g.shadowBlur=fs*0.30;g.shadowOffsetY=fs*0.02;
+    g.fillStyle=col.hex;
+    const maxW=px*0.84,words=L.text.split(' '),lines=[];let cur='';
+    for(const w of words){const t=cur?cur+' '+w:w;
+      if(g.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t;}
+    if(cur)lines.push(cur);
+    const lh=fs*1.16;
+    let y=L.pos==='top'?px*0.11+fs:px-px*0.085-(lines.length-1)*lh;
+    for(const ln of lines){g.fillText(ln,px*0.08,y);y+=lh;}
+    g.shadowColor='transparent';g.shadowBlur=0;g.shadowOffsetY=0;
   }
 }
 
-/* ---- state ---- */
-let TAB = 'week', OPEN = null;
-const el = id => document.getElementById(id);
+/* ===================== the agent (scripted) ===================== */
+const CHAT=[{who:'them',text:'Morning. Your week is ready — seven posts, two already out. Tell me what to change and I will do it. Or just look at them under <strong>The week</strong>.'}];
+const DAYS=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
-const TABS = [['week','The week'],['streak','Streak'],['note','This week'],['brand','Brand']];
-
-function drawTabs(){
-  el('tabs').innerHTML = TABS.map(([k,l])=>
-    `<button class="tab ${k===TAB?'on':''}" data-tab="${k}">${l}</button>`).join('');
-  el('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{TAB=b.dataset.tab;draw();});
+function findPost(t){
+  for(let i=0;i<DAYS.length;i++) if(t.indexOf(DAYS[i])>-1) return POSTS[i];
+  return null;
 }
+
+function agentReply(text){
+  const t=text.toLowerCase();
+  const p=findPost(t);
+  const targets = p?[p]:POSTS.filter(x=>x.status!=='posted');
+  const named = p?(p.day+'&rsquo;s'):'the ones not out yet';
+
+  if(/warm|friendl|softer|nicer|human|less formal|casual/.test(t)){
+    targets.forEach(x=>{if(x.warm){const s=x.caption;x.caption=x.warm;x.warm=s;}});
+    return {text:'Warmed up '+named+'. Same facts, looser voice &mdash; I have not added anything that was not already true.',card:targets[0]};
+  }
+  if(/shorter|too long|cut it down|trim/.test(t)){
+    targets.forEach(x=>{x.caption=x.caption.split('. ')[0]+'.';});
+    return {text:'Trimmed '+named+' to the first line. Shorter reads better on a phone anyway.',card:targets[0]};
+  }
+  if(/photo|picture|image|swap|different pic/.test(t)){
+    const pool=PHOTOS.map(x=>x.src);
+    targets.forEach(x=>{const i=pool.indexOf(x.img);x.img=pool[(i+1)%pool.length];});
+    return {text:p?('Swapped '+named+' photo for another from your gallery. Say &ldquo;again&rdquo; if that one is not right either.')
+                 :'Swapped the photos on the unposted ones &mdash; all from your own gallery. I will not invent a plate of food you do not serve.',card:targets[0]};
+  }
+  if(/bigger|larger|too small/.test(t)){
+    targets.forEach(x=>x.layers[0].size='l');
+    return {text:'Made the text bigger on '+named+'.',card:targets[0]};
+  }
+  if(/smaller|too big/.test(t)){
+    targets.forEach(x=>x.layers[0].size='s');
+    return {text:'Made it smaller on '+named+'.',card:targets[0]};
+  }
+  if(/hashtag|tags/.test(t)){
+    targets.forEach(x=>x.tags=x.tags.slice(0,3));
+    return {text:'Cut '+named+' back to three hashtags. More than that reads like an account trying too hard.',card:targets[0]};
+  }
+  if(/top|above/.test(t)){
+    targets.forEach(x=>x.layers[0].pos='top');
+    return {text:'Moved the text to the top on '+named+'.',card:targets[0]};
+  }
+  if(/price|rm ?\d|cost|cheap/.test(t)){
+    return {text:'I have left prices out on purpose &mdash; you never gave me a price list at signup, and a number I guessed is a number a customer holds you to. Send me the prices and I will use them.'};
+  }
+  if(/approve|post them|publish|send them|looks good|go ahead/.test(t)){
+    POSTS.forEach(x=>{if(x.status==='draft')x.status='approved';});
+    return {text:'Approved the rest. They go out on their days and I will nudge you each morning, so nothing sits unposted.'};
+  }
+  if(/authentic/.test(t)){
+    return {text:'Not using that one &mdash; &ldquo;authentic&rdquo; is on your never-say list from signup. Give me another word and I will work with it.'};
+  }
+  if(/why|where.*from|how did you|source/.test(t)){
+    return {text:'All of it comes from what you told me at signup. Open any post and it shows its source &mdash; the dish names, your hours, the year you opened. When I do not have a fact, I ask instead of guessing.'};
+  }
+  return {text:'I can change the words, the photo, the size or position of the text, or the hashtags &mdash; on one day or all of them. Try &ldquo;make Thursday warmer&rdquo;, &ldquo;swap Friday&rsquo;s photo&rdquo;, or &ldquo;fewer hashtags&rdquo;.'};
+}
+
+/* ===================== views ===================== */
+let TAB='chat', OPEN=null, PFILT='all';
+const TABS=[['chat','Chat'],['week','Week'],['photos','Photos'],['prog','Progress'],['brand','Brand']];
 
 function statusPill(p){
-  if(p.status==='posted') return '<div class="pill posted">Posted</div>';
-  if(p.status==='approved') return '<div class="pill appr">Approved</div>';
-  return '<div class="pill">Draft</div>';
+  return p.status==='posted'?'<span class="pill posted">Posted</span>'
+       : p.status==='approved'?'<span class="pill appr">Approved</span>'
+       : '<span class="pill">Draft</span>';
+}
+
+function drawTabs(){
+  el('tabs').innerHTML=TABS.map(function(t){
+    return '<button class="tab '+(t[0]===TAB?'on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';}).join('');
+  el('tabs').querySelectorAll('.tab').forEach(function(b){b.onclick=function(){TAB=b.dataset.tab;draw();};});
 }
 
 function draw(){
   drawTabs();
-  const v = el('view'), bar = el('bar');
+  const v=el('view'),bar=el('bar');
+  bar.innerHTML='';
+
+  if(TAB==='chat'){
+    v.innerHTML='<div class="chat" id="chat"></div>'
+      +'<div class="chips" id="chips">'
+      +['Make Thursday warmer','Swap Friday&rsquo;s photo','Fewer hashtags','Why this post?','Approve the rest']
+        .map(function(s){return '<button class="chip">'+s+'</button>';}).join('')
+      +'</div>'
+      +'<div class="demo"><b>The replies are scripted, not a live model.</b> This shows how it should '
+      +'feel to change things by asking &mdash; not the intelligence behind it.</div>';
+    paintChat();
+    v.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){say(c.textContent);};});
+    bar.className='composer';
+    bar.innerHTML='<div class="in"><textarea id="ci" rows="1" placeholder="Tell it what to change&hellip;"></textarea>'
+                 +'<button class="send" id="cs">&uarr;</button></div>';
+    const ci=el('ci');
+    ci.oninput=function(){ci.style.height='auto';ci.style.height=Math.min(ci.scrollHeight,110)+'px';};
+    ci.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();say(ci.value);ci.value='';ci.style.height='auto';}};
+    el('cs').onclick=function(){say(ci.value);ci.value='';ci.style.height='auto';};
+    return;
+  }
+  bar.className='bar';
+
   if(TAB==='week'){
-    v.innerHTML = `<h2 class="sec">Your week</h2>
-      <p class="sub">Seven posts, ready. Tap any one to change it.</p>
-      <div class="grid">${POSTS.map(p=>`
-        <button class="card" data-id="${p.id}">
-          <div class="thumb"><canvas id="th${p.id}"></canvas></div>
-          <div class="meta"><div class="day">${p.day} ${statusPill(p)}</div><div class="cap">${p.caption}</div></div>
-        </button>`).join('')}</div>
-      <div class="demo"><b>This is a prototype.</b> Everything is editable and nothing is sent
-        anywhere. The images were generated; every word on top of them is a separate layer, which
-        is why changing one is instant.</div>`;
-    POSTS.forEach(p=>render(el('th'+p.id), p, 400));
-    v.querySelectorAll('.card').forEach(c=>c.onclick=()=>openPost(+c.dataset.id));
-    const left = POSTS.filter(p=>p.status==='draft').length;
-    bar.innerHTML = `<div class="in">
-      <button class="btn primary" id="approve">${left?`Approve all ${left} remaining`:'All approved'}</button>
-    </div>`;
-    const a = el('approve'); if(a) a.onclick=()=>{POSTS.forEach(p=>{if(p.status==='draft')p.status='approved';});draw();};
-    if(!left) el('approve').setAttribute('disabled','');
+    v.innerHTML='<h2 class="sec">Your week</h2>'
+      +'<p class="sub">Look here. Change things in the chat, or tap one to nudge it by hand.</p>'
+      +'<div class="grid">'+POSTS.map(function(p){
+        return '<button class="card" data-id="'+p.id+'"><div class="thumb"><canvas id="th'+p.id+'"></canvas></div>'
+          +'<div class="meta"><div class="day">'+p.day+' '+statusPill(p)+'</div>'
+          +'<div class="cap">'+p.caption+'</div></div></button>';}).join('')+'</div>';
+    POSTS.forEach(function(p){render(el('th'+p.id),p,400);});
+    v.querySelectorAll('.card').forEach(function(c){c.onclick=function(){openPost(+c.dataset.id);};});
+    const left=POSTS.filter(function(p){return p.status==='draft';}).length;
+    bar.innerHTML='<div class="in"><button class="btn primary" id="ap">'
+      +(left?('Approve all '+left+' remaining'):'All approved')+'</button></div>';
+    el('ap').onclick=function(){POSTS.forEach(function(p){if(p.status==='draft')p.status='approved';});draw();};
+    if(!left)el('ap').setAttribute('disabled','');
+    return;
   }
-  if(TAB==='streak'){
-    const posted = POSTS.filter(p=>p.status==='posted').length;
-    v.innerHTML = `<h2 class="sec">Posting streak</h2>
-      <p class="sub">The only number that decides whether this works.</p>
-      <div class="panel">
-        <p class="big">${posted} <span style="font-size:19px;color:var(--muted);font-weight:600">of 7</span></p>
-        <p class="bigsub">posted this week</p>
-        <div class="streakrow">${POSTS.map(p=>
-          `<div class="dot ${p.status==='posted'?'hit':'miss'}">${p.day[0]}${p.day[1]}</div>`).join('')}</div>
-      </div>
-      <div class="panel">
-        <div class="kv"><span>Weeks in a row</span><span>3</span></div>
-        <div class="kv"><span>Best run</span><span>6 weeks</span></div>
-        <div class="kv"><span>Posts published with Suara</span><span>41</span></div>
-      </div>
-      <div class="demo">Deliberately not follower counts or reach. <b>We cannot see those</b> —
-        that needs a Meta connection we do not have yet, and a number we cannot verify is worse
-        than no number.</div>`;
-    bar.innerHTML = '';
+
+  if(TAB==='photos'){
+    const cats=['all'].concat(PHOTOS.map(function(p){return p.cat;})
+      .filter(function(c,i,a){return a.indexOf(c)===i;}));
+    const shown=PHOTOS.filter(function(p){return PFILT==='all'||p.cat===PFILT;});
+    v.innerHTML='<h2 class="sec">Your photos</h2>'
+      +'<p class="sub">Everything it makes starts from these. Real food beats generated food, always.</p>'
+      +'<div class="drop"><div class="dt">Add photos</div>'
+      +'<div class="ds">From your phone, or drop a Google Drive folder link and it pulls them in.</div>'
+      +'<input type="text" placeholder="Paste a Google Drive folder link&hellip;">'
+      +'<div style="display:flex;gap:8px"><button class="btn ghost" style="flex:1">From phone</button>'
+      +'<button class="btn primary" style="flex:1">Pull from Drive</button></div></div>'
+      +'<div class="filters">'+cats.map(function(c){
+        return '<button class="filt '+(c===PFILT?'on':'')+'" data-c="'+c+'">'+(c==='all'?'Everything':c)+'</button>';}).join('')+'</div>'
+      +'<div class="pgrid">'+shown.map(function(p){
+        return '<div class="ph"><img src="'+p.src+'" alt=""><div class="cat">'+p.cat+'</div></div>';}).join('')+'</div>'
+      +'<div class="demo">Each photo is <b>categorised as it lands</b>, so the generator can ask for '
+      +'&ldquo;a kaya toast photo&rdquo; instead of guessing. Two of these came from a Drive folder &mdash; '
+      +'<b>that pull already works</b>, I built it today for another client: a public folder link, '
+      +'no API key, nothing for the owner to set up.</div>';
+    v.querySelectorAll('.filt').forEach(function(b){b.onclick=function(){PFILT=b.dataset.c;draw();};});
+    return;
   }
-  if(TAB==='note'){
-    v.innerHTML = `<h2 class="sec">This week</h2>
-      <p class="sub">Three lines and one thing to try.</p>
-      <div class="panel">
-        <div class="kv"><span>You posted</span><span>2 of 7</span></div>
-        <div class="kv"><span>You kept</span><span>every post that led with food</span></div>
-        <div class="kv"><span>You cut</span><span>both that led with the room</span></div>
-      </div>
-      <div class="panel">
-        <div class="lab">What we will change</div>
-        <p style="margin:0">Food goes first from now on. We will keep one room photo a week
-        because the space is part of why people come, but it will not lead.</p>
-        <div class="note"><strong>One question:</strong> of the two you posted, which one did
-        better? One tap and next week is built around the answer.</div>
-      </div>
-      <div class="demo">Everything above comes from what you approved and rejected — <b>data we
-        actually hold</b>. Nothing here claims to have measured your reach.</div>`;
-    bar.innerHTML = '';
+
+  if(TAB==='prog'){
+    const posted=POSTS.filter(function(p){return p.status==='posted';}).length;
+    v.innerHTML='<h2 class="sec">How you are doing</h2>'
+      +'<p class="sub">The only number that decides whether this works.</p>'
+      +'<div class="panel"><p class="big">'+posted+' <span style="font-size:19px;color:var(--muted);font-weight:600">of 7</span></p>'
+      +'<p class="bigsub">posted this week</p><div class="streakrow">'
+      +POSTS.map(function(p){return '<div class="dot '+(p.status==='posted'?'hit':'')+'">'+p.day.slice(0,2)+'</div>';}).join('')
+      +'</div></div>'
+      +'<div class="panel"><div class="kv"><span>Weeks in a row</span><span>3</span></div>'
+      +'<div class="kv"><span>Best run</span><span>6 weeks</span></div>'
+      +'<div class="kv"><span>Posts published with Suara</span><span>41</span></div></div>'
+      +'<div class="panel"><div class="lab">This week</div>'
+      +'<div class="kv"><span>You kept</span><span>every post that led with food</span></div>'
+      +'<div class="kv"><span>You cut</span><span>both that led with the room</span></div>'
+      +'<div class="note"><strong>So:</strong> food goes first from now on. One room photo a week, '
+      +'never leading.<br><br><strong>One question:</strong> of the two you posted, which did better?</div></div>'
+      +'<div class="demo">All of that comes from what you approved and rejected &mdash; <b>things we '
+      +'actually know</b>. Nothing here claims to have measured your reach, because we cannot see it.</div>';
+    return;
   }
+
   if(TAB==='brand'){
-    v.innerHTML = `<h2 class="sec">Your brand</h2>
-      <p class="sub">Answered once at signup. Never asked again.</p>
-      <div class="panel">
-        <div class="lab">Colours</div>
-        <div class="swatches">${BRAND.colours.filter(c=>c.brand).map(c=>
-          `<div style="background:${c.hex}"></div>`).join('')}</div>
-        <div class="kv" style="margin-top:13px"><span>Headline font</span><span style="font-family:'Lora',serif">Lora</span></div>
-        <div class="kv"><span>Body font</span><span style="font-family:'WorkSans',sans-serif">Work Sans</span></div>
-        <div class="kv"><span>What you want more of</span><span>Walk-ins</span></div>
-      </div>
-      <div class="panel">
-        <div class="lab">Things we never say</div>
-        ${BRAND.neverSay.map(n=>`<div class="never">${n}</div>`).join('')}
-      </div>`;
-    bar.innerHTML = '';
+    v.innerHTML='<h2 class="sec">Your brand</h2>'
+      +'<p class="sub">Answered once at signup. Never asked again.</p>'
+      +'<div class="panel"><div class="lab">Colours</div><div class="swatches">'
+      +BRAND.colours.filter(function(c){return c.brand;}).map(function(c){
+        return '<div style="background:'+c.hex+'"></div>';}).join('')+'</div>'
+      +'<div class="kv" style="margin-top:13px"><span>Headline font</span><span style="font-family:\'Lora\',serif">Lora</span></div>'
+      +'<div class="kv"><span>Body font</span><span style="font-family:\'WorkSans\',sans-serif">Work Sans</span></div>'
+      +'<div class="kv"><span>What you want more of</span><span>Walk-ins</span></div></div>'
+      +'<div class="panel"><div class="lab">Things we never say</div>'
+      +BRAND.neverSay.map(function(n){return '<div class="never">'+n+'</div>';}).join('')+'</div>';
+    return;
   }
 }
 
-/* ---- editor ---- */
+function paintChat(){
+  const c=el('chat'); if(!c)return;
+  c.innerHTML=CHAT.map(function(m,i){
+    if(m.card) return '<div class="msg them">'+m.text+'</div>'
+      +'<div class="msgcard"><canvas id="cc'+i+'"></canvas><div class="mc">'
+      +'<div class="mcd">'+m.card.day+'</div><div class="mct">'+m.card.caption+'</div></div></div>';
+    return '<div class="msg '+m.who+'">'+m.text+'</div>';
+  }).join('');
+  CHAT.forEach(function(m,i){ if(m.card) render(el('cc'+i),m.card,200); });
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function say(text){
+  if(!text||!text.trim())return;
+  CHAT.push({who:'me',text:text.trim()});
+  paintChat();
+  setTimeout(function(){
+    const r=agentReply(text);
+    CHAT.push({who:'them',text:r.text,card:r.card});
+    paintChat();
+  },420);
+}
+
+/* ---------- editor ---------- */
 function openPost(id){
-  OPEN = POSTS.find(p=>p.id===id);
-  el('sday').textContent = OPEN.day;
-  drawSheet();
-  el('sheet').classList.add('open');
-  document.body.style.overflow='hidden';
+  OPEN=POSTS.filter(function(p){return p.id===id;})[0];
+  el('sday').textContent=OPEN.day;
+  drawSheet(); el('sheet').classList.add('open'); document.body.style.overflow='hidden';
 }
-function closeSheet(){
-  el('sheet').classList.remove('open'); document.body.style.overflow='';
-  OPEN=null; draw();
-}
-el('sclose').onclick = closeSheet;
+function closeSheet(){el('sheet').classList.remove('open');document.body.style.overflow='';OPEN=null;draw();}
+el('sclose').onclick=closeSheet;
 
 function drawSheet(){
-  const p = OPEN, L = p.layers[0];
-  el('sbody').innerHTML = `
-    <div class="preview"><canvas id="pv"></canvas></div>
-    <p class="hint">Changes appear as you type. Nothing is regenerated.</p>
-
-    <div class="ctl"><div class="lab">Text on the image</div>
-      <textarea id="tx" rows="2">${L.text}</textarea></div>
-
-    <div class="ctl"><div class="lab">Font <span style="text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted-2)">your two, plus three that suit them</span></div>
-      <div class="opts">${BRAND.fonts.map(f=>
-        `<button class="opt ${f.id===L.font?'on':''}" data-f="${f.id}" style="font-family:${f.css}">${f.label}${f.brand?' ·':''}</button>`).join('')}</div></div>
-
-    <div class="ctl"><div class="lab">Size</div>
-      <div class="opts">${BRAND.sizes.map(s=>
-        `<button class="opt ${s.id===L.size?'on':''}" data-s="${s.id}">${s.label}</button>`).join('')}</div></div>
-
-    <div class="ctl"><div class="lab">Colour <span style="text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted-2)">your three, plus black and white</span></div>
-      <div class="opts">${BRAND.colours.map(c=>
-        `<button class="sw ${c.id===L.colour?'on':''}" data-c="${c.id}" style="background:${c.hex}"></button>`).join('')}</div></div>
-
-    <div class="ctl"><div class="lab">Position</div>
-      <div class="opts">${['top','bottom'].map(v=>
-        `<button class="opt ${v===L.pos?'on':''}" data-p="${v}">${v[0].toUpperCase()+v.slice(1)}</button>`).join('')}</div></div>
-
-    <div class="ctl"><div class="lab">Caption</div>
-      <textarea id="cap" rows="4">${p.caption}</textarea></div>
-
-    <div class="ctl"><div class="lab">Hashtags</div>
-      <input type="text" id="newtag" placeholder="Add one and press enter">
-      <div class="tags" id="tags">${p.tags.map((t,i)=>
-        `<span class="tag">#${t}<button data-t="${i}">×</button></span>`).join('')}</div></div>
-
-    <div class="note"><strong>Where this came from:</strong> ${p.trace}</div>
-
-    <div class="ctl" style="margin-top:20px">
-      <button class="btn ghost" id="regen" style="width:100%">Regenerate the picture</button>
-      <p class="hint" style="margin-top:7px">A separate button on purpose — editing is free,
-      a new picture is not.</p>
-    </div>`;
-
-  const pv = el('pv');
-  const paint = ()=>{ render(pv,p,1000); render(el('th'+p.id)||document.createElement('canvas'),p,400); };
-  paint();
-
-  el('tx').oninput = e=>{ L.text=e.target.value; paint(); };
-  el('cap').oninput = e=>{ p.caption=e.target.value; };
-  el('sbody').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{L.font=b.dataset.f;drawSheet();});
-  el('sbody').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{L.size=b.dataset.s;drawSheet();});
-  el('sbody').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{L.colour=b.dataset.c;drawSheet();});
-  el('sbody').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{L.pos=b.dataset.p;drawSheet();});
-  el('sbody').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{p.tags.splice(+b.dataset.t,1);drawSheet();});
-  el('newtag').onkeydown = e=>{ if(e.key==='Enter'&&e.target.value.trim()){
-    p.tags.push(e.target.value.trim().replace(/^#/,'')); e.target.value=''; drawSheet(); } };
-  el('regen').onclick = ()=>{ el('regen').textContent='In a real account this costs one redraw';
-    setTimeout(()=>{ if(el('regen')) el('regen').textContent='Regenerate the picture'; },2200); };
-
-  el('bar').innerHTML = `<div class="in">
-    <button class="btn ghost" id="back2">Back</button>
-    <button class="btn primary" id="pub">${p.status==='posted'?'Posted':'Approve &amp; post'}</button>
-  </div>`;
-  el('back2').onclick = closeSheet;
-  el('pub').onclick = ()=>{ p.status='posted'; closeSheet(); };
-  if(p.status==='posted') el('pub').setAttribute('disabled','');
+  const p=OPEN,L=p.layers[0];
+  el('sbody').innerHTML=
+     '<div class="preview"><canvas id="pv"></canvas></div>'
+    +'<p class="hint">Changes appear as you type. Nothing is regenerated.</p>'
+    +'<div class="ctl"><div class="lab">Text on the image</div><textarea id="tx" rows="2">'+L.text+'</textarea></div>'
+    +'<div class="ctl"><div class="lab"><span>Font</span><span style="text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted-2)">your two, plus three that suit them</span></div><div class="opts">'
+    +BRAND.fonts.map(function(f){return '<button class="opt '+(f.id===L.font?'on':'')+'" data-f="'+f.id+'" style="font-family:'+f.css+'">'+f.label+(f.brand?' &middot;':'')+'</button>';}).join('')+'</div></div>'
+    +'<div class="ctl"><div class="lab">Size</div><div class="opts">'
+    +BRAND.sizes.map(function(s){return '<button class="opt '+(s.id===L.size?'on':'')+'" data-s="'+s.id+'">'+s.label+'</button>';}).join('')+'</div></div>'
+    +'<div class="ctl"><div class="lab"><span>Colour</span><span style="text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted-2)">your three, plus black and white</span></div><div class="opts">'
+    +BRAND.colours.map(function(c){return '<button class="sw '+(c.id===L.colour?'on':'')+'" data-c="'+c.id+'" style="background:'+c.hex+'"></button>';}).join('')+'</div></div>'
+    +'<div class="ctl"><div class="lab">Position</div><div class="opts">'
+    +['top','bottom'].map(function(v){return '<button class="opt '+(v===L.pos?'on':'')+'" data-p="'+v+'">'+v.charAt(0).toUpperCase()+v.slice(1)+'</button>';}).join('')+'</div></div>'
+    +'<div class="ctl"><div class="lab">Caption</div><textarea id="cap" rows="4">'+p.caption+'</textarea></div>'
+    +'<div class="ctl"><div class="lab">Hashtags</div><input type="text" id="newtag" placeholder="Add one and press enter"><div class="tags">'
+    +p.tags.map(function(t,i){return '<span class="tag">#'+t+'<button data-t="'+i+'">&times;</button></span>';}).join('')+'</div></div>'
+    +'<div class="note"><strong>Where this came from:</strong> '+p.trace+'</div>';
+  const pv=el('pv');
+  render(pv,p,1000);
+  el('tx').oninput=function(e){L.text=e.target.value;render(pv,p,1000);};
+  el('cap').oninput=function(e){p.caption=e.target.value;};
+  el('sbody').querySelectorAll('[data-f]').forEach(function(b){b.onclick=function(){L.font=b.dataset.f;drawSheet();};});
+  el('sbody').querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){L.size=b.dataset.s;drawSheet();};});
+  el('sbody').querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){L.colour=b.dataset.c;drawSheet();};});
+  el('sbody').querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){L.pos=b.dataset.p;drawSheet();};});
+  el('sbody').querySelectorAll('[data-t]').forEach(function(b){b.onclick=function(){p.tags.splice(+b.dataset.t,1);drawSheet();};});
+  el('newtag').onkeydown=function(e){if(e.key==='Enter'&&e.target.value.trim()){
+    p.tags.push(e.target.value.trim().replace(/^#/,''));e.target.value='';drawSheet();}};
+  el('bar').className='bar';
+  el('bar').innerHTML='<div class="in"><button class="btn ghost" id="b2">Back</button>'
+    +'<button class="btn primary" id="pub">'+(p.status==='posted'?'Posted':'Approve &amp; post')+'</button></div>';
+  el('b2').onclick=closeSheet;
+  el('pub').onclick=function(){p.status='posted';closeSheet();};
+  if(p.status==='posted')el('pub').setAttribute('disabled','');
 }
 
-/* fonts must be ready before the first canvas paint, or the thumbnails draw in a fallback face */
 document.fonts.ready.then(draw);
 </script>
 </body>
