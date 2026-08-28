@@ -1,0 +1,1468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suara — Melur Kopi</title>
+<style>
+@font-face{
+  font-family:"PJS";
+  src:url("fonts/PlusJakartaSans.ttf") format("truetype-variations");
+  font-weight:200 800; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Gloock";
+  src:url("fonts/Gloock-Regular.ttf") format("truetype");
+  font-weight:400; font-style:normal; font-display:swap;
+}
+
+:root{
+  --cream:#FDF7EF; --cream2:#F6EFE6; --paper:#ffffff;
+  --ink:#1A1520; --ink-soft:#3B3145; --muted:#6B6270;
+  --coral:#FF6A45; --coral-deep:#E24A28; --green:#26B37A; --marigold:#FFC24B;
+
+  --hair:rgba(26,21,32,.10);
+  --hair-strong:rgba(26,21,32,.18);
+
+  --bd:3px solid var(--ink);
+  --bd2:2.5px solid var(--ink);
+  --sh:4px 4px 0 var(--ink);
+  --sh-sm:3px 3px 0 var(--ink);
+  --sh-lg:6px 6px 0 var(--ink);
+
+  --r-card:20px;
+  --r-in:8px;
+  --pad:12px;
+
+  --t:150ms cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"PJS",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.5;
+  font-weight:500;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;outline:1px solid oklch(0 0 0 / 0.1);outline-offset:-1px}
+button,input,textarea,select{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- focus ---------- */
+:where(a,button,input,textarea,[tabindex]):focus-visible{
+  outline:3px solid var(--ink);
+  outline-offset:3px;
+  border-radius:4px;
+}
+.on-dark:focus-visible{outline-color:var(--cream)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{margin:0;line-height:1.08;letter-spacing:-.02em;font-weight:800}
+.display{font-family:"Gloock",Georgia,serif;font-weight:400;letter-spacing:-.01em;line-height:1.02}
+.eyebrow{
+  font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  line-height:1.2;
+}
+.eyebrow--ico{display:flex;align-items:center;gap:7px}
+.small{font-size:14px;line-height:1.45}
+.muted{color:var(--muted)}
+
+/* ---------- buttons ---------- */
+.btn{
+  -webkit-appearance:none;appearance:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:48px;padding:12px 20px;
+  border:var(--bd);border-radius:999px;
+  background:var(--paper);color:var(--ink);
+  font-weight:800;font-size:15px;letter-spacing:-.01em;
+  box-shadow:var(--sh);
+  cursor:pointer;
+  text-align:center;
+  transition:transform var(--t),box-shadow var(--t),background-color var(--t);
+}
+.btn:hover{background:var(--cream2)}
+.btn:active{transform:translate(4px,4px) scale(.985);box-shadow:0 0 0 var(--ink)}
+.btn--primary{background:var(--coral)}
+.btn--primary:hover{background:var(--coral-deep)}
+.btn--gold{background:var(--marigold)}
+.btn--gold:hover{background:#F5B22F}
+.btn--ink{background:var(--ink);color:var(--cream)}
+.btn--ink:hover{background:#2A2233}
+.btn--block{width:100%}
+.btn--sm{min-height:44px;padding:10px 16px;font-size:14px;box-shadow:var(--sh-sm)}
+.btn--sm:active{transform:translate(3px,3px) scale(.985)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none;transform:none}
+
+.iconbtn{
+  -webkit-appearance:none;appearance:none;
+  width:48px;height:48px;flex:0 0 48px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:var(--bd);border-radius:999px;background:var(--paper);color:var(--ink);
+  box-shadow:var(--sh-sm);cursor:pointer;
+  transition:transform var(--t),box-shadow var(--t),background-color var(--t);
+}
+.iconbtn:hover{background:var(--cream2)}
+.iconbtn:active{transform:translate(3px,3px) scale(.97);box-shadow:0 0 0 var(--ink)}
+
+svg{display:block;flex:0 0 auto}
+
+/* ---------- shell ---------- */
+.shell{max-width:1400px;margin:0 auto;padding:0 16px 112px}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:var(--cream);
+  border-bottom:3px solid var(--ink);
+}
+.topbar__in{
+  max-width:1400px;margin:0 auto;padding:10px 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.brandmark{display:flex;align-items:center;gap:10px;min-width:0}
+.brandmark__sq{
+  width:40px;height:40px;flex:0 0 40px;border:var(--bd2);border-radius:11px;
+  background:var(--coral);display:flex;align-items:center;justify-content:center;
+}
+.brandmark__txt{min-width:0}
+.brandmark__name{font-family:"Gloock",Georgia,serif;font-size:21px;line-height:1;letter-spacing:.01em}
+.brandmark__sub{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar__sp{margin-left:auto}
+
+/* ---------- nav ---------- */
+.nav{display:flex;gap:8px}
+.navitem{
+  -webkit-appearance:none;appearance:none;
+  position:relative;
+  display:flex;align-items:center;gap:9px;
+  min-height:48px;padding:10px 16px;
+  border:var(--bd2);border-radius:999px;background:var(--paper);color:var(--ink);
+  font-weight:800;font-size:14px;cursor:pointer;box-shadow:var(--sh-sm);
+  transition:background-color var(--t),transform var(--t),box-shadow var(--t);
+}
+.navitem:hover{background:var(--cream2)}
+.navitem:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.navitem[aria-current="page"]{background:var(--ink);color:var(--cream)}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:24px;height:24px;padding:0 6px;border-radius:999px;
+  background:var(--coral);color:var(--ink);border:2px solid var(--ink);
+  font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;
+}
+.navitem[aria-current="page"] .badge{border-color:var(--cream)}
+
+/* bottom nav (phone) */
+.botnav{
+  position:fixed;left:0;right:0;bottom:0;z-index:45;
+  background:var(--cream);border-top:3px solid var(--ink);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  display:none;
+}
+.botnav .nav{gap:6px}
+.botnav .navitem{
+  flex:1 1 0;min-width:0;flex-direction:column;gap:3px;padding:6px 4px;
+  border-radius:14px;font-size:11px;min-height:56px;box-shadow:none;letter-spacing:-.01em;
+}
+.botnav .navitem span.lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.botnav .badge{
+  position:absolute;top:2px;right:calc(50% - 26px);min-width:20px;height:20px;font-size:11.5px;
+}
+
+/* ---------- layout ---------- */
+.cols{display:block}
+.side{display:none}
+main{min-width:0}
+
+/* ---------- cards ---------- */
+.card{
+  border:var(--bd);border-radius:var(--r-card);background:var(--paper);
+  box-shadow:var(--sh);padding:var(--pad);
+}
+.block{
+  border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh);
+  padding:18px;
+}
+.block--coral{background:var(--coral)}
+.block--gold{background:var(--marigold)}
+.block--green{background:var(--green)}
+.block--cream{background:var(--cream2)}
+.block--paper{background:var(--paper)}
+.block--ink{background:var(--ink);color:var(--cream)}
+
+.stack{display:grid;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---------- week ---------- */
+.hero{
+  border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh-lg);
+  background:var(--marigold);padding:20px;margin:18px 0 14px;
+}
+.hero h1{font-size:clamp(30px,8.5vw,44px)}
+.hero__meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tally{
+  display:inline-flex;align-items:center;gap:8px;
+  border:var(--bd2);border-radius:999px;background:var(--paper);
+  padding:7px 14px;font-weight:800;font-size:14px;
+}
+.tally b{font-variant-numeric:tabular-nums;font-size:17px}
+
+.sectionhead{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin:26px 0 12px;
+}
+.sectionhead h2{font-size:20px}
+
+.postlist{display:grid;gap:14px}
+
+.post{
+  border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh);
+  background:var(--paper);
+  padding:var(--pad);
+  display:grid;gap:12px;
+  text-align:left;
+  width:100%;
+  font:inherit;color:inherit;
+  cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.post:hover{box-shadow:var(--sh-lg)}
+.post:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+.post--held{background:var(--coral)}
+.post--ready{background:var(--marigold)}
+.post--scheduled{background:var(--paper)}
+.post--posted{background:var(--cream2)}
+.post__top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.post__day{
+  font-size:18px;font-weight:800;letter-spacing:-.02em;
+}
+.post__top{row-gap:8px}
+.post__time{font-size:14px;font-weight:700}
+.post__media{position:relative;border:var(--bd2);border-radius:var(--r-in);overflow:hidden;background:var(--cream2)}
+.post__media img{aspect-ratio:16/10;object-fit:cover;width:100%}
+.post__caption{font-size:15.5px;line-height:1.5;font-weight:500}
+.post__foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px;font-weight:700}
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  border:2px solid var(--ink);border-radius:999px;
+  padding:4px 11px;font-size:12.5px;font-weight:800;line-height:1.25;
+  background:var(--paper);color:var(--ink);
+  letter-spacing:.01em;
+}
+.chip--ink{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.chip--green{background:var(--green);color:var(--ink)}
+.chip--coral{background:var(--coral);color:var(--ink)}
+.chip--gold{background:var(--marigold);color:var(--ink)}
+
+/* logo overlay drawn in DOM */
+.wordmark{
+  position:absolute;left:10px;bottom:10px;
+  display:flex;align-items:center;gap:7px;
+  background:var(--marigold);border:2.5px solid var(--ink);border-radius:999px;
+  padding:5px 12px 5px 8px;
+  box-shadow:2px 2px 0 var(--ink);
+}
+.wordmark__t{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink);line-height:1}
+
+/* ---------- needs you ---------- */
+.q{border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh-lg);background:var(--coral);padding:20px}
+.q h3{font-size:clamp(21px,5.4vw,27px);letter-spacing:-.025em}
+.q__why{margin:12px 0 0;font-size:15.5px;line-height:1.5;font-weight:600}
+.q__answers{display:grid;gap:10px;margin-top:18px}
+.q--done{background:var(--marigold)}
+
+/* ---------- detail ---------- */
+.detailgrid{display:grid;gap:16px;align-items:start}
+.figure{position:relative;border:var(--bd);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--sh);background:var(--cream2)}
+.figure img{width:100%;aspect-ratio:4/3;object-fit:cover}
+
+.field{
+  width:100%;border:var(--bd2);border-radius:var(--r-in);background:var(--paper);
+  padding:12px;font-size:16px;line-height:1.55;font-weight:500;
+  resize:vertical;min-height:150px;color:var(--ink);
+}
+.field:focus{outline:3px solid var(--ink);outline-offset:2px}
+
+.trace{display:grid;gap:8px;margin-top:12px}
+.traceitem{
+  display:flex;gap:10px;align-items:flex-start;
+  border:2px solid var(--ink);border-radius:var(--r-in);
+  background:var(--paper);padding:10px 12px;
+}
+.traceitem--none{background:var(--coral)}
+.traceitem__c{font-weight:800;font-size:14.5px}
+.traceitem__s{font-size:13.5px;font-weight:600}
+.traceitem--none .traceitem__s{color:var(--ink)}
+
+.pubrow{
+  display:flex;align-items:center;gap:12px;
+  border:2px solid var(--ink);border-radius:var(--r-in);background:var(--paper);
+  padding:11px 12px;
+}
+.pubrow__n{font-weight:800;font-size:15px}
+.pubrow__d{font-size:13px;font-weight:600;color:var(--muted)}
+
+.note{
+  border:2px dashed var(--ink);border-radius:var(--r-in);
+  padding:10px 12px;font-size:14px;font-weight:600;background:var(--cream2);
+}
+.note[hidden]{display:none}
+
+/* ---------- library ---------- */
+.grid-photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.photo{
+  position:relative;padding:0;border:var(--bd2);border-radius:14px;overflow:hidden;
+  background:var(--cream2);box-shadow:var(--sh-sm);cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.photo:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.photo img{aspect-ratio:1/1;object-fit:cover;width:100%}
+.photo__tag{
+  position:absolute;left:6px;top:6px;
+  background:var(--ink);color:var(--cream);border-radius:999px;
+  font-size:11px;font-weight:800;padding:3px 9px;letter-spacing:.04em;text-transform:uppercase;
+}
+.uploader{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;
+  border:3px dashed var(--ink);border-radius:14px;background:var(--cream2);
+  aspect-ratio:1/1;cursor:pointer;font-weight:800;font-size:14px;text-align:center;padding:10px;
+}
+.uploader:hover{background:var(--marigold)}
+.uploader input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+.reflist{display:grid;gap:10px}
+.refitem{
+  display:flex;gap:11px;align-items:flex-start;
+  border:2px solid var(--ink);border-radius:var(--r-in);background:var(--paper);padding:11px 12px;
+}
+
+/* ---------- refusals ---------- */
+.refusal{border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh);background:var(--paper);overflow:hidden}
+.refusal__head{background:var(--coral);padding:14px 16px;border-bottom:3px solid var(--ink)}
+.refusal__claim{font-size:17px;font-weight:800;text-decoration:line-through;text-decoration-thickness:2.5px;letter-spacing:-.01em}
+.refusal__why{padding:14px 16px;font-size:15px;line-height:1.5;font-weight:500}
+
+/* ---------- modal ---------- */
+.scrim{
+  position:fixed;inset:0;z-index:80;
+  background:rgba(26,21,32,.55);
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0;
+}
+.scrim[hidden]{display:none}
+.modal{
+  width:100%;max-width:560px;max-height:92vh;overflow:auto;
+  background:var(--cream);
+  border:var(--bd);border-bottom:none;border-radius:22px 22px 0 0;
+  padding:18px 16px calc(24px + env(safe-area-inset-bottom));
+}
+.modal__head{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.modal__head h2{font-size:24px;letter-spacing:-.025em}
+
+.swatch{display:flex;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:var(--r-in);padding:9px 12px;background:var(--paper)}
+.swatch__d{width:30px;height:30px;border:2.5px solid var(--ink);border-radius:8px;flex:0 0 30px}
+.kv{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--hair)}
+.kv:last-child{border-bottom:none}
+.kv dt{font-size:13.5px;font-weight:700;color:var(--muted);margin:0}
+.kv dd{margin:0;font-weight:800;font-size:15px;text-align:right}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- view transitions ---------- */
+.view[hidden]{display:none}
+.view.enter{animation:viewin 180ms cubic-bezier(.22,.61,.36,1) both}
+@keyframes viewin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.firstpaint>*{animation:cardin 260ms cubic-bezier(.22,.61,.36,1) both}
+.firstpaint>*:nth-child(1){animation-delay:0ms}
+.firstpaint>*:nth-child(2){animation-delay:40ms}
+.firstpaint>*:nth-child(3){animation-delay:80ms}
+.firstpaint>*:nth-child(4){animation-delay:120ms}
+.firstpaint>*:nth-child(5){animation-delay:160ms}
+.firstpaint>*:nth-child(n+6){animation-delay:200ms}
+@keyframes cardin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.scrim{animation:fadein 140ms ease-out both}
+.scrim .modal{animation:sheetin 200ms cubic-bezier(.22,.61,.36,1) both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes sheetin{from{transform:translateY(18px)}to{transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;transition-duration:1ms !important}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:719px){
+  .topbar .nav{display:none}
+  .botnav{display:block}
+  .shell{padding-bottom:128px}
+}
+@media (min-width:720px){
+  .q__answers{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .postlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-photos{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .modal{
+    border-radius:22px;border-bottom:var(--bd);box-shadow:var(--sh-lg);
+    margin:auto;max-height:88vh;
+  }
+  .scrim{align-items:center;padding:24px}
+  .detailgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (min-width:1100px){
+  .cols{
+    display:grid;grid-template-columns:296px minmax(0,1fr);
+    gap:26px;align-items:start;
+  }
+  .side{display:block;position:sticky;top:92px}
+  .side .nav{flex-direction:column;gap:10px}
+  .side .navitem{width:100%;justify-content:flex-start;font-size:15.5px;min-height:52px;border-radius:16px}
+  .side .badge{margin-left:auto}
+  .topbar .nav{display:none}
+  .postlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .refgrid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+  .hero{padding:28px}
+  .grid-photos{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .shell{padding-left:24px;padding-right:24px}
+}
+@media (min-width:1400px){
+  .postlist{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__in">
+    <div class="brandmark">
+      <div class="brandmark__sq" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A1520" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15V9M8 18V6M12 20V4M16 17V7M20 14V10"/></svg>
+      </div>
+      <div class="brandmark__txt">
+        <div class="brandmark__name">Suara</div>
+        <div class="brandmark__sub">Melur Kopi &middot; Bangsar</div>
+      </div>
+    </div>
+    <div class="topbar__sp"></div>
+    <nav class="nav" id="navTop" aria-label="Main"></nav>
+    <button class="iconbtn" id="settingsBtn" aria-label="Settings" aria-haspopup="dialog">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.55V21a2 2 0 1 1-4 0v-.11A1.7 1.7 0 0 0 8.9 19.3a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1.03H3a2 2 0 1 1 0-4h.11A1.7 1.7 0 0 0 4.7 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.03-1.55V3a2 2 0 1 1 4 0v.11A1.7 1.7 0 0 0 15.1 4.7a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09A1.7 1.7 0 0 0 21 10.1h.11a2 2 0 1 1 0 4H21a1.7 1.7 0 0 0-1.6 1.03Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+  <div class="cols">
+    <aside class="side">
+      <nav class="nav" id="navSide" aria-label="Sections"></nav>
+      <div class="block block--gold" style="margin-top:18px">
+        <div class="eyebrow">Brand lock</div>
+        <p style="margin:9px 0 0;font-size:15px;font-weight:700;line-height:1.4">
+          Plain &middot; unhurried &middot; local
+        </p>
+        <p style="margin:8px 0 0;font-size:14px;font-weight:600;line-height:1.45">
+          Nothing goes in a caption that is not on your file. That is the whole rule.
+        </p>
+        <div class="row" style="gap:8px;margin-top:14px;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:8px">
+          <span class="swatch__d" style="background:#FF6A45" title="Coral"></span>
+          <span class="swatch__d" style="background:#FFC24B" title="Marigold"></span>
+          <span class="swatch__d" style="background:#1A1520" title="Ink"></span>
+        </div>
+        <button class="btn btn--sm" style="margin-top:14px;width:100%" id="settingsBtn2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Settings
+        </button>
+      </div>
+    </aside>
+
+    <main>
+      <section class="view" id="view-week" aria-labelledby="weekTitle"></section>
+      <section class="view" id="view-needs" hidden aria-labelledby="needsTitle"></section>
+      <section class="view" id="view-post" hidden></section>
+      <section class="view" id="view-library" hidden></section>
+      <section class="view" id="view-refusals" hidden></section>
+    </main>
+  </div>
+</div>
+
+<div class="botnav">
+  <nav class="nav" id="navBot" aria-label="Main (mobile)"></nav>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="modal"></div>
+</div>
+
+<div class="sr" role="status" aria-live="polite" id="live"></div>
+
+<script>
+"use strict";
+
+/* ============================ icons ============================ */
+const I = (p, s) => `<svg width="${s||18}" height="${s||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const ico = {
+  check:  s => I('<path d="M20 6 9 17l-5-5"/>', s),
+  clock:  s => I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', s),
+  ask:    s => I('<circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.9 2.9 0 0 1 5.6 1c0 2-2.8 2.4-2.8 4"/><path d="M12 17.4h.01"/>', s),
+  pen:    s => I('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>', s),
+  send:   s => I('<path d="M21 3 10.5 13.5"/><path d="M21 3 14.5 21l-4-8-8-4Z"/>', s),
+  back:   s => I('<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>', s),
+  x:      s => I('<path d="M18 6 6 18M6 6l12 12"/>', s),
+  grid:   s => I('<rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/>', s),
+  image:  s => I('<rect x="3" y="3" width="18" height="18" rx="2.6"/><circle cx="8.8" cy="9" r="1.7"/><path d="m4 17 5-5 4.5 4.5L17 13l3 3"/>', s),
+  ban:    s => I('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>', s),
+  redo:   s => I('<path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/>', s),
+  down:   s => I('<path d="M12 3v13"/><path d="m6.5 11.5 5.5 5.5 5.5-5.5"/><path d="M4 21h16"/>', s),
+  ig:     s => I('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.6h.01"/>', s),
+  fb:     s => I('<path d="M14.5 8.5H17V5h-2.5A4.5 4.5 0 0 0 10 9.5V12H7.5v3.5H10V21h3.5v-5.5H16l.6-3.5H13.5V9.5a1 1 0 0 1 1-1Z"/>', s),
+  plus:   s => I('<path d="M12 5v14M5 12h14"/>', s),
+  book:   s => I('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22.5Z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20"/>', s),
+  lock:   s => I('<rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>', s),
+  plug:   s => I('<path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0Z"/><path d="M12 17v5"/>', s),
+  card:   s => I('<rect x="2.5" y="5" width="19" height="14" rx="2.6"/><path d="M2.5 10h19"/>', s),
+  dot:    s => I('<circle cx="12" cy="12" r="5.5" fill="currentColor" stroke="none"/>', s)
+};
+
+/* ============================ data ============================ */
+const V = (label, text) => ({ label, text });
+
+const posts = [
+  {
+    id:"mon", day:"Monday", time:"6:30am", status:"posted", img:"img/p1.jpg", logo:true,
+    caption:"We open at seven because someone always needs the first cup before the rest of the city is awake. Same beans, same hands, same corner of Bangsar.",
+    variants:[],
+    trace:[
+      {c:"same corner of Bangsar", s:"location: Bangsar, Kuala Lumpur"},
+      {c:"no price stated", s:"nothing on file, so nothing claimed", none:true}
+    ]
+  },
+  {
+    id:"tue", day:"Tuesday", time:"8:00am", status:"posted", img:"img/p2.jpg", logo:true,
+    caption:"Kaya toast and two soft eggs. Nothing complicated, nothing that needs explaining.",
+    variants:[],
+    trace:[
+      {c:"kaya toast and two soft eggs", s:"menu: kaya toast, soft eggs"},
+      {c:"no price stated", s:"nothing on file, so nothing claimed", none:true}
+    ]
+  },
+  {
+    id:"wed", day:"Wednesday", time:"7:15am", status:"ready", today:true, img:"img/p3.jpg", logo:true,
+    caption:"Quarter past seven, before the room fills. The first pour is always the quietest one of the day — kaya toast is on from opening, and the window seat looks out onto Telawi.",
+    variants:[
+      V("Shorter","Quarter past seven, before the room fills. Kaya toast is on from opening."),
+      V("Warmer","Quarter past seven is the quietest the room gets all day. Kaya toast is on from opening, the first pour is happening now, and the window seat looks out onto Telawi."),
+      V("Mention the window seat","The corner table by the window catches the morning light. Quarter past seven, before the room fills — kaya toast is on from opening, and the first pour is always the quietest one of the day.")
+    ],
+    trace:[
+      {c:"opens at 7", s:"opening hours: 7:00am"},
+      {c:"kaya toast from opening", s:"menu: kaya toast, all day"},
+      {c:"no price stated", s:"nothing on file, so nothing claimed", none:true}
+    ]
+  },
+  {
+    id:"wed2", day:"Wednesday", time:"4:30pm", status:"ready", img:"img/p5.jpg", logo:false,
+    caption:"The afternoon is quieter. Same beans, one more cup before you head back out.",
+    variants:[
+      V("Shorter","Same beans, one more cup before you head back out."),
+      V("Warmer","Afternoons are quieter in here. Same beans, same corner, one more cup before you head back out.")
+    ],
+    trace:[
+      {c:"same beans", s:"brand voice: same beans, same hands"},
+      {c:"no price stated", s:"nothing on file, so nothing claimed", none:true}
+    ]
+  },
+  {
+    id:"thu", day:"Thursday", time:"8:00am", status:"held", img:"img/p4.jpg", logo:true,
+    caption:"Nasi lemak from eight in the morning until it runs out, which is usually before noon.",
+    variants:[
+      V("Shorter","Nasi lemak from eight, until it runs out."),
+      V("Warmer","Nasi lemak goes on at eight and stays until it doesn’t. Most mornings that’s before noon, so you know how it goes.")
+    ],
+    trace:[
+      {c:"nasi lemak from eight", s:"menu: nasi lemak, mornings"},
+      {c:"no halal wording", s:"no certificate number on file", none:true}
+    ],
+    q:{
+      title:"Is the kitchen halal certified?",
+      why:"Thursday’s post says “nasi lemak from eight”. I won’t call anything halal without a certificate number on file — that one carries the heaviest penalty of anything you could put in a caption.",
+      answers:[
+        {label:"Yes — add certificate number", ack:"Filed. I still won’t use the word halal in a caption until the number is on your brand lock — Thursday goes out as written."},
+        {label:"No certificate", ack:"Understood. Thursday goes out with no halal wording at all, and I’ll stop asking."},
+        {label:"Skip this week", ack:"Skipped for now. Thursday still goes out as written — it never claimed anything."}
+      ]
+    }
+  },
+  {
+    id:"thu2", day:"Thursday", time:"3:00pm", status:"ready", img:"img/p1.jpg", logo:false,
+    caption:"Second half of the day. The grinder is still going, and there is always one more cup in it.",
+    variants:[
+      V("Shorter","Second half of the day. There’s always one more cup in it."),
+      V("Warmer","The second half of the day is its own thing. The grinder is still going, and there’s always one more cup in it.")
+    ],
+    trace:[
+      {c:"one more cup", s:"menu: coffee, all day"},
+      {c:"no closing time stated", s:"you haven’t confirmed one", none:true}
+    ]
+  },
+  {
+    id:"fri", day:"Friday", time:"9:00am", status:"ready", img:"img/p2.jpg", logo:true,
+    caption:"Long breakfast kind of day. We’re here until the afternoon, the toast is thick, and nobody is going to rush you out of your seat.",
+    variants:[
+      V("Shorter","Long breakfast kind of day. Thick toast, no rush."),
+      V("Warmer","The kind of day that’s built for a long breakfast. We’re here until the afternoon, the toast is thick, and nobody is going to move you along.")
+    ],
+    trace:[
+      {c:"the toast is thick", s:"menu: kaya toast, all day"},
+      {c:"no closing time stated", s:"you haven’t confirmed one", none:true}
+    ]
+  },
+  {
+    id:"sat", day:"Saturday", time:"8:30am", status:"held", img:"img/p3.jpg", logo:true,
+    caption:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
+    variants:[
+      V("Shorter","Weekend mornings run slower here. Come early."),
+      V("Warmer","Weekend mornings have their own pace here. Come early if the window seat is the one you want.")
+    ],
+    trace:[
+      {c:"the window seat", s:"floor plan: window table, two seats"},
+      {c:"no closing time stated", s:"you haven’t confirmed one", none:true}
+    ],
+    q:{
+      title:"What time do you actually close?",
+      why:"Your intake says 6pm, but you told me last week you’ve been open till 9 on weekends. I’d rather ask than post the wrong time.",
+      answers:[
+        {label:"6pm is right", ack:"Locked at 6pm. I’ll use it wherever a closing time comes up."},
+        {label:"9pm now", ack:"Updated to 9pm on weekends. Your brand lock now says 6pm weekdays, 9pm Saturday and Sunday."},
+        {label:"Leave the time out", ack:"No closing time in any caption until you confirm one."}
+      ]
+    }
+  },
+  {
+    id:"sun", day:"Sunday", time:"3:00pm", status:"ready", img:"img/p5.jpg", logo:true,
+    caption:"Sunday afternoon, one more before the week starts again.",
+    variants:[
+      V("Shorter","One more before the week starts again."),
+      V("Warmer","Sunday afternoon has a way of stretching. One more before the week starts again.")
+    ],
+    trace:[
+      {c:"Sunday afternoon", s:"opening hours: open Sundays"},
+      {c:"no price stated", s:"nothing on file, so nothing claimed", none:true}
+    ]
+  }
+];
+
+const refusals = [
+  { claim:"The best nasi lemak in Bangsar",
+    why:"That’s a comparison against every other shop on the street, and there’s nothing on file that could stand behind it if someone complained." },
+  { claim:"Halal certified kitchen",
+    why:"No certificate number on file. This is the one I’ll keep asking about." },
+  { claim:"Tables are filling fast — book now",
+    why:"I have no idea how full you are. If it isn’t true on the day, it’s the kind of line people remember." }
+];
+
+const library = {
+  photos:[
+    {src:"img/p1.jpg", name:"First cup", own:false},
+    {src:"img/p2.jpg", name:"Kaya toast", own:false},
+    {src:"img/p3.jpg", name:"The room", own:false},
+    {src:"img/p4.jpg", name:"Nasi lemak", own:false},
+    {src:"img/p5.jpg", name:"Counter", own:false}
+  ],
+  refs:[
+    {t:"@kopi.tiam.kl", d:"Instagram account — you said you like how plainly they write."},
+    {t:"Saved post: “We are out of bread”", d:"A closing notice with no apology in it. Saved 12 August."},
+    {t:"Saved post: morning light, no caption", d:"One photo, four words. Saved 3 August."}
+  ],
+  note:"Short sentences. Never sell. Never say best."
+};
+
+const state = {
+  view:"week",
+  openPostId:null,
+  pickingFor:null,     // post id awaiting a photo pick
+  answered:{},         // postId -> ack text
+  refsNote:library.note,
+  firstWeekPaint:true
+};
+
+/* ============================ helpers ============================ */
+const $ = s => document.querySelector(s);
+const el = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const post = id => posts.find(p => p.id === id);
+const countHeld  = () => posts.filter(p => p.status === "held").length;
+const countReady = () => posts.filter(p => p.status === "ready").length;
+const NUMWORD = ["no","one","two","three","four","five","six","seven","eight","nine"];
+const numword = n => NUMWORD[n] !== undefined ? NUMWORD[n] : String(n);
+const cap = s => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+
+function say(msg){ el("live").textContent = msg; }
+
+/* a caption is never allowed to be scrolled out of sight — grow the box to the text */
+function autogrow(n){
+  if (!n) return;
+  n.style.height = "auto";
+  if (n.scrollHeight > 0) n.style.height = (n.scrollHeight + 3) + "px";
+}
+function growAll(){ document.querySelectorAll("textarea.field").forEach(autogrow); }
+document.addEventListener("input", e => {
+  if (e.target.classList && e.target.classList.contains("field")) autogrow(e.target);
+});
+
+const STATUS = {
+  held:      {word:"Needs you", icon:ico.ask,   chip:"chip--ink"},
+  ready:     {word:"Ready",     icon:ico.pen,   chip:"chip--ink"},
+  scheduled: {word:"Scheduled", icon:ico.check, chip:"chip--green"},
+  posted:    {word:"Posted",    icon:ico.dot,   chip:"chip--ink"}
+};
+
+function statusChip(st){
+  const s = STATUS[st];
+  return `<span class="chip ${s.chip}">${s.icon(14)}${esc(s.word)}</span>`;
+}
+
+function wordmarkHTML(){
+  return `<div class="wordmark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A1520" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 14V10M9.5 17V7M14 20V4M18.5 15V9"/></svg><span class="wordmark__t">Melur Kopi</span></div>`;
+}
+
+/* ============================ nav ============================ */
+const NAVITEMS = [
+  {id:"week",     label:"Week",      icon:ico.grid},
+  {id:"needs",    label:"Needs you", icon:ico.ask,  badge:true},
+  {id:"library",  label:"Library",   icon:ico.book},
+  {id:"refusals", label:"Didn’t write", icon:ico.ban}
+];
+
+function renderNav(){
+  ["navTop","navSide","navBot"].forEach(nid => {
+    const host = el(nid);
+    const isBot = nid === "navBot";
+    host.innerHTML = NAVITEMS.map(n => {
+      const cur = (state.view === n.id) || (state.view === "post" && n.id === "week");
+      const b = n.badge && countHeld() > 0
+        ? `<span class="badge num" aria-hidden="true">${countHeld()}</span>` : "";
+      const a11y = n.badge ? ` aria-label="${esc(n.label)}${countHeld()>0 ? ", " + countHeld() + " waiting" : ""}"` : "";
+      return `<button class="navitem" data-nav="${n.id}"${cur ? ' aria-current="page"' : ""}${a11y}>
+        ${n.icon(isBot ? 20 : 18)}<span class="lbl">${esc(n.label)}</span>${b}</button>`;
+    }).join("");
+  });
+}
+
+/* ============================ views ============================ */
+function show(view){
+  state.view = view;
+  ["week","needs","post","library","refusals"].forEach(v => {
+    const node = el("view-" + v);
+    node.hidden = v !== view;
+    node.classList.remove("enter");
+  });
+  const node = el("view-" + view);
+  void node.offsetWidth;
+  node.classList.add("enter");
+  growAll();
+  renderNav();
+  window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+}
+
+/* ---------- week ---------- */
+function renderWeek(){
+  const held = countHeld(), ready = countReady();
+  const scheduled = posts.filter(p => p.status === "scheduled").length;
+  const done = held === 0 && ready === 0;
+
+  const top = done ? `
+    <div class="hero block--green" style="background:var(--green)">
+      <div class="eyebrow">${"Melur Kopi &middot; this week"}</div>
+      <h1 style="margin-top:8px">Nothing left for you.</h1>
+      <p style="margin:14px 0 0;font-size:16.5px;font-weight:600;max-width:46ch">
+        <span class="num">${scheduled}</span> posts scheduled, <span class="num">2</span> already out.
+        Two questions answered. Nothing was published that you had not seen.
+      </p>
+      <div class="row" style="margin-top:18px">
+        <button class="btn btn--ink" data-nav="refusals">${ico.ban(18)}See what I didn’t write</button>
+      </div>
+    </div>` : `
+    <div class="hero">
+      <div class="eyebrow">Melur Kopi &middot; this week</div>
+      <h1 id="weekTitle" style="margin-top:8px">Nine posts.<br>${
+        held > 0
+          ? `${cap(numword(held))} need${held === 1 ? "s" : ""} a word from you.`
+          : `${cap(numword(ready))} waiting on your yes.`
+      }</h1>
+      <div class="hero__meta">
+        <span class="tally">${ico.ask(16)}<b class="num" data-count="held">${held}</b> need you</span>
+        <span class="tally">${ico.pen(16)}<b class="num" data-count="ready">${ready}</b> ready</span>
+        <span class="tally">${ico.check(16)}<b class="num" data-count="scheduled">${scheduled}</b> scheduled</span>
+      </div>
+    </div>`;
+
+  const needsCard = held > 0 ? `
+    <div class="block block--coral">
+      <div class="eyebrow">Needs you</div>
+      <h2 style="font-size:clamp(21px,5vw,26px);margin-top:8px">
+        <span class="num">${cap(numword(held))}</span> ${held === 1 ? "question" : "questions"} before I can finish the week.
+      </h2>
+      <p style="margin:10px 0 0;font-size:15.5px;font-weight:600">
+        Both are things I refuse to guess at. Each one takes a tap.
+      </p>
+      <button class="btn" style="margin-top:16px" data-nav="needs">
+        ${ico.ask(18)}Answer ${held === 1 ? "it" : "them"}
+      </button>
+    </div>` : `
+    <div class="block block--cream">
+      <div class="eyebrow">Needs you</div>
+      <h2 style="font-size:20px;margin-top:8px">Nothing needs you.</h2>
+      <p class="small" style="margin:8px 0 0;font-weight:600">Both questions are answered. I have not guessed at anything.</p>
+    </div>`;
+
+  const batchCard = ready > 0 ? `
+    <div class="block block--gold">
+      <div class="eyebrow">Ready to go out</div>
+      <h2 style="font-size:clamp(21px,5vw,26px);margin-top:8px">
+        <span class="num">${cap(numword(ready))}</span> ${ready === 1 ? "post claims" : "posts claim"} nothing you haven’t confirmed.
+      </h2>
+      <p style="margin:10px 0 0;font-size:15.5px;font-weight:600">
+        No prices, no comparisons, no halal wording. Every line traces back to your file.
+      </p>
+      <button class="btn btn--ink" style="margin-top:16px" id="batchBtn">
+        ${ico.check(18)}Approve the ${numword(ready)} that claim nothing
+      </button>
+    </div>` : `
+    <div class="block block--cream">
+      <div class="eyebrow">Ready to go out</div>
+      <h2 style="font-size:20px;margin-top:8px">Nothing waiting for approval.</h2>
+      <p class="small" style="margin:8px 0 0;font-weight:600">Everything you approved is scheduled.</p>
+    </div>`;
+
+  const cards = posts.map(p => {
+    const s = STATUS[p.status];
+    return `<button class="post post--${p.status}" data-post="${p.id}">
+      <div class="post__top">
+        <span class="post__day">${esc(p.day)}</span>
+        <span class="post__time num">${esc(p.time)}</span>
+        ${p.today ? '<span class="chip chip--ink">Today</span>' : ""}
+        <span style="margin-left:auto">${statusChip(p.status)}</span>
+      </div>
+      <div class="post__media">
+        <img src="${p.img}" alt="${esc(p.day)} photo for Melur Kopi">
+        ${p.logo ? wordmarkHTML() : ""}
+      </div>
+      <p class="post__caption">${esc(p.caption)}</p>
+      <div class="post__foot">
+        <span style="display:inline-flex;align-items:center;gap:6px">${ico.ig(15)}Instagram</span>
+        <span style="display:inline-flex;align-items:center;gap:6px">${ico.fb(15)}Facebook</span>
+        <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px">Open${ico.back(15).replace('d="M19 12H5"','d="M5 12h14"').replace('d="m12 19-7-7 7-7"','d="m12 5 7 7-7 7"')}</span>
+      </div>
+    </button>`;
+  }).join("");
+
+  el("view-week").innerHTML = `
+    ${top}
+    <div class="stack ${state.firstWeekPaint ? "firstpaint" : ""}" style="grid-template-columns:1fr" id="weekTop">
+      ${needsCard}
+      ${batchCard}
+    </div>
+    <div class="sectionhead">
+      <h2>The week</h2>
+      <span class="small muted" style="font-weight:700">Nine posts &middot; tap one to read it in full</span>
+    </div>
+    <div class="postlist">${cards}</div>`;
+
+  const wt = el("weekTop");
+  if (window.matchMedia("(min-width:1100px)").matches) wt.style.gridTemplateColumns = "1fr 1fr";
+  state.firstWeekPaint = false;
+}
+
+/* ---------- needs you ---------- */
+function renderNeeds(){
+  const open = posts.filter(p => p.q && p.status === "held");
+  const answered = posts.filter(p => p.q && state.answered[p.id]);
+
+  const head = `<div class="sectionhead" style="margin-top:18px">
+      <h2 id="needsTitle" style="font-size:clamp(26px,7vw,36px)">Needs you</h2>
+    </div>`;
+
+  if (open.length === 0){
+    el("view-needs").innerHTML = head + `
+      <div class="q q--done">
+        <div class="eyebrow">Done</div>
+        <h3 style="margin-top:8px">Nothing needs you.</h3>
+        <p class="q__why">Both questions are answered and on file. I did not guess at either of them.</p>
+        <div class="row" style="margin-top:18px">
+          <button class="btn" data-nav="week">${ico.back(18)}Back to the week</button>
+        </div>
+      </div>
+      ${answered.length ? `<div class="stack" style="margin-top:16px">${answered.map(p => ackCard(p)).join("")}</div>` : ""}`;
+    return;
+  }
+
+  el("view-needs").innerHTML = head + `
+    <p style="margin:-4px 0 16px;font-size:16px;font-weight:600;max-width:56ch">
+      <span class="num">${cap(numword(open.length))}</span> ${open.length === 1 ? "thing" : "things"} I will not guess at.
+      Answer and the post finishes itself.
+    </p>
+    <div class="stack">
+      ${open.map(p => `
+        <div class="q" data-q="${p.id}">
+          <div class="eyebrow">${esc(p.day)} &middot; ${esc(p.time)}</div>
+          <h3 style="margin-top:8px">${esc(p.q.title)}</h3>
+          <p class="q__why">${esc(p.q.why)}</p>
+          <div class="q__answers">
+            ${p.q.answers.map((a,i) => `<button class="btn btn--block" data-answer="${p.id}" data-i="${i}">${esc(a.label)}</button>`).join("")}
+          </div>
+        </div>`).join("")}
+      ${answered.map(p => ackCard(p)).join("")}
+    </div>`;
+}
+
+function ackCard(p){
+  return `<div class="block block--paper" data-ack="${p.id}">
+    <div class="eyebrow">${esc(p.day)} &middot; answered</div>
+    <h3 style="font-size:18px;margin-top:7px">${esc(p.q.title)}</h3>
+    <p class="small" style="margin:9px 0 0;font-weight:600">${esc(state.answered[p.id])}</p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn--sm" data-post="${p.id}">${ico.pen(16)}Read ${esc(p.day)}’s post</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- post detail ---------- */
+function renderPost(){
+  const p = post(state.openPostId);
+  if (!p) return;
+  const editable = p.status !== "posted";
+  const s = STATUS[p.status];
+
+  const variantPills = p.variants.length ? `
+    <div class="block block--paper">
+      <div class="eyebrow eyebrow--ico">${ico.redo(14)}<span>Ask it to redo the post</span></div>
+      <p class="small" style="margin:8px 0 12px;font-weight:600">Same facts, different shape. Nothing new gets claimed.</p>
+      <div class="row">
+        <button class="btn btn--sm" data-variant="orig" aria-pressed="${p.active === undefined || p.active === "orig"}">Original</button>
+        ${p.variants.map((v,i) => `<button class="btn btn--sm" data-variant="${i}" aria-pressed="${p.active === i}">${esc(v.label)}</button>`).join("")}
+      </div>
+    </div>` : "";
+
+  const left = `
+    <div class="stack">
+      <div class="figure">
+        <img src="${p.img}" alt="Photo for the ${esc(p.day)} post" id="postImg">
+        ${p.logo ? wordmarkHTML() : ""}
+      </div>
+      <div class="row">
+        <button class="btn btn--sm" id="logoBtn" aria-pressed="${!!p.logo}">
+          ${ico.image(16)}Logo ${p.logo ? "on" : "off"}
+        </button>
+        <button class="btn btn--sm" id="swapBtn">${ico.grid(16)}Use a different photo</button>
+        <button class="btn btn--sm" id="dlBtn">${ico.down(16)}Download</button>
+      </div>
+      <div class="note" id="dlNote" hidden></div>
+
+      <div class="block block--paper">
+        <div class="eyebrow">Where this came from</div>
+        <div class="trace">
+          ${p.trace.map(t => `
+            <div class="traceitem ${t.none ? "traceitem--none" : ""}">
+              ${t.none ? ico.ban(17) : ico.check(17)}
+              <div>
+                <div class="traceitem__c">${esc(t.c)}</div>
+                <div class="traceitem__s ${t.none ? "" : "muted"}">${esc(t.s)}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>
+
+      <div class="block block--paper">
+        <div class="eyebrow">Where it publishes</div>
+        <div class="stack" style="gap:10px;margin-top:10px">
+          <div class="pubrow">${ico.ig(20)}<div><div class="pubrow__n">Instagram</div><div class="pubrow__d">@melurkopi &middot; posts automatically</div></div>
+            <span style="margin-left:auto" class="chip chip--green">${ico.check(13)}On</span></div>
+          <div class="pubrow">${ico.fb(20)}<div><div class="pubrow__n">Facebook</div><div class="pubrow__d">Melur Kopi page &middot; posts automatically</div></div>
+            <span style="margin-left:auto" class="chip chip--green">${ico.check(13)}On</span></div>
+        </div>
+        <p class="small muted" style="margin:11px 0 0;font-weight:600">
+          Both run off one Meta connection — the Instagram business account linked to your page. Connect once, not twice.
+        </p>
+      </div>
+    </div>`;
+
+  const right = `
+    <div class="stack">
+      <div class="block ${p.status === "held" ? "block--coral" : p.status === "ready" ? "block--gold" : "block--paper"}">
+        <div class="post__top" style="margin-bottom:10px">
+          <span class="post__day" style="font-size:22px">${esc(p.day)}</span>
+          <span class="post__time num">${esc(p.time)}</span>
+          ${p.today ? '<span class="chip chip--ink">Today</span>' : ""}
+          <span style="margin-left:auto">${statusChip(p.status)}</span>
+        </div>
+        ${editable ? `
+          <label class="eyebrow" for="capField">The caption</label>
+          <textarea class="field" id="capField" style="margin-top:8px">${esc(p.caption)}</textarea>
+          <div class="row" style="margin-top:12px">
+            <button class="btn btn--ink" id="saveBtn">${ico.check(18)}Save caption</button>
+            ${p.status === "ready" ? `<button class="btn" id="approveBtn">${ico.send(18)}Approve &amp; schedule</button>` : ""}
+            ${p.status === "held" ? `<button class="btn" data-nav="needs">${ico.ask(18)}Answer the question first</button>` : ""}
+          </div>
+          <div class="note" id="saveNote" hidden></div>
+        ` : `
+          <div class="eyebrow">The caption</div>
+          <p style="margin:8px 0 0;font-size:16.5px;line-height:1.55;font-weight:500">${esc(p.caption)}</p>
+          <div class="note" style="margin-top:14px">${ico.dot(14)} This one is already out. Rewriting it here would not change what people have seen, so I have not offered it.</div>
+        `}
+      </div>
+      ${editable ? variantPills : ""}
+      ${p.status === "scheduled" ? `
+        <div class="block block--green">
+          <div class="eyebrow">Scheduled</div>
+          <h3 style="font-size:19px;margin-top:7px">Going out ${esc(p.day)} at ${esc(p.time)}.</h3>
+          <p class="small" style="margin:8px 0 0;font-weight:600">Instagram and Facebook, both from one connection.</p>
+        </div>` : ""}
+      ${p.q && state.answered[p.id] ? `
+        <div class="block block--paper">
+          <div class="eyebrow">You answered</div>
+          <p class="small" style="margin:8px 0 0;font-weight:600">${esc(state.answered[p.id])}</p>
+        </div>` : ""}
+    </div>`;
+
+  el("view-post").innerHTML = `
+    <div class="row" style="margin:18px 0 14px">
+      <button class="btn btn--sm" data-nav="week">${ico.back(16)}The week</button>
+    </div>
+    <div class="detailgrid">${left}${right}</div>`;
+  growAll();
+}
+
+/* ---------- library ---------- */
+function renderLibrary(){
+  const picking = !!state.pickingFor;
+  el("view-library").innerHTML = `
+    <div class="sectionhead" style="margin-top:18px">
+      <h2 style="font-size:clamp(26px,7vw,36px)">Library</h2>
+    </div>
+    ${picking ? `
+      <div class="block block--coral" style="margin-bottom:16px">
+        <div class="eyebrow">Choosing a photo</div>
+        <h3 style="font-size:19px;margin-top:7px">Pick one for ${esc(post(state.pickingFor).day)} ${esc(post(state.pickingFor).time)}.</h3>
+        <div class="row" style="margin-top:14px">
+          <button class="btn btn--sm" id="cancelPick">${ico.x(16)}Cancel</button>
+        </div>
+      </div>` : ""}
+
+    <div class="block block--paper">
+      <div class="eyebrow">Her photos</div>
+      <p class="small muted" style="margin:8px 0 14px;font-weight:600">
+        Your own pictures. Add one and it is available to every post.
+      </p>
+      <div class="grid-photos">
+        ${library.photos.map((ph,i) => `
+          <button class="photo" data-photo="${i}">
+            <img src="${ph.src}" alt="${esc(ph.name)}">
+            ${ph.own ? '<span class="photo__tag">Yours</span>' : ""}
+          </button>`).join("")}
+        <label class="uploader" for="uploadInput">
+          ${ico.plus(22)}<span>Add a photo</span>
+          <input type="file" id="uploadInput" accept="image/*">
+        </label>
+      </div>
+      <div class="note" id="upNote" hidden></div>
+    </div>
+
+    <div class="block block--paper" style="margin-top:16px">
+      <div class="eyebrow">References — what I learn your taste from</div>
+      <p class="small muted" style="margin:8px 0 14px;font-weight:600">
+        Accounts and posts you like. I read these for tone, never for facts — facts only come from your own file.
+      </p>
+      <div class="reflist">
+        ${library.refs.map(r => `
+          <div class="refitem">${ico.book(18)}
+            <div><div style="font-weight:800;font-size:15px">${esc(r.t)}</div>
+            <div class="small muted" style="font-weight:600">${esc(r.d)}</div></div>
+          </div>`).join("")}
+      </div>
+      <label class="eyebrow" for="refNote" style="display:block;margin-top:16px">Your note on the voice</label>
+      <textarea class="field" id="refNote" style="min-height:96px;margin-top:8px">${esc(state.refsNote)}</textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn btn--sm btn--gold" id="saveNoteBtn">${ico.check(16)}Save note</button>
+      </div>
+      <div class="note" id="refNoteMsg" hidden></div>
+    </div>`;
+  growAll();
+}
+
+/* ---------- refusals ---------- */
+function renderRefusals(){
+  el("view-refusals").innerHTML = `
+    <div class="sectionhead" style="margin-top:18px">
+      <h2 style="font-size:clamp(26px,7vw,36px)">What I didn’t write</h2>
+    </div>
+    <p style="margin:-4px 0 16px;font-size:16px;font-weight:600;max-width:58ch">
+      Three lines I could have written this week and did not. This list is the product, not a limitation.
+    </p>
+    <div class="stack refgrid">
+      ${refusals.map(r => `
+        <div class="refusal">
+          <div class="refusal__head">
+            <div class="eyebrow" style="display:flex;align-items:center;gap:7px">${ico.ban(14)}Refused</div>
+            <div class="refusal__claim" style="margin-top:7px">${esc(r.claim)}</div>
+          </div>
+          <div class="refusal__why">${esc(r.why)}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+/* ============================ render ============================ */
+function render(){
+  renderWeek();
+  renderNeeds();
+  renderLibrary();
+  renderRefusals();
+  if (state.view === "post") renderPost();
+  renderNav();
+}
+
+/* ============================ modals ============================ */
+let lastFocus = null;
+
+const MODALS = {
+  menu: () => ({
+    title:"Settings",
+    body:`<p class="small muted" style="font-weight:600;margin:0 0 14px">Three things, all locked until you change them here.</p>
+      <div class="stack" style="gap:10px">
+        <button class="btn btn--block" data-modal="brand" style="justify-content:flex-start">${ico.lock(18)}Brand — voice, colours, logo</button>
+        <button class="btn btn--block" data-modal="accounts" style="justify-content:flex-start">${ico.plug(18)}Connected accounts</button>
+        <button class="btn btn--block" data-modal="plan" style="justify-content:flex-start">${ico.card(18)}Plan and billing</button>
+      </div>`
+  }),
+  brand: () => ({
+    title:"Brand lock",
+    body:`
+      <div class="block block--gold" style="margin-bottom:14px">
+        <div class="eyebrow">What I am not allowed to drift from</div>
+        <p style="margin:8px 0 0;font-size:15.5px;font-weight:600">
+          Everything below is fixed. If a post would need something that is not here, I ask you instead of inventing it.
+        </p>
+      </div>
+      <dl style="margin:0">
+        <div class="kv"><dt>Business</dt><dd>Melur Kopi</dd></div>
+        <div class="kv"><dt>Where</dt><dd>Bangsar, Kuala Lumpur</dd></div>
+        <div class="kv"><dt>Opens</dt><dd class="num">7:00am</dd></div>
+        <div class="kv"><dt>Closes</dt><dd>Not confirmed</dd></div>
+        <div class="kv"><dt>Tone words</dt><dd>Plain &middot; unhurried &middot; local</dd></div>
+        <div class="kv"><dt>Never</dt><dd>Superlatives &middot; prices &middot; halal wording</dd></div>
+      </dl>
+      <div class="eyebrow" style="margin:18px 0 9px">The two colours</div>
+      <div class="stack" style="gap:9px">
+        <div class="swatch"><span class="swatch__d" style="background:#FF6A45"></span>
+          <div><div style="font-weight:800;font-size:15px">Coral</div><div class="small muted" style="font-weight:600">#FF6A45 — fields and fills only</div></div></div>
+        <div class="swatch"><span class="swatch__d" style="background:#FFC24B"></span>
+          <div><div style="font-weight:800;font-size:15px">Marigold</div><div class="small muted" style="font-weight:600">#FFC24B — fields and fills only</div></div></div>
+      </div>
+      <div class="eyebrow" style="margin:18px 0 9px">The logo</div>
+      <div class="swatch" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#FFC24B;border:2.5px solid #1A1520;border-radius:999px;padding:5px 12px 5px 8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A1520" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 14V10M9.5 17V7M14 20V4M18.5 15V9"/></svg>
+            <span style="font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#1A1520;line-height:1">Melur Kopi</span>
+          </span>
+        </div>
+        <span class="chip chip--green">${ico.check(13)}In use</span>
+      </div>`
+  }),
+  accounts: () => ({
+    title:"Connected accounts",
+    body:`
+      <div class="stack" style="gap:10px">
+        <div class="pubrow">${ico.ig(20)}<div><div class="pubrow__n">Instagram</div><div class="pubrow__d">@melurkopi &middot; business account</div></div>
+          <span style="margin-left:auto" class="chip chip--green">${ico.check(13)}Connected</span></div>
+        <div class="pubrow">${ico.fb(20)}<div><div class="pubrow__n">Facebook</div><div class="pubrow__d">Melur Kopi page</div></div>
+          <span style="margin-left:auto" class="chip chip--green">${ico.check(13)}Connected</span></div>
+      </div>
+      <div class="block block--gold" style="margin-top:14px">
+        <div class="eyebrow">One connection, both places</div>
+        <p style="margin:8px 0 0;font-size:15px;font-weight:600">
+          Instagram and Facebook publish off the same Meta connection — the Instagram business account linked to your page. Connect once, not twice.
+        </p>
+        <button class="btn btn--ink" style="margin-top:14px" id="reconnectBtn">${ico.plug(18)}Reconnect Meta</button>
+        <div class="note" id="connNote" hidden></div>
+      </div>
+      <div class="block block--paper" style="margin-top:14px">
+        <div class="eyebrow" style="display:flex;align-items:center;gap:7px">${ico.ban(14)}Not here on purpose</div>
+        <p class="small" style="margin:8px 0 0;font-weight:600">
+          TikTok. Their API forces every post to your own private drafts until an audit passes, so there is no button here that could work. When that changes, it appears.
+        </p>
+      </div>`
+  }),
+  plan: () => ({
+    title:"Plan",
+    body:`
+      <div class="block block--gold">
+        <div class="eyebrow">Current plan</div>
+        <h3 style="font-size:26px;margin-top:8px">Suara Standard</h3>
+        <p style="margin:8px 0 0;font-size:19px;font-weight:800" class="num">RM1,200 / month</p>
+      </div>
+      <dl style="margin:14px 0 0">
+        <div class="kv"><dt>Posts written</dt><dd class="num">Up to 12 a week</dd></div>
+        <div class="kv"><dt>Places it publishes</dt><dd>Instagram, Facebook</dd></div>
+        <div class="kv"><dt>Questions asked</dt><dd>As many as it takes</dd></div>
+        <div class="kv"><dt>Next billing date</dt><dd class="num">14 September 2026</dd></div>
+      </dl>
+      <p class="small muted" style="font-weight:600;margin-top:14px">
+        Nothing publishes without your approval, on any plan.
+      </p>`
+  })
+};
+
+function openModal(name){
+  const m = MODALS[name]();
+  lastFocus = lastFocus || document.activeElement;
+  const modal = el("modal");
+  modal.innerHTML = `
+    <div class="modal__head">
+      <h2 id="modalTitle">${esc(m.title)}</h2>
+      <button class="iconbtn" style="margin-left:auto" id="modalClose" aria-label="Close">${ico.x(20)}</button>
+    </div>
+    ${name !== "menu" ? `<div class="row" style="margin-bottom:14px"><button class="btn btn--sm" data-modal="menu">${ico.back(16)}All settings</button></div>` : ""}
+    ${m.body}`;
+  const scrim = el("scrim");
+  scrim.hidden = false;
+  document.body.style.overflow = "hidden";
+  const f = focusables();
+  (f[0] || modal).focus();
+}
+
+function closeModal(){
+  el("scrim").hidden = true;
+  el("modal").innerHTML = "";
+  document.body.style.overflow = "";
+  if (lastFocus && lastFocus.isConnected) lastFocus.focus();
+  lastFocus = null;
+}
+
+function focusables(){
+  return Array.from(el("modal").querySelectorAll(
+    'button, [href], input:not([type=file]), textarea, select, [tabindex]:not([tabindex="-1"])'
+  )).filter(n => n.offsetParent !== null || n === document.activeElement);
+}
+
+document.addEventListener("keydown", e => {
+  if (el("scrim").hidden) return;
+  if (e.key === "Escape"){ e.preventDefault(); closeModal(); return; }
+  if (e.key === "Tab"){
+    const f = focusables();
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    else if (!el("modal").contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  }
+});
+
+/* close on click (not mousedown) so the browser's own blur lands first
+   and our focus restore is the last thing that happens */
+el("scrim").addEventListener("click", e => { if (e.target === el("scrim")) closeModal(); });
+
+/* ============================ interaction ============================ */
+document.addEventListener("click", e => {
+
+  const close = e.target.closest("#modalClose");
+  if (close){ closeModal(); return; }
+
+  const mo = e.target.closest("[data-modal]");
+  if (mo){ openModal(mo.dataset.modal); return; }
+
+  const sb = e.target.closest("#settingsBtn, #settingsBtn2");
+  if (sb){ lastFocus = sb; openModal("menu"); return; }
+
+  const nav = e.target.closest("[data-nav]");
+  if (nav){
+    const v = nav.dataset.nav;
+    if (v === "library") state.pickingFor = null;
+    if (v === "needs") renderNeeds();
+    if (v === "library") renderLibrary();
+    show(v);
+    return;
+  }
+
+  const openPost = e.target.closest("[data-post]");
+  if (openPost){
+    state.openPostId = openPost.dataset.post;
+    renderPost();
+    show("post");
+    return;
+  }
+
+  const ans = e.target.closest("[data-answer]");
+  if (ans){
+    const p = post(ans.dataset.answer);
+    const a = p.q.answers[+ans.dataset.i];
+    p.status = "ready";
+    state.answered[p.id] = a.ack;
+    render();
+    renderNeeds();
+    say(a.ack + " " + countHeld() + " left needing you.");
+    return;
+  }
+
+  if (e.target.closest("#batchBtn")){
+    const n = countReady();
+    posts.forEach(p => { if (p.status === "ready") p.status = "scheduled"; });
+    render();
+    if (countHeld() === 0) window.scrollTo({top:0, behavior:"auto"});
+    say(n + " posts scheduled.");
+    return;
+  }
+
+  if (e.target.closest("#approveBtn")){
+    const p = post(state.openPostId);
+    p.status = "scheduled";
+    render();
+    renderPost();
+    say(p.day + " scheduled.");
+    return;
+  }
+
+  if (e.target.closest("#saveBtn")){
+    const p = post(state.openPostId);
+    const v = el("capField").value.trim();
+    if (!v){
+      const n = el("saveNote"); n.hidden = false;
+      n.textContent = "A caption cannot be empty. Nothing was saved.";
+      return;
+    }
+    p.caption = v;
+    p.active = "edited";
+    render();
+    renderPost();
+    const n = el("saveNote");
+    n.hidden = false;
+    n.textContent = "Saved. The week now shows this wording.";
+    say("Caption saved.");
+    return;
+  }
+
+  const vb = e.target.closest("[data-variant]");
+  if (vb){
+    const p = post(state.openPostId);
+    const k = vb.dataset.variant;
+    if (k === "orig"){
+      if (p.orig) p.caption = p.orig;
+      p.active = "orig";
+    } else {
+      if (!p.orig) p.orig = p.caption;
+      p.caption = p.variants[+k].text;
+      p.active = +k;
+    }
+    render();
+    renderPost();
+    say("Caption rewritten.");
+    return;
+  }
+
+  if (e.target.closest("#logoBtn")){
+    const p = post(state.openPostId);
+    p.logo = !p.logo;
+    render();
+    renderPost();
+    say("Logo " + (p.logo ? "on" : "off") + ".");
+    return;
+  }
+
+  if (e.target.closest("#swapBtn")){
+    state.pickingFor = state.openPostId;
+    renderLibrary();
+    show("library");
+    return;
+  }
+
+  if (e.target.closest("#cancelPick")){
+    const id = state.pickingFor;
+    state.pickingFor = null;
+    state.openPostId = id;
+    renderPost();
+    show("post");
+    return;
+  }
+
+  const ph = e.target.closest("[data-photo]");
+  if (ph){
+    const item = library.photos[+ph.dataset.photo];
+    if (state.pickingFor){
+      const p = post(state.pickingFor);
+      p.img = item.src;
+      state.openPostId = state.pickingFor;
+      state.pickingFor = null;
+      render();
+      renderPost();
+      show("post");
+      say("Photo changed.");
+    } else {
+      const n = el("upNote");
+      n.hidden = false;
+      n.textContent = "“" + item.name + "” is in your library. Open a post and choose “Use a different photo” to put it on one.";
+    }
+    return;
+  }
+
+  if (e.target.closest("#dlBtn")){
+    const p = post(state.openPostId);
+    const n = el("dlNote");
+    n.hidden = false;
+    try {
+      const blob = new Blob([p.day + " " + p.time + " — Melur Kopi\n\n" + p.caption + "\n\nPhoto: " + p.img + "\n"], {type:"text/plain"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "melur-" + p.id + ".txt";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      n.textContent = "Caption downloaded as melur-" + p.id + ".txt. The photo is not bundled in this prototype — it is " + p.img + " in your library.";
+    } catch (err){
+      n.textContent = "Your browser blocked the download. The caption is the text above; the photo is " + p.img + ".";
+    }
+    say("Download handled.");
+    return;
+  }
+
+  if (e.target.closest("#saveNoteBtn")){
+    state.refsNote = el("refNote").value;
+    library.note = state.refsNote;
+    const n = el("refNoteMsg");
+    n.hidden = false;
+    n.textContent = "Saved. I will read this before writing next week.";
+    say("Note saved.");
+    return;
+  }
+
+  if (e.target.closest("#reconnectBtn")){
+    const n = el("connNote");
+    n.hidden = false;
+    n.textContent = "This is a prototype — no real Meta window opens. In the product this is one login that covers both accounts.";
+    return;
+  }
+});
+
+document.addEventListener("change", e => {
+  if (e.target.id === "uploadInput"){
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    library.photos.push({src:URL.createObjectURL(f), name:f.name, own:true});
+    renderLibrary();
+    const n = el("upNote");
+    n.hidden = false;
+    n.textContent = "Added “" + f.name + "” to your photos.";
+    say("Photo added.");
+  }
+});
+
+/* ============================ boot ============================ */
+window.addEventListener("resize", growAll);
+render();
+show("week");
+</script>
+</body>
+</html>

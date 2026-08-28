@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Suara — three directions</title>
+<style>
+@font-face{font-family:'PJS';src:url('fonts/PlusJakartaSans.ttf') format('truetype');font-weight:200 800;font-display:block}
+@font-face{font-family:'Gloock';src:url('fonts/Gloock-Regular.ttf') format('truetype');font-weight:400;font-display:block}
+:root{--cream:#FDF7EF;--ink:#1A1520;--ink-soft:#3B3145;--muted:#6B6270;
+      --coral:#FF6A45;--marigold:#FFC24B;--edge:rgba(0,0,0,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink-soft);font-family:'PJS',system-ui,sans-serif;
+     font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 0 64px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+header{padding:40px 0 8px;display:flex;align-items:center;gap:10px}
+.mark{width:26px;height:26px}
+.name{font-weight:800;font-size:19px;color:var(--ink);letter-spacing:-.02em}
+h1{font-family:'Gloock',Georgia,serif;font-weight:400;color:var(--ink);letter-spacing:-.015em;
+   font-size:clamp(34px,5.5vw,54px);line-height:1.05;margin:24px 0 0;max-width:16ch}
+h1 em{font-style:normal;background:linear-gradient(180deg,transparent 62%,var(--marigold) 62%,var(--marigold) 93%,transparent 93%)}
+.lede{margin:18px 0 0;font-size:17px;max-width:56ch;color:var(--ink-soft)}
+.note{margin:14px 0 0;font-size:14px;color:var(--muted);max-width:60ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:44px}
+a.card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink);
+  background:#fff;border:2.5px solid var(--ink);border-radius:16px;padding:22px;
+  box-shadow:5px 5px 0 var(--ink);
+  transition-property:translate,box-shadow;transition-duration:130ms;transition-timing-function:ease-out}
+a.card:hover{translate:-2px -2px;box-shadow:7px 7px 0 var(--ink)}
+a.card:active{translate:5px 5px;box-shadow:0 0 0 var(--ink)}
+a.card:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.tag{align-self:flex-start;font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink);padding:4px 11px;border-radius:999px}
+.c1 .tag{background:var(--coral)} .c2 .tag{background:var(--marigold)} .c3 .tag{background:#E9E3DC}
+.card h2{font-size:23px;margin:0;letter-spacing:-.02em}
+.card p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+.go{margin-top:6px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:7px}
+footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--edge);font-size:13.5px;color:var(--muted);max-width:64ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#FFC24B" stroke-width="2.8" stroke-linecap="round"/>
+    </svg>
+    <span class="name">suara</span>
+  </header>
+
+  <h1>Three ways it could <em>actually work</em>.</h1>
+  <p class="lede">The same product and the same week of posts, built three times. Every screen is
+  clickable — answer a held question, edit a caption, approve the week, open the library and the
+  settings. Built phone-first; they work on desktop too.</p>
+  <p class="note">Try it on your phone. The buyer is a cafe owner checking this for five minutes
+  between customers, so that is the screen that matters.</p>
+
+  <div class="grid">
+    <a class="card c1" href="bold.html">
+      <span class="tag">Bold</span>
+      <h2>Graphic and loud</h2>
+      <p>Thick borders, hard shadows, whole cards filled with coral and marigold. The week
+      colour-codes itself so you can read it in one glance from across the counter.</p>
+      <span class="go">Open it &rarr;</span>
+    </a>
+    <a class="card c2" href="receipt.html">
+      <span class="tag">Receipt</span>
+      <h2>A printed ticket</h2>
+      <p>The week as a paper receipt from the counter. Torn edges, stamped marks, itemised like a
+      bill. The most distinctive of the three, and the one nobody else looks like.</p>
+      <span class="go">Open it &rarr;</span>
+    </a>
+    <a class="card c3" href="chat.html">
+      <span class="tag">Conversation</span>
+      <h2>A message thread</h2>
+      <p>The week arrives as messages. Held questions come with tappable answers. Nothing to learn
+      for someone who already runs her shop through WhatsApp.</p>
+      <span class="go">Open it &rarr;</span>
+    </a>
+  </div>
+
+  <footer>
+    Prototypes, not the shipped product. The content is a fictional cafe and the model replies are
+    scripted — the point is the shape of the thing and the flow through it, not the writing.
+    Instagram and Facebook are shown as the publishing targets because they share one Meta
+    connection; TikTok is deliberately absent, since its API will not let anything post on a
+    business's behalf until an audit passes.
+  </footer>
+</div>
+</body>
+</html>

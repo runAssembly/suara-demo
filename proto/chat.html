@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suara — Melur Kopi</title>
+<style>
+@font-face{font-family:PJS;src:url("fonts/PlusJakartaSans.ttf") format("truetype");font-weight:200 800;font-display:swap}
+@font-face{font-family:Gloock;src:url("fonts/Gloock-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+
+:root{
+  --cream:#FDF7EF; --cream2:#F6EFE6; --paper:#fff;
+  --ink:#1A1520; --ink-soft:#3B3145; --muted:#6B6270;
+  --coral:#FF6A45; --coral-deep:#E24A28; --green:#26B37A; --marigold:#FFC24B;
+  --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.16); --line-3:rgba(0,0,0,.28);
+  --rb:22px; --rc:16px; --rk:12px;
+  --dur:180ms; --ease:cubic-bezier(.22,.72,.28,1);
+  --shadow:0 1px 2px rgba(26,21,32,.05), 0 10px 24px -16px rgba(26,21,32,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:PJS,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--cream); color:var(--ink);
+  font-size:16px; line-height:1.5; font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,p,figure{margin:0}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;font-variant-numeric:tabular-nums}
+img{display:block;max-width:100%}
+.disp{font-family:Gloock,Georgia,serif;font-weight:400;letter-spacing:-.01em}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:6px}
+.on-fill:focus-visible{outline-color:var(--ink)}
+
+/* ---------- app shell ---------- */
+.app{height:100dvh;display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden}
+@media (min-width:760px){
+  .app{grid-template-columns:288px minmax(0,1fr)}
+}
+@media (min-width:1180px){
+  .app{grid-template-columns:320px minmax(0,1fr) 344px;max-width:1720px;margin-inline:auto;
+       border-inline:1px solid var(--line)}
+  .app[data-view="thread"] .aside{display:flex}
+  .app:not([data-view="thread"]){grid-template-columns:320px minmax(0,1fr)}
+}
+.aside{display:none}
+
+/* ---------- rail ---------- */
+.rail{background:var(--cream);border-right:1px solid var(--line);display:flex;flex-direction:column;
+      min-height:0;overflow-y:auto;padding:18px 16px 16px}
+@media (max-width:759px){
+  .rail{position:fixed;inset:0 auto 0 0;width:min(320px,88vw);z-index:60;
+        transform:translateX(-102%);transition:transform var(--dur) var(--ease);
+        box-shadow:0 0 0 100vmax rgba(26,21,32,0);border-right:1px solid var(--line)}
+  .app.drawer .rail{transform:translateX(0)}
+  .scrim{position:fixed;inset:0;background:rgba(26,21,32,.42);z-index:55;opacity:0;pointer-events:none;
+         transition:opacity var(--dur) var(--ease);border:0;padding:0;display:block;width:100%}
+  .app.drawer .scrim{opacity:1;pointer-events:auto}
+}
+@media (min-width:760px){.scrim,.drawer-close{display:none!important}}
+
+.brandline{display:flex;align-items:center;gap:10px;padding:2px 4px 14px}
+.mark{width:34px;height:34px;border-radius:11px;background:var(--ink);color:var(--cream);
+      display:grid;place-items:center;flex:none}
+.wordmark{font-size:26px;line-height:1}
+.rail .biz{padding:12px 14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--rc);
+      box-shadow:var(--shadow)}
+.biz .nm{font-weight:700;font-size:15px;letter-spacing:-.01em}
+.biz .sub{font-size:13px;color:var(--muted);margin-top:2px}
+.railsec{margin-top:18px}
+.railsec>h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+      font-weight:700;padding:0 4px 8px;display:flex;justify-content:space-between;align-items:center}
+.needs{display:flex;flex-direction:column;gap:8px}
+.needbtn{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;min-height:44px;
+      background:var(--coral);color:var(--ink);border:0;border-radius:var(--rk);padding:11px 12px;
+      cursor:pointer;transition:filter 120ms linear,transform 120ms var(--ease)}
+.needbtn:hover{filter:brightness(1.05)} .needbtn:active{transform:scale(.98)}
+.needbtn .t{font-weight:700;font-size:14px;line-height:1.35}
+.needbtn .d{font-size:12px;font-weight:600;opacity:.85}
+.allclear{background:var(--paper);border:1px solid var(--line);border-radius:var(--rc);padding:14px;
+      box-shadow:var(--shadow)}
+.allclear .t{display:flex;gap:8px;align-items:center;font-weight:700;font-size:14px}
+.allclear p{font-size:13px;color:var(--muted);margin:6px 0 12px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.navbtn{display:flex;align-items:center;gap:11px;min-height:44px;width:100%;text-align:left;
+      background:none;border:0;border-radius:var(--rk);padding:0 12px;cursor:pointer;font-size:15px;
+      font-weight:600;color:var(--ink-soft);transition:background 120ms linear,color 120ms linear}
+.navbtn:hover{background:var(--cream2);color:var(--ink)}
+.navbtn[aria-current="true"]{background:var(--ink);color:var(--cream)}
+.navbtn .ct{margin-left:auto;font-size:13px;font-weight:700;background:var(--cream2);color:var(--ink);
+      border-radius:999px;padding:2px 9px}
+.navbtn[aria-current="true"] .ct{background:rgba(253,247,239,.22);color:var(--cream)}
+.railfoot{margin-top:auto;padding-top:18px}
+
+/* ---------- main ---------- */
+.main{min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--cream2)}
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);
+      border-bottom:1px solid var(--line);flex:none;min-height:62px}
+.iconbtn{width:44px;height:44px;flex:none;display:grid;place-items:center;background:none;border:0;
+      border-radius:var(--rk);cursor:pointer;color:var(--ink);transition:background 120ms linear}
+.iconbtn:hover{background:var(--cream2)}
+.iconbtn.sq{background:var(--paper);border:1px solid var(--line)}
+.tb-t{min-width:0;flex:1}
+.tb-t h1{font-size:17px;font-weight:800;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-t .sub{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pills{display:flex;gap:6px;align-items:center;flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;
+      font-size:13px;font-weight:700;background:var(--paper);border:1px solid var(--line-2);color:var(--ink)}
+.pill.hot{background:var(--coral);border-color:transparent}
+.pill.done{background:var(--green);border-color:transparent}
+@media (max-width:519px){.pill.quiet{display:none}}
+@media (min-width:760px){#menuBtn{display:none!important}}
+
+.view{min-height:0;flex:1;display:none;flex-direction:column}
+.view[data-on="1"]{display:flex}
+
+/* ---------- thread ---------- */
+.thread{flex:1;min-height:0;overflow-y:auto;padding:20px 14px 26px;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){.thread{scroll-behavior:auto}}
+.tin{max-width:700px;margin-inline:auto;display:flex;flex-direction:column;gap:14px}
+@media (min-width:760px){.thread{padding:24px 24px 28px}}
+
+.daysep{display:flex;align-items:center;gap:12px;margin:12px 0 2px}
+.daysep::before,.daysep::after{content:"";height:1px;background:var(--line-2);flex:1}
+.daysep span{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);
+      background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.daysep.today span{background:var(--ink);color:var(--cream);border-color:transparent}
+
+.row{display:flex;gap:10px;align-items:flex-end}
+.row.me{justify-content:flex-end}
+.av{width:32px;height:32px;flex:none;border-radius:10px;background:var(--ink);color:var(--cream);
+    display:grid;place-items:center;margin-bottom:2px}
+.bub{background:var(--paper);border:1px solid var(--line);border-radius:var(--rb);
+     border-bottom-left-radius:8px;box-shadow:var(--shadow);max-width:min(100%,560px);min-width:0}
+.row.me .bub{background:var(--marigold);border-color:rgba(0,0,0,.10);border-bottom-left-radius:var(--rb);
+     border-bottom-right-radius:8px;max-width:min(86%,460px)}
+.bub .txt{padding:13px 16px;font-size:15.5px;line-height:1.55;color:var(--ink)}
+.bub .txt.soft{color:var(--ink-soft)}
+.bub .txt+.txt{padding-top:0}
+.row.me .bub .txt{font-weight:600}
+.is-new{animation:rise 190ms var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.first-paint{animation:rise 220ms var(--ease) both}
+@media (prefers-reduced-motion:reduce){.is-new,.first-paint{animation:none}}
+
+/* summary strip inside intro bubble */
+.sumrow{display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap}
+.sumcell{flex:1 1 90px;border-radius:var(--rk);padding:9px 11px;background:var(--cream2);color:var(--ink)}
+.sumcell.hot{background:var(--coral)} .sumcell.go{background:var(--marigold)}
+.sumcell .n{display:block;font-size:24px;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.sumcell .l{display:block;font-size:12px;font-weight:700;line-height:1.25;margin-top:3px}
+
+/* ---------- post bubble ---------- */
+.bub.post{padding:9px;max-width:min(100%,560px)}
+.bub.post.today{background:var(--coral);border-color:transparent}
+.pbanner{display:flex;align-items:center;gap:8px;padding:3px 6px 9px;font-size:13px;font-weight:800;
+      letter-spacing:.02em;color:var(--ink)}
+.media{position:relative;border-radius:13px;overflow:hidden;background:var(--cream2)}
+.media img{width:100%;aspect-ratio:1/1;object-fit:cover;
+      outline:1px solid oklch(0 0 0 / 0.1);outline-offset:-1px}
+.logomark{position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:7px;
+      background:var(--cream);color:var(--ink);border-radius:10px;padding:7px 11px 7px 9px;
+      box-shadow:0 2px 10px rgba(26,21,32,.28)}
+.logomark .lw{font-size:11px;font-weight:800;letter-spacing:.14em}
+.pbody{padding:12px 8px 6px}
+.bub.post.today .pbody,.bub.post.today .pfoot{color:var(--ink)}
+.cap{font-size:15.5px;line-height:1.58;color:var(--ink);overflow-wrap:break-word}
+.pmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px}
+.pfoot{display:flex;gap:8px;padding:10px 8px 4px;flex-wrap:wrap}
+.chan{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+
+/* ---------- status ---------- */
+.st{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:9px;
+    font-size:12.5px;font-weight:800;letter-spacing:.01em;background:var(--cream2);color:var(--ink);
+    border:1px solid transparent;transition:background 120ms linear}
+.st.ready{background:var(--paper);border-color:var(--line-3);color:var(--ink)}
+.st.held{background:var(--coral)}
+.st.scheduled{background:var(--green)}
+.st.posted{background:var(--cream2);color:var(--ink-soft);border-color:var(--line)}
+.st.skipped{background:var(--paper);border-color:var(--line-2);color:var(--muted)}
+.bub.post.today .st.ready{background:var(--cream);border-color:transparent}
+.tim{font-size:12.5px;font-weight:600;color:var(--muted)}
+.bub.post.today .tim,.bub.post.today .chan{color:var(--ink)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;
+     border-radius:var(--rk);border:1px solid transparent;background:var(--ink);color:var(--cream);
+     font-size:14.5px;font-weight:700;cursor:pointer;
+     transition:transform 110ms var(--ease),filter 110ms linear,background 110ms linear}
+.btn:hover{filter:brightness(1.08)} .btn:active{transform:scale(.96)}
+.btn.pri{background:var(--coral);color:var(--ink)}
+.btn.pri:hover{background:var(--coral-deep)}
+.btn.sec{background:var(--paper);color:var(--ink);border-color:var(--line-3)}
+.btn.sec:hover{background:var(--cream2);filter:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--cream2);filter:none}
+.btn.wide{width:100%}
+.btn[disabled]{cursor:default;opacity:1}
+.bub.post.today .btn.sec{border-color:rgba(0,0,0,.28)}
+
+/* reply chips */
+.chips{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.chip{min-height:44px;padding:10px 16px;border-radius:var(--rb);border-bottom-right-radius:8px;
+      background:var(--paper);border:1.5px solid var(--line-3);color:var(--ink);font-size:15px;
+      font-weight:700;cursor:pointer;text-align:right;max-width:min(86%,420px);
+      transition:background 120ms linear,transform 110ms var(--ease),border-color 120ms linear}
+.chip:hover{background:var(--marigold);border-color:transparent}
+.chip:active{transform:scale(.97)}
+.chiphint{font-size:12.5px;font-weight:700;color:var(--muted);text-align:right;padding-right:2px}
+
+/* ---------- compose ---------- */
+.compose{flex:none;background:var(--cream);border-top:1px solid var(--line);padding:10px 14px;
+      padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.cin{max-width:700px;margin-inline:auto;display:flex;gap:9px;align-items:flex-end}
+.cfield{flex:1;min-width:0;display:flex;align-items:center;background:var(--paper);
+      border:1px solid var(--line-2);border-radius:24px;padding:0 6px 0 16px;min-height:48px}
+.cfield:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,21,32,.10)}
+.cfield input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;font-size:15.5px;
+      color:var(--ink);padding:12px 0}
+.cfield input::placeholder{color:var(--muted)}
+.send{width:44px;height:44px;flex:none;border:0;border-radius:50%;background:var(--coral);color:var(--ink);
+      display:grid;place-items:center;cursor:pointer;transition:transform 110ms var(--ease),background 110ms linear}
+.send:hover{background:var(--coral-deep)} .send:active{transform:scale(.96)}
+
+@media (max-width:560px){.sumcell{flex:1 1 calc(50% - 4px)}}
+.bub:not(.post) .pfoot{padding:4px 16px 14px}
+.qwrap{display:flex;flex-direction:column;gap:14px}
+.bub.q{padding:0;overflow:hidden}
+.qband{background:var(--marigold);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.09em;
+      text-transform:uppercase;padding:10px 16px;display:flex;gap:8px;align-items:center}
+.bub.q .qt{padding:14px 16px 2px;font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.3}
+
+/* ---------- done state ---------- */
+.donecard{background:var(--paper);border:1px solid var(--line);border-radius:var(--rb);
+      box-shadow:var(--shadow);overflow:hidden}
+.donecard .band{background:var(--green);color:var(--ink);padding:14px 16px;display:flex;gap:9px;
+      align-items:center;font-weight:800;font-size:14px;letter-spacing:.02em}
+.donecard .in{padding:18px 18px 20px}
+.donecard h2{font-size:27px;line-height:1.15;margin-bottom:8px}
+.donecard p{font-size:15px;line-height:1.55;color:var(--ink-soft);margin-bottom:16px}
+
+/* ---------- aside ---------- */
+.aside{flex-direction:column;gap:14px;border-left:1px solid var(--line);background:var(--cream);
+      padding:18px 16px;min-height:0;overflow-y:auto}
+.acard{background:var(--paper);border:1px solid var(--line);border-radius:var(--rc);box-shadow:var(--shadow);
+      padding:14px}
+.acard h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;
+      margin-bottom:10px;display:flex;justify-content:space-between;gap:8px}
+.strike{font-size:14px;line-height:1.5;color:var(--ink);text-decoration:line-through;
+      text-decoration-color:var(--coral-deep);text-decoration-thickness:2px}
+.acard li{list-style:none;padding:9px 0;border-top:1px solid var(--line)}
+.acard li:first-child{border-top:0;padding-top:0}
+.acard ul{margin:0;padding:0}
+.swatches{display:flex;gap:8px;margin-bottom:12px}
+.sw{flex:1;border-radius:var(--rk);padding:10px 11px;color:var(--ink);min-height:64px;
+    display:flex;flex-direction:column;justify-content:space-between}
+.sw .n{font-size:13px;font-weight:800} .sw .h{font-size:11.5px;font-weight:700}
+.arow{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.arow:first-of-type{border-top:0}
+.arow .nm{font-weight:700} .arow .st{margin-left:auto}
+
+/* ---------- generic full view ---------- */
+.vscroll{flex:1;min-height:0;overflow-y:auto;padding:18px 14px 40px}
+@media (min-width:760px){.vscroll{padding:24px 24px 48px}}
+.vin{max-width:900px;margin-inline:auto}
+.vhead{margin-bottom:18px}
+.vhead h1{font-size:30px;line-height:1.1;letter-spacing:-.02em}
+.vhead p{font-size:15px;color:var(--ink-soft);margin-top:8px;max-width:62ch;line-height:1.55}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--rc);box-shadow:var(--shadow);
+      padding:16px;margin-bottom:14px}
+.card>h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;
+      margin-bottom:12px}
+.lbl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* post detail */
+.pd{display:grid;gap:18px;align-items:start}
+@media (min-width:1000px){.pd{grid-template-columns:minmax(0,420px) minmax(0,1fr)}
+  .pd .left{position:sticky;top:0}}
+.pd .media{border-radius:var(--rc)}
+.editwrap{border:1.5px solid var(--line-3);border-radius:var(--rk);background:var(--paper);overflow:hidden}
+.editwrap:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,21,32,.10)}
+textarea.cap-edit{width:100%;border:0;outline:0;background:none;font:inherit;font-size:16px;line-height:1.6;
+      color:var(--ink);padding:14px;resize:vertical;min-height:150px;display:block}
+.dirs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dir{min-height:44px;padding:0 14px;border-radius:var(--rk);border:1.5px solid var(--line-3);
+     background:var(--paper);font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;
+     align-items:center;gap:7px;transition:background 120ms linear,transform 110ms var(--ease)}
+.dir:hover{background:var(--marigold);border-color:transparent}
+.dir:active{transform:scale(.96)}
+.dir[aria-pressed="true"]{background:var(--marigold);border-color:transparent}
+.trace{display:flex;flex-direction:column;gap:0}
+.trace li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:11px 0;border-top:1px solid var(--line)}
+.trace li:first-child{border-top:0;padding-top:2px}
+.trace .a{font-weight:700;font-size:14.5px;color:var(--ink);flex:none;max-width:48%}
+.trace .b{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+.trace li.none{background:var(--marigold);border-radius:var(--rk);padding:11px 12px;border-top:0;margin-top:6px}
+.trace li.none .b{color:var(--ink);font-weight:600}
+.rowline{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.rowline:first-child{border-top:0}
+.rowline .nm{font-weight:700;font-size:14.5px}
+.rowline .dd{font-size:13px;color:var(--muted)}
+.rowline .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.switch{position:relative;width:52px;height:32px;flex:none;border-radius:999px;border:1.5px solid var(--line-3);
+      background:var(--paper);cursor:pointer;padding:0;transition:background 120ms linear,border-color 120ms linear}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:25px;height:25px;border-radius:50%;
+      background:var(--ink);transition:transform 140ms var(--ease)}
+.switch[aria-checked="true"]{background:var(--green);border-color:transparent}
+.switch[aria-checked="true"]::after{transform:translateX(20px)}
+.hitwrap{min-height:44px;display:flex;align-items:center}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.note{font-size:13.5px;color:var(--muted);line-height:1.5}
+.live{font-size:13.5px;font-weight:700;color:var(--ink);min-height:20px}
+
+/* library */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.tile{position:relative;border:0;padding:0;background:none;border-radius:var(--rk);overflow:hidden;
+      cursor:pointer;display:block;transition:transform 110ms var(--ease)}
+.tile img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--rk);
+      outline:1px solid oklch(0 0 0 / 0.1);outline-offset:-1px}
+.tile:active{transform:scale(.97)}
+.tile .use{position:absolute;left:8px;right:8px;bottom:8px;background:var(--coral);color:var(--ink);
+      border-radius:9px;font-size:13px;font-weight:800;padding:8px 6px;text-align:center;display:none}
+.picking .tile .use{display:block}
+.uptile{border:1.5px dashed var(--line-3);border-radius:var(--rk);background:var(--cream2);
+      aspect-ratio:1/1;display:grid;place-items:center;cursor:pointer;text-align:center;padding:12px;
+      font-size:13.5px;font-weight:700;color:var(--ink);gap:6px;transition:background 120ms linear}
+.uptile:hover{background:var(--marigold);border-color:transparent}
+.refs li{list-style:none;padding:12px 0;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.refs li:first-child{border-top:0;padding-top:0}
+.refs .h{font-weight:700;font-size:14.5px} .refs .w{font-size:13.5px;color:var(--muted);margin-top:2px}
+
+/* refusals */
+.ref{background:var(--paper);border:1px solid var(--line);border-radius:var(--rc);box-shadow:var(--shadow);
+     overflow:hidden;margin-bottom:12px}
+.ref .band{background:var(--coral);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.09em;
+     text-transform:uppercase;padding:9px 16px;display:flex;align-items:center;gap:8px}
+.ref .in{padding:15px 16px 17px}
+.ref .claim{font-size:19px;line-height:1.4;font-weight:700;text-decoration:line-through;
+     text-decoration-color:var(--coral-deep);text-decoration-thickness:2px;margin-bottom:9px}
+.ref .why{font-size:15px;line-height:1.6;color:var(--ink-soft)}
+
+/* ---------- modals ---------- */
+.mscrim{position:fixed;inset:0;background:rgba(26,21,32,.46);z-index:80;display:none;
+        align-items:flex-end;justify-content:center;padding:0}
+@media (min-width:760px){.mscrim{align-items:center;padding:24px}}
+.mscrim[data-on="1"]{display:flex}
+.modal{background:var(--cream);width:min(560px,100%);max-height:min(88dvh,760px);overflow-y:auto;
+       border-radius:22px 22px 0 0;box-shadow:0 -8px 40px rgba(26,21,32,.3);
+       animation:sheet 200ms var(--ease) both}
+@media (min-width:760px){.modal{border-radius:22px;animation:pop 180ms var(--ease) both}}
+@keyframes sheet{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes pop{from{transform:scale(.98);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.modal{animation:none}}
+.mhead{display:flex;align-items:center;gap:10px;padding:14px 12px 14px 20px;position:sticky;top:0;
+       background:var(--cream);border-bottom:1px solid var(--line);z-index:2}
+.mhead h2{font-size:20px;font-weight:800;letter-spacing:-.015em;flex:1}
+.mbody{padding:16px 20px 24px}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;background:var(--paper);
+      border:1px solid var(--line);border-radius:var(--rc);padding:12px 14px;cursor:pointer;text-align:left;
+      margin-bottom:9px;transition:background 120ms linear,transform 110ms var(--ease)}
+.mrow:hover{background:var(--cream2)} .mrow:active{transform:scale(.99)}
+.mrow .nm{font-weight:700;font-size:15px} .mrow .dd{font-size:13px;color:var(--muted);margin-top:1px}
+.mrow .ch{margin-left:auto;color:var(--muted)}
+.field{display:block;margin-bottom:14px}
+.field .lbl{display:block;margin-bottom:6px}
+.field input[type=text]{width:100%;min-height:48px;border:1.5px solid var(--line-3);border-radius:var(--rk);
+      background:var(--paper);font:inherit;font-size:15.5px;color:var(--ink);padding:0 13px}
+.field input[type=text]:focus{outline:0;border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,21,32,.10)}
+.tones{display:flex;gap:7px;flex-wrap:wrap}
+.tone{background:var(--cream2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;
+      font-size:13.5px;font-weight:700}
+.locknote{display:flex;gap:9px;align-items:flex-start;background:var(--marigold);color:var(--ink);
+      border-radius:var(--rk);padding:12px 13px;font-size:13.5px;font-weight:600;line-height:1.5}
+.plan-hero{background:var(--ink);color:var(--cream);border-radius:var(--rc);padding:18px;margin-bottom:14px}
+.plan-hero .p{font-size:31px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.plan-hero .n{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.85}
+.checkl li{list-style:none;display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:14.5px;
+      line-height:1.5}
+.checkl{margin:0;padding:0}
+.checkl li svg,.refs li svg,.locknote svg,.allclear .t svg,.needbtn>svg,.trace li.none>svg,.arow>span:first-child svg,.mrow>svg{flex:none}
+.checkl li svg,.refs li svg,.locknote svg{margin-top:3px}
+.needbtn>svg{margin-top:2px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;
+    transition-duration:1ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app" data-view="thread">
+
+  <button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+
+  <aside class="rail" id="rail" aria-label="Suara navigation">
+    <div class="brandline">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="wordmark disp">Suara</span>
+      <button class="iconbtn drawer-close" id="drawerClose" style="margin-left:auto" aria-label="Close menu"></button>
+    </div>
+    <div class="biz">
+      <div class="nm">Melur Kopi</div>
+      <div class="sub">Bangsar, Kuala Lumpur</div>
+    </div>
+
+    <div class="railsec">
+      <h2 id="needsHead">Needs you</h2>
+      <div class="needs" id="needsList"></div>
+    </div>
+
+    <div class="railsec">
+      <h2>Go to</h2>
+      <nav class="nav" id="nav"></nav>
+    </div>
+
+    <div class="railfoot">
+      <button class="btn sec wide" data-act="open-modal" data-modal="settings">
+        <span class="ic" data-ic="gear"></span>Settings</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="iconbtn" id="menuBtn" aria-label="Open menu" aria-expanded="false"></button>
+      <button class="iconbtn" id="backBtn" aria-label="Back to this week" hidden></button>
+      <div class="tb-t">
+        <h1 id="tbTitle">This week</h1>
+        <div class="sub" id="tbSub">Melur Kopi &middot; Bangsar</div>
+      </div>
+      <div class="pills" id="tbPills"></div>
+    </header>
+
+    <section class="view" data-view="thread" data-on="1" aria-label="This week">
+      <div class="thread" id="thread"><div class="tin" id="tin"></div></div>
+      <div class="compose">
+        <form class="cin" id="composeForm">
+          <label class="sr" for="composeInput">Message Suara</label>
+          <div class="cfield">
+            <input id="composeInput" type="text" autocomplete="off"
+                   placeholder="Tell Suara something about this week">
+          </div>
+          <button class="send" type="submit" aria-label="Send message"></button>
+        </form>
+      </div>
+    </section>
+
+    <section class="view" data-view="post" aria-label="Post"><div class="vscroll"><div class="vin" id="postView"></div></div></section>
+    <section class="view" data-view="library" aria-label="Library"><div class="vscroll"><div class="vin" id="libView"></div></div></section>
+    <section class="view" data-view="refusals" aria-label="What I didn't write"><div class="vscroll"><div class="vin" id="refView"></div></div></section>
+  </main>
+
+  <aside class="aside" id="aside" aria-label="This week at a glance"></aside>
+</div>
+
+<div class="mscrim" id="mscrim"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></div></div>
+<p class="sr" id="live" role="status" aria-live="polite"></p>
+<input type="file" id="fileInput" accept="image/*" class="sr" aria-label="Upload a photo">
+
+<script>
+/* ============================ icons ============================ */
+const ICONS = {
+  menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',
+  back:'<path d="M15 19l-7-7 7-7"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  check:'<path d="M4 12.5l5.2 5.2L20 7"/>',
+  dot:'<circle cx="12" cy="12" r="6.5"/>',
+  hold:'<path d="M12 8.4v4.2M12 16.4h.01"/><circle cx="12" cy="12" r="9"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 2.6v4.4M16 2.6v4.4M3.5 10.5h17M9 15.4l2.2 2.2L15.4 13"/>',
+  slash:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+  ask:'<path d="M9.2 9.2a2.9 2.9 0 115.6 1c0 2-2.8 2.4-2.8 4.3"/><path d="M12 18.4h.01"/><circle cx="12" cy="12" r="9"/>',
+  ig:'<rect x="3.4" y="3.4" width="17.2" height="17.2" rx="5"/><circle cx="12" cy="12" r="4.1"/><path d="M17.1 6.9h.01"/>',
+  fb:'<path d="M14.6 21.5v-8.2h2.8l.5-3.4h-3.3V7.7c0-1 .3-1.7 1.7-1.7h1.8V3c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v2.5H8.2v3.4h2.9v8.2z"/>',
+  dl:'<path d="M12 3.5v11.6M7.4 10.9l4.6 4.6 4.6-4.6M4 19.5h16"/>',
+  redo:'<path d="M20.5 5.5v5h-5"/><path d="M20 10.5A8.4 8.4 0 106 17.9"/>',
+  img:'<rect x="3.2" y="4.6" width="17.6" height="14.8" rx="3"/><circle cx="8.6" cy="10" r="1.7"/><path d="M4 17.2l4.9-4.4 4 3.4 3-2.4 4.1 3.4"/>',
+  up:'<path d="M12 19.4V7.8M7.4 12.4L12 7.8l4.6 4.6M4 4.6h16"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M19.6 14.5a1.7 1.7 0 00.35 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.35 1.7 1.7 0 00-1.03 1.56V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.55 1.7 1.7 0 00-1.87.35l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.35-1.87 1.7 1.7 0 00-1.56-1.03H3a2 2 0 110-4h.1a1.7 1.7 0 001.55-1.1 1.7 1.7 0 00-.35-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.35H9a1.7 1.7 0 001.03-1.56V3a2 2 0 114 0v.1A1.7 1.7 0 0015.06 4.7a1.7 1.7 0 001.87-.35l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.35 1.87V9a1.7 1.7 0 001.56 1.03H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.55 1.1z"/>',
+  chev:'<path d="M9 5.5l7 6.5-7 6.5"/>',
+  send:'<path d="M4.5 12h14M12.5 5.5l6.5 6.5-6.5 6.5"/>',
+  book:'<path d="M4.5 4.6h5.2c1.7 0 3.1 1.4 3.1 3.1V20a2.6 2.6 0 00-2.6-2.6H4.5z"/><path d="M19.5 4.6h-5.2c-1.7 0-3.1 1.4-3.1 3.1V20a2.6 2.6 0 012.6-2.6h5.7z"/>',
+  strike:'<path d="M4 12h16"/><path d="M7.5 7.5A4 4 0 0111.4 4.5h1.2a4 4 0 013.9 3M16.5 16.5a4 4 0 01-3.9 3h-1.2a4 4 0 01-3.9-3"/>',
+  week:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 2.6v4.4M16 2.6v4.4M3.5 10.5h17"/>',
+  card:'<rect x="2.8" y="5" width="18.4" height="14" rx="3"/><path d="M2.8 9.8h18.4"/>',
+  lock:'<rect x="4.6" y="10.4" width="14.8" height="10" rx="3"/><path d="M8.2 10.4V7.6a3.8 3.8 0 017.6 0v2.8"/>',
+  plug:'<path d="M9 3.6v5.2M15 3.6v5.2M6.4 8.8h11.2v3.1a5.6 5.6 0 01-5.6 5.6 5.6 5.6 0 01-5.6-5.6z"/><path d="M12 17.5v3"/>',
+  bulb:'<path d="M9.4 17.6h5.2M10.2 20.6h3.6"/><path d="M12 3.4a5.9 5.9 0 00-3.4 10.7c.5.4.8 1 .8 1.6h5.2c0-.6.3-1.2.8-1.6A5.9 5.9 0 0012 3.4z"/>',
+  flower:'<circle cx="12" cy="12" r="2.3"/><circle cx="12" cy="6.6" r="2.7"/><circle cx="17.1" cy="10.3" r="2.7"/><circle cx="15.2" cy="16.3" r="2.7"/><circle cx="8.8" cy="16.3" r="2.7"/><circle cx="6.9" cy="10.3" r="2.7"/>'
+};
+function ic(n, size, sw){
+  return '<svg viewBox="0 0 24 24" width="'+(size||18)+'" height="'+(size||18)+'" fill="none" '+
+    'stroke="currentColor" stroke-width="'+(sw||1.8)+'" stroke-linecap="round" stroke-linejoin="round" '+
+    'aria-hidden="true" focusable="false">'+ICONS[n]+'</svg>';
+}
+function icf(n, size){ /* filled glyph (facebook) */
+  return '<svg viewBox="0 0 24 24" width="'+(size||18)+'" height="'+(size||18)+'" fill="currentColor" '+
+    'aria-hidden="true" focusable="false">'+ICONS[n]+'</svg>';
+}
+document.querySelectorAll('[data-ic]').forEach(function(e){ e.innerHTML = ic(e.dataset.ic, 18); });
+document.getElementById('menuBtn').innerHTML = ic('menu',22);
+document.getElementById('backBtn').innerHTML = ic('back',22);
+document.getElementById('drawerClose').innerHTML = ic('x',20);
+document.querySelector('.send').innerHTML = ic('send',20,2);
+document.querySelector('.mark').innerHTML = ic('flower',20,1.6);
+</script>
+<script>
+/* ============================ data ============================ */
+const PHOTOS = [
+  {src:'img/p1.jpg', alt:'A white cup of coffee seen from above on a scratched wooden table, roasted beans scattered around it.'},
+  {src:'img/p2.jpg', alt:'Kaya toast with a slice of butter on a plate beside two soft-boiled eggs in dark soy, on a marble table by a window.'},
+  {src:'img/p3.jpg', alt:'The empty front room of the kedai: marble tables, bentwood chairs, a ceiling fan and daylight through the shopfront window.'},
+  {src:'img/p4.jpg', alt:'Nasi lemak on a banana leaf with sambal, anchovies, peanuts, cucumber and half a boiled egg, on a marble table.'},
+  {src:'img/p5.jpg', alt:'Two hands passing a flat white across the marble counter, pastries in the cabinet behind.'}
+];
+
+const POSTS = [
+  { id:'mon', day:'Monday', when:'went out 7:10 am', img:0, status:'posted',
+    caption:"We open at seven because someone always needs the first cup before the rest of the city is awake. Same beans, same hands, same corner of Bangsar.",
+    trace:[{a:'we open at seven', b:'your note, 3 Aug: "we are in by six"'},
+           {a:'same corner of Bangsar', b:'location: Bangsar, Kuala Lumpur'}] },
+
+  { id:'tue', day:'Tuesday', when:'went out 8:05 am', img:1, status:'posted',
+    caption:"Kaya toast and two soft eggs. Nothing complicated, nothing that needs explaining.",
+    trace:[{a:'kaya toast', b:'menu: kaya toast, all day'},
+           {a:'two soft eggs', b:'menu: soft eggs, breakfast'}] },
+
+  { id:'wed', day:'Wednesday', today:true, when:'goes out 7:30 am', img:2, status:'ready',
+    caption:"Quarter past seven, before the room fills. The first pour is always the quietest one of the day — kaya toast is on from opening, and the window seat looks out onto Telawi.",
+    trace:[{a:'opens at 7', b:'opening hours: 7:00am'},
+           {a:'kaya toast from opening', b:'menu: kaya toast, all day'},
+           {a:'no price stated', b:'nothing on file, so nothing claimed', none:true}],
+    variants:{
+      shorter:"Quarter past seven, before the room fills. Kaya toast is on from opening.",
+      warmer:"Quarter past seven and the room is still ours for a while. The first pour is the quietest one of the day, kaya toast is on from opening, and nobody is in a hurry in here.",
+      window:"Quarter past seven, before the room fills. Kaya toast is on from opening, and the corner table by the window — the one you always sit at — catches the morning light."} },
+
+  { id:'thu', day:'Thursday', when:'goes out 8:15 am', img:3, status:'held',
+    caption:"Nasi lemak from eight in the morning until it runs out, which is usually before noon.",
+    trace:[{a:'nasi lemak from eight', b:'menu: nasi lemak, from 8:00am'},
+           {a:'no halal claim', b:'no certificate number on file', none:true}],
+    variants:{
+      shorter:"Nasi lemak from eight, until it runs out.",
+      warmer:"Nasi lemak goes on at eight and stays until it runs out, which is usually before noon. Come while there is still some left.",
+      window:"Nasi lemak from eight until it runs out, usually before noon. The window seat is the good one for it."} },
+
+  { id:'fri', day:'Friday', when:'goes out 8:00 am', img:4, status:'ready',
+    caption:"Long breakfast kind of day. We're here until the afternoon, the toast is thick, and nobody is going to rush you out of your seat.",
+    trace:[{a:'here until the afternoon', b:'opening hours: 7:00am – 6:00pm'},
+           {a:'the toast is thick', b:'your words, intake 3 Aug'}],
+    variants:{
+      shorter:"Long breakfast kind of day. We're here until the afternoon.",
+      warmer:"The kind of Friday that turns into a long breakfast. We're here until the afternoon, the toast is thick, and nobody is going to move you along.",
+      window:"Long breakfast kind of day. We're here until the afternoon, and the window seat is the one to take."} },
+
+  { id:'fri2', day:'Friday', when:'goes out 4:40 pm', img:0, status:'ready',
+    caption:"Some mornings the room is quiet and some mornings it isn't. Either way the kettle is on from seven.",
+    trace:[{a:'on from seven', b:'opening hours: 7:00am'}],
+    variants:{
+      shorter:"The kettle is on from seven.",
+      warmer:"Some mornings the room is quiet, some mornings it isn't. The kettle is on from seven either way, and there is a cup here for you.",
+      window:"Some mornings the room is quiet and some mornings it isn't. The kettle is on from seven, and the window seat is where I would sit."} },
+
+  { id:'sat', day:'Saturday', when:'goes out 8:30 am', img:2, status:'held',
+    caption:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
+    trace:[{a:'window seat', b:'seating: window bench, corner table'},
+           {a:'no closing time', b:'weekend hours not confirmed', none:true}],
+    variants:{
+      shorter:"Weekend mornings run slower here. Come early.",
+      warmer:"Weekend mornings have their own pace here. Come early if the window seat is the one you want.",
+      window:"Come early on a weekend if you want the window seat — it goes first."} },
+
+  { id:'sun', day:'Sunday', when:'goes out 2:00 pm', img:4, status:'ready',
+    caption:"Sunday afternoon, one more before the week starts again.",
+    trace:[{a:'open Sunday afternoon', b:'opening hours: Sunday 7:00am – 6:00pm'}],
+    variants:{
+      shorter:"One more before the week starts again.",
+      warmer:"Sunday afternoon, the slow part of the week. One more before it starts again.",
+      window:"Sunday afternoon, one more before the week starts again. The light by the window is good at this hour."} },
+
+  { id:'sun2', day:'Sunday', when:'goes out 5:20 pm', img:1, status:'ready',
+    caption:"The corner of Bangsar hasn't changed much. Neither have we.",
+    trace:[{a:'corner of Bangsar', b:'location: Bangsar, Kuala Lumpur'}],
+    variants:{
+      shorter:"The corner of Bangsar hasn't changed. Neither have we.",
+      warmer:"The corner of Bangsar hasn't changed much in all this time. Neither have we, and that seems to suit everybody.",
+      window:"The corner of Bangsar hasn't changed much. Neither have we, and neither has the window seat."} }
+];
+
+const BATCH = ['wed','fri','fri2','sun','sun2'];
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+const QUESTIONS = [
+  { id:'q1', post:'thu', day:'Thursday',
+    title:"Is the kitchen halal certified?",
+    body:"Thursday's post says “nasi lemak from eight”. I won't call anything halal without a certificate number on file — that one carries the heaviest penalty of anything you could put in a caption.",
+    answers:[
+      {label:"Yes — add certificate number", effect:'ready', cta:'brand',
+       reply:"Good. Put the number in Brand settings and I'll write it from then on. Until it's on file, Thursday goes out as written — nasi lemak from eight, and no claim about certification."},
+      {label:"No certificate", effect:'ready',
+       reply:"Then I won't write it — not this week, not any week. Thursday goes out as written: nasi lemak from eight, and nothing about certification."},
+      {label:"Skip this week", effect:'skipped',
+       reply:"Skipped. Thursday comes off the schedule and nothing goes out about the nasi lemak. I'll ask again next week."}
+    ]},
+  { id:'q2', post:'sat', day:'Saturday',
+    title:"What time do you actually close?",
+    body:"Your intake says 6pm, but you told me last week you've been open till 9 on weekends. I'd rather ask than post the wrong time.",
+    answers:[
+      {label:"6pm is right", effect:'ready',
+       reply:"6pm it is — I've left your hours as they are. Saturday goes out as written."},
+      {label:"9pm now", effect:'ready',
+       reply:"Updated: open till 9 on weekends. It's on file now, so I can use it when it's relevant. Saturday goes out as written."},
+      {label:"Leave the time out", effect:'ready',
+       reply:"Left out. I won't put a closing time in a caption until you tell me one. Saturday goes out as written."}
+    ]}
+];
+
+const REFUSALS = [
+  { claim:"The best nasi lemak in Bangsar",
+    why:"That's a comparison against every other shop on the street, and there's nothing on file that could stand behind it if someone complained." },
+  { claim:"Halal certified kitchen",
+    why:"No certificate number on file. This is the one I'll keep asking about." },
+  { claim:"Tables are filling fast — book now",
+    why:"I have no idea how full you are. If it isn't true on the day, it's the kind of line people remember." }
+];
+
+const REFS = [
+  { h:'@kedaikopi.kl', w:'The way they write about mornings. Short sentences, no exclamation marks.' },
+  { h:'Saved post — "the 6am crowd"', w:'You liked that it named a person instead of a product.' },
+  { h:'Your own caption, 12 July', w:'Written by you, not by me. I match this one closest.' }
+];
+
+/* ============================ state ============================ */
+const S = {
+  view:'thread',
+  status:{}, captions:{}, photo:{}, logo:{},
+  answered:{},          /* qid -> answer index */
+  batchDone:false,
+  openPost:null, draft:'', dir:null,
+  convo:[],             /* free-form compose turns */
+  fresh:{},             /* ids of just-added messages -> animate once */
+  painted:false,
+  picker:null,
+  uploads:[],
+  brand:{ cert:'', hours9:false },
+  meta:{ reconnected:false },
+  modalStack:[]
+};
+POSTS.forEach(function(p){ S.status[p.id]=p.status; S.captions[p.id]=p.caption; S.photo[p.id]=p.img; S.logo[p.id]=(p.id==='wed'); });
+
+function post(id){ return POSTS.find(function(p){return p.id===id}); }
+function stOf(id){ return S.status[id]; }
+function count(st){ return POSTS.filter(function(p){return S.status[p.id]===st}).length; }
+function needsCount(){ return QUESTIONS.filter(function(q){ return S.answered[q.id]===undefined; }).length; }
+function readyCount(){ return count('ready'); }
+function isDone(){ return needsCount()===0 && readyCount()===0; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function say(msg){ document.getElementById('live').textContent = msg; }
+</script>
+<script>
+/* ============================ small pieces ============================ */
+const ST = {
+  ready:{w:'Ready', i:'dot'}, held:{w:'Held', i:'hold'}, scheduled:{w:'Scheduled', i:'cal'},
+  posted:{w:'Posted', i:'check'}, skipped:{w:'Skipped', i:'slash'}
+};
+function stChip(id){
+  const s = stOf(id), m = ST[s];
+  return '<span class="st '+s+'">'+ic(m.i,15,2)+m.w+'</span>';
+}
+function logoMark(){
+  return '<span class="logomark">'+ic('flower',15,1.7)+'<span class="lw">MELUR KOPI</span></span>';
+}
+function photoOf(id){
+  const i = S.photo[id];
+  return (typeof i === 'number') ? PHOTOS[i] : i; /* uploads are objects */
+}
+function mediaHTML(id, cls){
+  const ph = photoOf(id);
+  return '<figure class="media '+(cls||'')+'"><img src="'+esc(ph.src)+'" alt="'+esc(ph.alt)+'">'+
+    (S.logo[id] ? logoMark() : '')+'</figure>';
+}
+function row(inner, opt){
+  opt = opt||{};
+  const cls = 'row'+(opt.me?' me':'')+(opt.fresh?' is-new':'');
+  if(opt.me) return '<div class="'+cls+'">'+inner+'</div>';
+  const av = opt.avatar ? '<span class="av">'+ic('flower',18,1.7)+'</span>'
+                        : '<span class="av" style="visibility:hidden" aria-hidden="true"></span>';
+  return '<div class="'+cls+'">'+av+inner+'</div>';
+}
+function bub(inner, extra){ return '<div class="bub '+(extra||'')+'">'+inner+'</div>'; }
+function txt(s, soft){ return '<p class="txt'+(soft?' soft':'')+'">'+s+'</p>'; }
+function daysep(label, today){
+  return '<div class="daysep'+(today?' today':'')+'"><span>'+esc(label)+'</span></div>';
+}
+function fresh(key){ if(S.fresh[key]){ return true; } return false; }
+
+/* ============================ thread ============================ */
+function introBubble(){
+  const p = count('posted'), sc = count('scheduled'), r = readyCount(), n = needsCount();
+  let s = '<p class="txt">I wrote nine posts for this week, day by day. Two are already out. '+
+    'Five state nothing that isn\'t on file, so you can send those together. '+
+    'Two I\'m holding until you answer a question.</p>';
+  s += '<div class="sumrow">'+
+    '<span class="sumcell"><span class="n">'+p+'</span><span class="l">posted</span></span>'+
+    '<span class="sumcell'+(sc?' ':'')+'"'+(sc?' style="background:#26B37A"':'')+'><span class="n">'+sc+'</span><span class="l">scheduled</span></span>'+
+    '<span class="sumcell go"><span class="n">'+r+'</span><span class="l">ready to send</span></span>'+
+    '<span class="sumcell hot"><span class="n">'+n+'</span><span class="l">needs you</span></span>'+
+    '</div>';
+  return s;
+}
+function postBubble(p){
+  const st = stOf(p.id), hot = (p.today && st==='ready');
+  let h = '';
+  if(p.today) h += '<div class="pbanner">'+ic('ask',16,2)+(hot?'TODAY &middot; WAITING ON YOUR YES':'TODAY')+'</div>';
+  h += mediaHTML(p.id);
+  h += '<div class="pbody"><p class="cap">'+esc(S.captions[p.id])+'</p>'+
+       '<div class="pmeta">'+stChip(p.id)+'<span class="tim">'+esc(p.when)+'</span>'+
+       '<span class="chan">'+ic('ig',14,1.9)+'Instagram</span>'+
+       '<span class="chan">'+icf('fb',14)+'Facebook</span></div></div>';
+  h += '<div class="pfoot">';
+  if(st==='ready'){
+    h += '<button class="btn '+(hot?'':'pri')+'" data-act="approve" data-id="'+p.id+'">'+ic('check',17,2.2)+'Approve</button>';
+    h += '<button class="btn sec" data-act="open-post" data-id="'+p.id+'">'+ic('redo',16,2)+'Change</button>';
+  } else if(st==='held'){
+    const q = QUESTIONS.find(function(q){return q.post===p.id});
+    h += '<button class="btn pri" data-act="goto-q" data-q="'+q.id+'">'+ic('ask',17,2)+'Answer the question</button>';
+    h += '<button class="btn sec" data-act="open-post" data-id="'+p.id+'">Open</button>';
+  } else {
+    h += '<button class="btn sec" data-act="open-post" data-id="'+p.id+'">Open</button>';
+  }
+  h += '</div>';
+  return h;
+}
+function batchBlock(){
+  const remaining = BATCH.filter(function(id){ return stOf(id)==='ready'; });
+  let h = row(bub(
+      '<p class="txt">Five of these state nothing that isn\'t already on file — your hours, your menu, '+
+      'where you are. Nothing about how busy you are, nothing about being the best at anything.</p>'+
+      '<div class="pfoot">'+ (
+        S.batchDone || remaining.length===0
+          ? '<span class="st scheduled" style="height:36px;padding:0 13px">'+ic('cal',15,2)+'All five scheduled</span>'
+          : '<button class="btn pri" data-act="batch">'+ic('check',17,2.2)+'Approve the five that claim nothing</button>'
+      ) + '</div>'), {avatar:true, fresh:fresh('batch')});
+  if(S.batchDone){
+    h += row(bub(txt('Approve all five.')), {me:true, fresh:fresh('batch-me')});
+    h += row(bub(txt('Done. All five are scheduled — Wednesday through Sunday. '+
+      'I\'ll put them out at the time on each card.')), {avatar:true, fresh:fresh('batch-reply')});
+  }
+  return h;
+}
+function questionBlock(q){
+  const ai = S.answered[q.id];
+  let h = '<div class="qwrap" id="qw-'+q.id+'">' + row(bub(
+    '<div class="qband">'+ic('ask',15,2)+(ai===undefined?'Needs an answer':'You answered')+'</div>'+
+    '<p class="qt">'+esc(q.title)+'</p>'+
+    txt(esc(q.body), true), 'q'+(ai===undefined?'':'')), {avatar:true, fresh:fresh('q-'+q.id)});
+  if(ai===undefined){
+    let chips = '<div class="chips"><span class="chiphint">Your answer</span>';
+    q.answers.forEach(function(a,i){
+      chips += '<button class="chip" data-act="answer" data-q="'+q.id+'" data-i="'+i+'">'+esc(a.label)+'</button>';
+    });
+    chips += '</div>';
+    h += '<div class="row me'+(fresh('q-'+q.id)?' is-new':'')+'">'+chips+'</div>';
+  } else {
+    const a = q.answers[ai];
+    h += row(bub(txt(esc(a.label))), {me:true, fresh:fresh('ans-'+q.id)});
+    let reply = txt(esc(a.reply));
+    let foot = '';
+    if(a.cta==='brand'){
+      foot += '<button class="btn sec" data-act="open-modal" data-modal="brand">'+ic('lock',16,2)+'Open brand settings</button>';
+    }
+    const tp = post(q.post);
+    if(stOf(q.post)==='ready'){
+      foot += '<button class="btn pri" data-act="approve" data-id="'+q.post+'">'+ic('check',17,2.2)+'Approve '+esc(tp.day)+'</button>';
+    } else if(stOf(q.post)==='scheduled'){
+      foot += '<span class="st scheduled" style="height:36px;padding:0 13px">'+ic('cal',15,2)+esc(tp.day)+' scheduled</span>';
+    } else if(stOf(q.post)==='skipped'){
+      foot += '<span class="st skipped" style="height:36px;padding:0 13px">'+ic('slash',15,2)+esc(tp.day)+' skipped</span>';
+    }
+    if(foot) reply += '<div class="pfoot">'+foot+'</div>';
+    h += row(bub(reply), {avatar:true, fresh:fresh('ans-'+q.id)});
+  }
+  return h + '</div>';
+}
+function doneBlock(){
+  const sc = count('scheduled'), sk = count('skipped');
+  const W = ['no','one','two','three','four','five','six','seven','eight','nine'];
+  let line = 'Nine posts: two already out, '+(W[sc]||sc)+' scheduled';
+  if(sk) line += ', one skipped';
+  line += '. Nothing is waiting on you.';
+  return '<div class="donecard'+(fresh('done')?' is-new':'')+'">'+
+    '<div class="band">'+ic('check',16,2.4)+'ALL DONE FOR THIS WEEK</div>'+
+    '<div class="in"><h2 class="disp">That\'s the week.</h2>'+
+    '<p>'+line+' I\'ll write next week\'s on Sunday night and ask you if anything has changed. '+
+    'Three lines I would not write are on the list — worth a look before you close this.</p>'+
+    '<button class="btn pri" data-act="nav" data-view="refusals">'+ic('strike',17,2)+'See what I didn\'t write</button>'+
+    '</div></div>';
+}
+function renderThread(){
+  const first = !S.painted;
+  let h = row(bub(introBubble()), {avatar:true});
+  DAYS.forEach(function(day){
+    const ps = POSTS.filter(function(p){return p.day===day});
+    if(!ps.length) return;
+    const today = ps.some(function(p){return p.today});
+    h += daysep(today ? day+' · today' : day, today);
+    ps.forEach(function(p){
+      h += row(bub(postBubble(p), 'post'+(p.today && stOf(p.id)==='ready' ? ' today':'')),
+               {fresh:fresh('post-'+p.id)});
+    });
+  });
+  h += daysep('Now');
+  h += batchBlock();
+  h += row(bub(txt('Two need an answer before I\'ll write them.')), {avatar:true});
+  QUESTIONS.forEach(function(q){ h += questionBlock(q); });
+  S.convo.forEach(function(m, i){
+    h += row(bub(txt(esc(m.text))), {me:m.me, avatar:!m.me, fresh:fresh('c-'+i)});
+  });
+  if(isDone()) h += doneBlock();
+
+  const tin = document.getElementById('tin');
+  const keep = document.getElementById('thread').scrollTop;
+  tin.innerHTML = h;
+  if(first){
+    S.painted = true;
+    Array.prototype.slice.call(tin.children,0,7).forEach(function(el,i){
+      el.classList.add('first-paint'); el.style.animationDelay = (i*45)+'ms';
+    });
+  } else {
+    document.getElementById('thread').scrollTop = keep;
+  }
+  S.fresh = {};
+}
+</script>
+<script>
+/* ============================ rail / topbar / aside ============================ */
+const NAV = [
+  {v:'thread', l:'This week', i:'week'},
+  {v:'library', l:'Library', i:'book'},
+  {v:'refusals', l:"What I didn't write", i:'strike'}
+];
+function renderRail(){
+  const n = needsCount();
+  document.getElementById('needsHead').innerHTML = 'Needs you <span>'+n+'</span>';
+  let h = '';
+  if(n===0){
+    h = '<div class="allclear"><div class="t">'+ic('check',17,2.4)+'Nothing needs you.</div>'+
+        '<p>Both questions answered. I won\'t write anything you haven\'t confirmed.</p>'+
+        '<button class="btn sec wide" data-act="nav" data-view="refusals">'+ic('strike',16,2)+'See what I didn\'t write</button></div>';
+  } else {
+    QUESTIONS.forEach(function(q){
+      if(S.answered[q.id]!==undefined) return;
+      h += '<button class="needbtn" data-act="goto-q" data-q="'+q.id+'">'+ic('ask',18,2)+
+           '<span><span class="t">'+esc(q.title)+'</span><br><span class="d">'+esc(q.day)+'’s post is held</span></span></button>';
+    });
+  }
+  document.getElementById('needsList').innerHTML = h;
+
+  let nav = '';
+  NAV.forEach(function(x){
+    const ct = x.v==='refusals' ? '3' : (x.v==='thread' ? String(readyCount()) : '');
+    nav += '<button class="navbtn" data-act="nav" data-view="'+x.v+'" aria-current="'+(S.view===x.v)+'">'+
+      ic(x.i,19,1.9)+'<span>'+esc(x.l)+'</span>'+(ct?'<span class="ct">'+ct+'</span>':'')+'</button>';
+  });
+  document.getElementById('nav').innerHTML = nav;
+}
+function renderTopbar(){
+  const t = {thread:['This week','Melur Kopi · Bangsar'],
+             post:['Post','Melur Kopi · Bangsar'],
+             library:['Library','Your photos and references'],
+             refusals:["What I didn't write",'Three claims I left out this week']}[S.view];
+  /* the full views carry their own display heading, so the bar keeps the business in view instead */
+  document.getElementById('tbTitle').textContent = S.view==='thread' ? t[0] : 'Melur Kopi';
+  document.getElementById('tbSub').textContent = S.view==='thread' ? t[1] : 'Bangsar, Kuala Lumpur';
+  document.getElementById('backBtn').hidden = (S.view==='thread');
+  const n = needsCount(), r = readyCount();
+  let p = '';
+  if(S.view!=='thread') p = '';
+  else if(isDone()) p = '<span class="pill done">'+ic('check',15,2.4)+'All done</span>';
+  else {
+    if(n) p += '<span class="pill hot">'+ic('ask',15,2)+n+' need you</span>';
+    if(r) p += '<span class="pill quiet">'+ic('dot',14,2)+r+' ready</span>';
+  }
+  document.getElementById('tbPills').innerHTML = p;
+}
+function renderAside(){
+  let h = '';
+  h += '<div class="acard"><h2><span>What I didn\'t write</span><span>3</span></h2><ul>';
+  REFUSALS.forEach(function(r){ h += '<li><span class="strike">'+esc(r.claim)+'</span></li>'; });
+  h += '</ul><div style="margin-top:12px"><button class="btn sec wide" data-act="nav" data-view="refusals">Read the reasons</button></div></div>';
+
+  h += '<div class="acard"><h2>Brand lock</h2>'+
+    '<div class="swatches">'+
+      '<span class="sw" style="background:#FF6A45"><span class="n">Coral</span><span class="h">#FF6A45</span></span>'+
+      '<span class="sw" style="background:#FFC24B"><span class="n">Marigold</span><span class="h">#FFC24B</span></span>'+
+    '</div>'+
+    '<div class="tones"><span class="tone">plain</span><span class="tone">warm</span><span class="tone">unhurried</span></div>'+
+    '<div style="margin-top:12px"><button class="btn sec wide" data-act="open-modal" data-modal="brand">'+ic('lock',16,2)+'Open brand lock</button></div></div>';
+
+  h += '<div class="acard"><h2>Publishing</h2>'+
+    '<div class="arow"><span>'+ic('ig',18,1.9)+'</span><span class="nm">Instagram</span>'+
+      '<span class="st scheduled">'+ic('check',14,2.2)+'Connected</span></div>'+
+    '<div class="arow"><span>'+icf('fb',18)+'</span><span class="nm">Facebook</span>'+
+      '<span class="st scheduled">'+ic('check',14,2.2)+'Connected</span></div>'+
+    '<p class="note" style="margin-top:10px">Both from one Meta connection. Connect once, not twice.</p>'+
+    '<div style="margin-top:12px"><button class="btn sec wide" data-act="open-modal" data-modal="accounts">'+ic('plug',16,2)+'Connected accounts</button></div></div>';
+  document.getElementById('aside').innerHTML = h;
+}
+
+/* ============================ post detail ============================ */
+function renderPost(){
+  const p = post(S.openPost); if(!p) return;
+  const st = stOf(p.id), editable = (st!=='posted');
+  const cap = (S.draft!==null && S.draft!==undefined) ? S.draft : S.captions[p.id];
+  let h = '<div class="vhead"><h1 class="disp">'+esc(p.day)+'</h1>'+
+    '<p>'+esc(p.when)+' &middot; Instagram and Facebook</p>'+
+    '<div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+stChip(p.id)+'</div></div>';
+
+  h += '<div class="pd"><div class="left">'+
+    '<div class="card" style="padding:10px">'+mediaHTML(p.id)+
+    '<div class="rowline" style="padding:12px 6px 4px"><span class="nm">Logo on the photo</span>'+
+    '<span class="right"><button class="switch" data-act="logo" role="switch" aria-checked="'+(S.logo[p.id]?'true':'false')+'" aria-label="Show the Melur Kopi logo on the photo"></button></span></div>'+
+    '</div>'+
+    '<div class="actions"><button class="btn sec" data-act="pick-photo">'+ic('img',16,2)+'Use a different photo</button>'+
+    '<button class="btn sec" data-act="download">'+ic('dl',16,2)+'Download</button></div>'+
+    '<p class="live" id="dlLive" style="margin-top:10px"></p>'+
+    '</div><div class="right">';
+
+  if(editable){
+    h += '<div class="card"><h2>Caption</h2>'+
+      '<div class="editwrap"><label class="sr" for="capEdit">Caption</label>'+
+      '<textarea class="cap-edit" id="capEdit">'+esc(cap)+'</textarea></div>'+
+      '<div class="actions" style="margin-top:12px">'+
+        '<button class="btn pri" data-act="save-cap">'+ic('check',17,2.2)+'Save caption</button>'+
+        '<button class="btn ghost" data-act="cancel-cap">Cancel</button></div>'+
+      '<h2 style="margin-top:20px">Ask it to redo the post</h2>'+
+      '<p class="note">Same facts, different way of saying it. Nothing new gets claimed.</p>'+
+      '<div class="dirs">'+
+        '<button class="dir" data-act="redo" data-dir="shorter" aria-pressed="'+(S.dir==='shorter')+'">'+ic('redo',15,2)+'Shorter</button>'+
+        '<button class="dir" data-act="redo" data-dir="warmer" aria-pressed="'+(S.dir==='warmer')+'">'+ic('redo',15,2)+'Warmer</button>'+
+        '<button class="dir" data-act="redo" data-dir="window" aria-pressed="'+(S.dir==='window')+'">'+ic('redo',15,2)+'Mention the window seat</button>'+
+        '<button class="dir" data-act="redo" data-dir="original" aria-pressed="'+(S.dir==='original')+'">Back to the original</button>'+
+      '</div></div>';
+  } else {
+    h += '<div class="card"><h2>Caption</h2><p class="cap">'+esc(S.captions[p.id])+'</p>'+
+      '<p class="note" style="margin-top:12px">This one is already out. Nothing left to change.</p></div>';
+  }
+
+  h += '<div class="card"><h2>Where this came from</h2><ul class="trace">';
+  p.trace.forEach(function(t){
+    h += '<li'+(t.none?' class="none"':'')+'>'+(t.none?ic('strike',16,2)+' ':'')+
+      '<span class="a">'+esc(t.a)+'</span><span class="b">'+esc(t.b)+'</span></li>';
+  });
+  h += '</ul></div>';
+
+  h += '<div class="card"><h2>Where it publishes</h2>'+
+    '<div class="rowline"><span>'+ic('ig',20,1.9)+'</span><span><span class="nm">Instagram</span>'+
+      '<span class="dd" style="display:block">@melurkopi &middot; posted automatically</span></span>'+
+      '<span class="right"><span class="st scheduled">'+ic('check',14,2.2)+'On</span></span></div>'+
+    '<div class="rowline"><span>'+icf('fb',20)+'</span><span><span class="nm">Facebook</span>'+
+      '<span class="dd" style="display:block">Melur Kopi &middot; posted automatically</span></span>'+
+      '<span class="right"><span class="st scheduled">'+ic('check',14,2.2)+'On</span></span></div>'+
+    '<p class="note" style="margin-top:10px">Both run off the one Meta connection — the Instagram business account linked to your page.</p></div>';
+
+  h += '<div class="actions" style="margin-bottom:8px">';
+  if(st==='ready') h += '<button class="btn pri" data-act="approve" data-id="'+p.id+'">'+ic('check',17,2.2)+'Approve &amp; schedule</button>';
+  if(st==='held'){
+    const q = QUESTIONS.find(function(q){return q.post===p.id});
+    h += '<button class="btn pri" data-act="goto-q" data-q="'+q.id+'">'+ic('ask',17,2)+'Answer the question</button>';
+  }
+  h += '<button class="btn ghost" data-act="nav" data-view="thread">'+ic('back',16,2)+'Back to the week</button></div>';
+  h += '</div></div>';
+  document.getElementById('postView').innerHTML = h;
+}
+
+/* ============================ library ============================ */
+function renderLibrary(){
+  const picking = !!S.picker;
+  let h = '<div class="vhead"><h1 class="disp">Library</h1><p>'+
+    (picking ? 'Pick the photo for '+esc(post(S.picker).day)+'’s post.'
+             : 'Your photos and the accounts you like. This is what I learn your taste from — I don’t go looking anywhere else.')+
+    '</p></div>';
+  h += '<div class="card'+(picking?' picking':'')+'"><h2>Your photos</h2><div class="grid">';
+  PHOTOS.concat(S.uploads).forEach(function(ph, i){
+    h += '<button class="tile" data-act="'+(picking?'use-photo':'preview-photo')+'" data-i="'+i+'">'+
+      '<img src="'+esc(ph.src)+'" alt="'+esc(ph.alt)+'">'+
+      (picking?'<span class="use">Use this photo</span>':'')+'</button>';
+  });
+  h += '<button class="uptile" data-act="upload">'+ic('up',22,2)+'<span>Add a photo<br>from your phone</span></button>';
+  h += '</div><p class="live" id="libLive" style="margin-top:12px"></p></div>';
+
+  h += '<div class="card"><h2>References &mdash; what I learn your taste from</h2><ul class="refs">';
+  REFS.forEach(function(r){
+    h += '<li>'+ic('bulb',18,1.9)+'<span><span class="h">'+esc(r.h)+'</span><span class="w">'+esc(r.w)+'</span></span></li>';
+  });
+  h += '</ul>'+
+    '<label class="field" style="margin-top:14px"><span class="lbl">Add a reference</span>'+
+    '<input type="text" id="refInput" placeholder="An account, a saved post, or what you liked about it"></label>'+
+    '<button class="btn sec" data-act="add-ref">'+ic('check',16,2.2)+'Save reference</button>'+
+    '<p class="live" id="refLive" style="margin-top:10px"></p></div>';
+  document.getElementById('libView').innerHTML = h;
+}
+
+/* ============================ refusals ============================ */
+function renderRefusals(){
+  let h = '<div class="vhead"><h1 class="disp">What I didn\'t write</h1>'+
+    '<p>Three lines I could have written this week and didn\'t. Each one would have said something '+
+    'that isn\'t on file. If you want any of them written, tell me the fact behind it and I will.</p></div>';
+  REFUSALS.forEach(function(r){
+    h += '<div class="ref"><div class="band">'+ic('strike',14,2.2)+'I didn\'t write this</div>'+
+      '<div class="in"><p class="claim">'+esc(r.claim)+'</p><p class="why">'+esc(r.why)+'</p></div></div>';
+  });
+  h += '<div class="actions" style="margin-top:6px"><button class="btn sec" data-act="nav" data-view="thread">'+
+    ic('back',16,2)+'Back to the week</button></div>';
+  document.getElementById('refView').innerHTML = h;
+}
+</script>
+<script>
+/* ============================ modals ============================ */
+const MODALS = {
+  settings:{ title:'Settings', body:function(){
+    return '<button class="mrow" data-act="open-modal" data-modal="brand">'+ic('lock',20,1.9)+
+      '<span><span class="nm">Brand</span><span class="dd">Your voice, your colours, your logo — locked</span></span>'+
+      '<span class="ch">'+ic('chev',18,2)+'</span></button>'+
+    '<button class="mrow" data-act="open-modal" data-modal="accounts">'+ic('plug',20,1.9)+
+      '<span><span class="nm">Connected accounts</span><span class="dd">Instagram and Facebook, one Meta connection</span></span>'+
+      '<span class="ch">'+ic('chev',18,2)+'</span></button>'+
+    '<button class="mrow" data-act="open-modal" data-modal="plan">'+ic('card',20,1.9)+
+      '<span><span class="nm">Plan</span><span class="dd">Suara Full service &middot; RM1,200/month</span></span>'+
+      '<span class="ch">'+ic('chev',18,2)+'</span></button>';
+  }},
+  brand:{ title:'Brand', body:function(){
+    return '<p class="note" style="margin-bottom:14px">This is what I am not allowed to drift from. '+
+      'Everything I write comes out of this.</p>'+
+      '<div class="card" style="margin-bottom:12px"><h2>Business</h2>'+
+      '<div class="rowline"><span class="nm">Melur Kopi</span><span class="right dd">Bangsar, Kuala Lumpur</span></div>'+
+      '<div class="rowline"><span class="nm">Tone</span><span class="right"><span class="tones">'+
+      '<span class="tone">plain</span><span class="tone">warm</span><span class="tone">unhurried</span></span></span></div></div>'+
+      '<div class="card" style="margin-bottom:12px"><h2>Colours</h2><div class="swatches">'+
+      '<span class="sw" style="background:#FF6A45"><span class="n">Coral</span><span class="h">#FF6A45</span></span>'+
+      '<span class="sw" style="background:#FFC24B"><span class="n">Marigold</span><span class="h">#FFC24B</span></span>'+
+      '</div></div>'+
+      '<div class="card" style="margin-bottom:12px"><h2>Logo</h2>'+
+      '<div style="background:#F6EFE6;border-radius:12px;padding:18px;display:flex;justify-content:center">'+
+      '<span class="logomark" style="position:static;box-shadow:none;border:1px solid rgba(0,0,0,.08)">'+
+      ic('flower',16,1.7)+'<span class="lw">MELUR KOPI</span></span></div></div>'+
+      '<div class="card"><h2>Halal certificate</h2>'+
+      '<label class="field"><span class="lbl">Certificate number</span>'+
+      '<input type="text" id="certInput" value="'+esc(S.brand.cert)+'" placeholder="Not on file"></label>'+
+      '<div class="actions"><button class="btn pri" data-act="save-cert">'+ic('check',17,2.2)+'Save</button></div>'+
+      '<p class="live" id="certLive" style="margin-top:10px">'+
+      (S.brand.cert ? 'On file. I can write the word halal now.'
+                    : 'Not on file. Until it is, I won\'t write the word halal in any caption.')+'</p></div>';
+  }},
+  accounts:{ title:'Connected accounts', body:function(){
+    return '<div class="card" style="margin-bottom:12px">'+
+      '<div class="rowline"><span>'+ic('ig',22,1.9)+'</span><span><span class="nm">Instagram</span>'+
+      '<span class="dd" style="display:block">@melurkopi &middot; business account</span></span>'+
+      '<span class="right"><span class="st scheduled">'+ic('check',14,2.2)+'Connected</span></span></div>'+
+      '<div class="rowline"><span>'+icf('fb',22)+'</span><span><span class="nm">Facebook</span>'+
+      '<span class="dd" style="display:block">Melur Kopi &middot; linked page</span></span>'+
+      '<span class="right"><span class="st scheduled">'+ic('check',14,2.2)+'Connected</span></span></div></div>'+
+      '<div class="locknote" style="margin-bottom:14px">'+ic('plug',18,2)+
+      '<span>Both of these run off one Meta connection — the Instagram business account linked to your '+
+      'Facebook page. Connect once, not twice.</span></div>'+
+      '<div class="actions"><button class="btn pri" data-act="reconnect">'+ic('plug',17,2)+'Reconnect Meta</button></div>'+
+      '<p class="live" id="metaLive" style="margin-top:10px">'+
+      (S.meta.reconnected ? 'Reconnected just now. Instagram and Facebook both came back.'
+                          : 'Last connected 3 August. Nothing needs doing.')+'</p>'+
+      '<p class="note" style="margin-top:14px">TikTok isn\'t here. Their API only lets an unaudited app '+
+      'post privately to your own account, so a button would look like it worked and wouldn\'t. '+
+      'I\'ll add it when it can actually publish.</p>';
+  }},
+  plan:{ title:'Plan', body:function(){
+    return '<div class="plan-hero"><div class="n">Suara &middot; Full service</div>'+
+      '<div class="p">RM1,200<span style="font-size:16px;font-weight:700">/month</span></div></div>'+
+      '<div class="card" style="margin-bottom:12px"><h2>What you get</h2><ul class="checkl">'+
+      '<li>'+ic('check',17,2.2)+'<span>Nine posts a week, written in your voice and scheduled for you.</span></li>'+
+      '<li>'+ic('check',17,2.2)+'<span>Instagram and Facebook, posted automatically.</span></li>'+
+      '<li>'+ic('check',17,2.2)+'<span>A question asked before anything gets claimed — and a list of what I refused to write.</span></li>'+
+      '<li>'+ic('check',17,2.2)+'<span>Your photos and references kept in one library.</span></li>'+
+      '</ul></div>'+
+      '<div class="card"><div class="rowline"><span class="nm">Next billing</span>'+
+      '<span class="right dd">1 September</span></div>'+
+      '<div class="rowline"><span class="nm">Billed to</span><span class="right dd">Melur Kopi Enterprise</span></div></div>';
+  }}
+};
+let lastFocus = null;
+function paintModal(){
+  const stack = S.modalStack, name = stack[stack.length-1];
+  const m = document.getElementById('modal'), sc = document.getElementById('mscrim');
+  if(!name){ sc.dataset.on='0'; if(lastFocus && lastFocus.focus) lastFocus.focus(); lastFocus=null; return; }
+  const def = MODALS[name];
+  m.innerHTML = '<div class="mhead">'+
+    (stack.length>1 ? '<button class="iconbtn" data-act="modal-back" aria-label="Back to settings">'+ic('back',20,2)+'</button>' : '')+
+    '<h2 id="modalTitle">'+esc(def.title)+'</h2>'+
+    '<button class="iconbtn" data-act="close-modal" aria-label="Close">'+ic('x',20,2.2)+'</button></div>'+
+    '<div class="mbody">'+def.body()+'</div>';
+  sc.dataset.on='1';
+  const f = m.querySelector('button, input, textarea, a[href]');
+  if(f) f.focus();
+}
+function openModal(name){
+  if(S.modalStack.length===0){ lastFocus = document.activeElement; setDrawer(false); }
+  S.modalStack.push(name); paintModal();
+}
+function closeModal(all){
+  if(all) S.modalStack = []; else S.modalStack.pop();
+  paintModal();
+}
+document.getElementById('mscrim').addEventListener('mousedown', function(e){
+  if(e.target === this) closeModal(true);
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    if(S.modalStack.length){ e.preventDefault(); closeModal(true); return; }
+    if(document.getElementById('app').classList.contains('drawer')) setDrawer(false);
+  }
+  if(e.key === 'Tab' && S.modalStack.length){
+    const m = document.getElementById('modal');
+    const f = Array.prototype.filter.call(
+      m.querySelectorAll('button, input, textarea, select, a[href], [tabindex]:not([tabindex="-1"])'),
+      function(el){ return el.offsetParent !== null; });
+    if(!f.length) return;
+    const first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    else if(!m.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  }
+});
+</script>
+<script>
+/* ============================ view switching ============================ */
+function renderAll(){
+  renderRail(); renderTopbar(); renderAside();
+  if(S.view==='thread') renderThread();
+  if(S.view==='post') renderPost();
+  if(S.view==='library') renderLibrary();
+  if(S.view==='refusals') renderRefusals();
+}
+function setView(v){
+  S.view = v;
+  document.getElementById('app').dataset.view = v;
+  document.querySelectorAll('.view').forEach(function(el){
+    el.dataset.on = (el.dataset.view===v) ? '1' : '0';
+  });
+  if(v!=='post') S.openPost = null;
+  if(v!=='library') S.picker = null;
+  /* drop the DOM of the views we left so nothing stale is left behind */
+  ({post:'postView', library:'libView', refusals:'refView'}) &&
+  Object.keys({post:'postView', library:'libView', refusals:'refView'}).forEach(function(k){
+    if(k!==v) document.getElementById({post:'postView',library:'libView',refusals:'refView'}[k]).innerHTML='';
+  });
+  renderAll();
+  const sc = document.querySelector('.view[data-on="1"] .vscroll');
+  if(sc) sc.scrollTop = 0;
+  setDrawer(false);
+}
+function setDrawer(on){
+  const app = document.getElementById('app');
+  app.classList.toggle('drawer', !!on);
+  document.getElementById('menuBtn').setAttribute('aria-expanded', on?'true':'false');
+  document.getElementById('scrim').setAttribute('aria-hidden', on?'false':'true');
+  document.getElementById('scrim').tabIndex = on ? 0 : -1;
+  if(on){ const f = document.getElementById('rail').querySelector('button'); if(f) f.focus(); }
+}
+function openPostView(id){
+  S.openPost = id; S.draft = S.captions[id]; S.dir = null;
+  setView('post');
+}
+function syncDraft(){
+  const t = document.getElementById('capEdit');
+  if(t) S.draft = t.value;
+}
+function scrollToEl(el){
+  if(!el) return;
+  const t = document.getElementById('thread');
+  const top = el.getBoundingClientRect().top - t.getBoundingClientRect().top + t.scrollTop - 24;
+  t.scrollTo({top:top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto':'smooth'});
+}
+
+/* ============================ actions ============================ */
+function approve(id){
+  if(stOf(id)!=='ready') return;
+  const wasDone = isDone();
+  S.status[id] = 'scheduled';
+  if(!wasDone && isDone()) S.fresh['done'] = true;
+  renderAll();
+  say(post(id).day + ' scheduled.');
+  if(isDone()){
+    const d = document.querySelector('.donecard');
+    if(d) scrollToEl(d);
+  }
+}
+function doBatch(){
+  BATCH.forEach(function(id){ if(S.status[id]==='ready') S.status[id]='scheduled'; });
+  S.batchDone = true;
+  S.fresh['batch-me']=true; S.fresh['batch-reply']=true;
+  if(isDone()) S.fresh['done']=true;
+  renderAll();
+  say('Five posts scheduled.');
+  const el = document.querySelectorAll('.tin > .row');
+  scrollToEl(document.querySelector('.donecard') || el[el.length-1]);
+}
+function answer(qid, i){
+  if(S.answered[qid]!==undefined) return;
+  const q = QUESTIONS.find(function(x){return x.id===qid});
+  const a = q.answers[i];
+  S.answered[qid] = i;
+  S.status[q.post] = a.effect;
+  S.fresh['ans-'+qid] = true;
+  S.fresh['post-'+q.post] = true;
+  if(isDone()) S.fresh['done']=true;
+  renderAll();
+  say('You answered: ' + a.label + '. ' + a.reply);
+  const w = document.getElementById('qw-'+qid);
+  if(w) scrollToEl(w.lastElementChild);
+}
+function download(){
+  const p = post(S.openPost), live = document.getElementById('dlLive');
+  const cap = S.captions[p.id];
+  const name = 'melur-kopi-' + p.day.toLowerCase();
+  try{
+    const blob = new Blob([cap + '\n'], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+  }catch(err){
+    live.textContent = 'The caption could not be saved here: ' + err.message;
+    return;
+  }
+  /* the image: canvas export is blocked when the page is opened straight off the disk */
+  try{
+    const img = document.querySelector('.pd .media img');
+    const c = document.createElement('canvas'); c.width = 1080; c.height = 1080;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0, 1080, 1080);
+    if(S.logo[p.id]){
+      x.fillStyle = '#FDF7EF'; x.fillRect(48, 948, 320, 84);
+      x.fillStyle = '#1A1520'; x.font = 'bold 34px sans-serif';
+      x.fillText('MELUR KOPI', 78, 1000);
+    }
+    const url = c.toDataURL('image/jpeg', 0.92);
+    const a2 = document.createElement('a');
+    a2.href = url; a2.download = name + '.jpg';
+    document.body.appendChild(a2); a2.click(); a2.remove();
+    live.textContent = 'Saved ' + name + '.jpg and ' + name + '.txt to your downloads.';
+  }catch(err){
+    live.textContent = 'Caption saved as ' + name + '.txt. The image could not be saved because this ' +
+      'prototype was opened straight off the disk — it works when Suara is served over the web.';
+  }
+  say(live.textContent);
+}
+
+/* ============================ one click handler ============================ */
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-act]');
+  if(!el) return;
+  const a = el.dataset.act;
+
+  if(a==='nav'){ closeModal(true); setView(el.dataset.view); return; }
+  if(a==='open-post'){ openPostView(el.dataset.id); return; }
+  if(a==='approve'){ approve(el.dataset.id); return; }
+  if(a==='batch'){ doBatch(); return; }
+  if(a==='answer'){ answer(el.dataset.q, Number(el.dataset.i)); return; }
+  if(a==='goto-q'){
+    const qid = el.dataset.q;
+    if(S.view!=='thread') setView('thread');
+    setDrawer(false);
+    requestAnimationFrame(function(){
+      const w = document.getElementById('qw-'+qid);
+      if(w){ scrollToEl(w); const c = w.querySelector('.chip'); if(c) c.focus({preventScroll:true}); }
+    });
+    return;
+  }
+  if(a==='open-modal'){ openModal(el.dataset.modal); return; }
+  if(a==='close-modal'){ closeModal(true); return; }
+  if(a==='modal-back'){ closeModal(false); return; }
+
+  if(a==='logo'){
+    syncDraft();
+    S.logo[S.openPost] = !S.logo[S.openPost];
+    renderPost();
+    const sw = document.querySelector('.switch'); if(sw) sw.focus({preventScroll:true});
+    say(S.logo[S.openPost] ? 'Logo is on the photo.' : 'Logo removed from the photo.');
+    return;
+  }
+  if(a==='redo'){
+    const p = post(S.openPost), d = el.dataset.dir;
+    S.dir = d;
+    S.draft = (d==='original') ? p.caption : (p.variants ? p.variants[d] : p.caption);
+    renderPost();
+    const b = document.querySelector('.dir[data-dir="'+d+'"]'); if(b) b.focus({preventScroll:true});
+    say('Caption rewritten: ' + d + '. Not saved yet.');
+    return;
+  }
+  if(a==='save-cap'){
+    syncDraft();
+    S.captions[S.openPost] = (S.draft||'').trim() || S.captions[S.openPost];
+    const id = S.openPost;
+    setView('thread');
+    say(post(id).day + ' caption saved.');
+    return;
+  }
+  if(a==='cancel-cap'){ S.draft = S.captions[S.openPost]; S.dir = null; renderPost(); return; }
+  if(a==='download'){ download(); return; }
+  if(a==='pick-photo'){ syncDraft(); S.picker = S.openPost; S.view='library';
+    document.getElementById('app').dataset.view='library';
+    document.querySelectorAll('.view').forEach(function(x){ x.dataset.on = (x.dataset.view==='library')?'1':'0'; });
+    renderRail(); renderTopbar(); renderAside(); renderLibrary(); return; }
+  if(a==='use-photo'){
+    const i = Number(el.dataset.i), all = PHOTOS.concat(S.uploads);
+    S.photo[S.picker] = (i < PHOTOS.length) ? i : all[i];
+    const id = S.picker; S.picker = null;
+    S.openPost = id; setView('post');
+    say('Photo changed.');
+    return;
+  }
+  if(a==='preview-photo'){
+    const all = PHOTOS.concat(S.uploads), ph = all[Number(el.dataset.i)];
+    const l = document.getElementById('libLive');
+    if(l) l.textContent = ph.src.replace(/^img\//,'') + ' — ' + ph.alt;
+    return;
+  }
+  if(a==='upload'){ document.getElementById('fileInput').click(); return; }
+  if(a==='add-ref'){
+    const inp = document.getElementById('refInput'), v = (inp.value||'').trim();
+    const l = document.getElementById('refLive');
+    if(!v){ l.textContent = 'Type something first — an account name, or what you liked about a post.'; inp.focus(); return; }
+    REFS.push({h:v, w:'Added just now. I\'ll read it before I write next week.'});
+    renderLibrary();
+    document.getElementById('refLive').textContent = 'Saved. That is now part of what I learn your taste from.';
+    say('Reference saved.');
+    return;
+  }
+  if(a==='save-cert'){
+    const inp = document.getElementById('certInput');
+    S.brand.cert = (inp.value||'').trim();
+    const l = document.getElementById('certLive');
+    l.textContent = S.brand.cert
+      ? 'On file: ' + S.brand.cert + '. I can write the word halal now.'
+      : 'Not on file. Until it is, I won\'t write the word halal in any caption.';
+    say(l.textContent);
+    return;
+  }
+  if(a==='reconnect'){
+    S.meta.reconnected = true;
+    const l = document.getElementById('metaLive');
+    l.textContent = 'Reconnected just now. Instagram and Facebook both came back.';
+    say(l.textContent);
+    return;
+  }
+});
+
+/* ============================ chrome wiring ============================ */
+document.getElementById('menuBtn').addEventListener('click', function(){ setDrawer(true); });
+document.getElementById('drawerClose').addEventListener('click', function(){ setDrawer(false); });
+document.getElementById('scrim').addEventListener('click', function(){ setDrawer(false); });
+document.getElementById('backBtn').addEventListener('click', function(){ setView('thread'); });
+document.getElementById('composeForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const inp = document.getElementById('composeInput');
+  const v = (inp.value||'').trim();
+  if(!v) return;
+  inp.value = '';
+  S.convo.push({me:true, text:v});
+  S.fresh['c-'+(S.convo.length-1)] = true;
+  S.convo.push({me:false, text:"Noted — that goes in your brand file. I won't state it as a fact in a "+
+    "caption until you confirm the details, but it will shape how I write."});
+  S.fresh['c-'+(S.convo.length-1)] = true;
+  renderThread();
+  const rows = document.querySelectorAll('.tin > .row');
+  scrollToEl(rows[rows.length-1]);
+  say('Message sent.');
+});
+document.getElementById('fileInput').addEventListener('change', function(e){
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  S.uploads.push({src:URL.createObjectURL(f), alt:'Photo you uploaded: '+f.name});
+  renderLibrary();
+  const l = document.getElementById('libLive');
+  if(l) l.textContent = f.name + ' added to your photos.';
+  say('Photo added.');
+  e.target.value = '';
+});
+
+/* ============================ go ============================ */
+renderAll();
+</script>
+</body>
+</html>

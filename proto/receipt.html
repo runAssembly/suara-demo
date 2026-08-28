@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suara — Melur Kopi, week of 24–30 Aug</title>
+<style>
+@font-face{font-family:PJS;src:url('fonts/PlusJakartaSans.ttf') format('truetype');font-weight:200 800;font-display:swap}
+@font-face{font-family:Gloock;src:url('fonts/Gloock-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+
+:root{
+  --cream:#FDF7EF; --cream2:#F6EFE6; --white:#fff;
+  --ink:#1A1520; --ink-soft:#3B3145; --muted:#6B6270;
+  --coral:#FF6A45; --coral-deep:#E24A28; --green:#26B37A; --marigold:#FFC24B;
+  --line:rgba(26,21,32,.10);
+  --line-strong:rgba(26,21,32,.22);
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono","DejaVu Sans Mono",monospace;
+  --r-card:14px; --r-btn:8px;
+  --t:150ms cubic-bezier(.2,.7,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:PJS,system-ui,sans-serif;
+  font-variant-numeric:tabular-nums;
+  background:var(--cream2); color:var(--ink);
+  font-size:16px; line-height:1.5;
+  overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255,194,75,.10), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(26,21,32,.020) 0 1px, transparent 1px 8px);
+}
+img{max-width:100%;display:block}
+.img{outline:1px solid oklch(0 0 0 / 0.1); outline-offset:-1px}
+button,input,textarea,select{font:inherit;color:inherit}
+.ic{width:1em;height:1em;flex:none;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.mono{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:2px}
+.tap{min-height:44px}
+
+/* ---------- app shell ---------- */
+.app{position:relative;z-index:1;display:grid;gap:0;grid-template-columns:1fr;
+     max-width:1560px;margin:0 auto;padding:0 14px 108px}
+.rail{display:none}
+.stage{min-width:0;padding-top:14px}
+.panelcol{min-width:0}
+
+@media (min-width:1100px){
+  .app{grid-template-columns:236px minmax(420px,600px) minmax(360px,1fr);
+       column-gap:26px;padding:0 26px 40px;align-items:start}
+  .rail{display:block;position:sticky;top:0;height:100dvh;padding:22px 0 20px;
+        display:flex;flex-direction:column;gap:14px}
+  .stage{padding-top:22px;padding-bottom:40px}
+  .panelcol{position:sticky;top:22px;max-height:calc(100dvh - 44px);overflow:auto;padding:22px 2px 24px 0}
+}
+
+/* ---------- rail ---------- */
+.brandmark{display:flex;align-items:baseline;gap:8px}
+.brandmark b{font-family:Gloock,Georgia,serif;font-weight:400;font-size:25px;letter-spacing:.01em}
+.brandmark span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.railnav{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.navbtn{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:8px 12px;
+  background:transparent;border:1px solid transparent;border-radius:10px;cursor:pointer;
+  font-size:14px;font-weight:600;text-align:left}
+.navbtn .ic{width:18px;height:18px;color:var(--ink-soft)}
+.navbtn:hover{background:rgba(26,21,32,.05)}
+.navbtn[aria-current="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.navbtn[aria-current="true"] .ic{color:var(--cream)}
+.badge{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;
+  min-width:24px;height:24px;padding:0 7px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:999px;background:var(--coral);color:var(--ink)}
+.badge[data-zero="1"]{background:rgba(26,21,32,.10);color:var(--ink-soft)}
+.railfoot{margin-top:auto;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted)}
+
+/* ---------- mobile top bar + tab bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 2px 10px}
+@media (min-width:1100px){.topbar{display:none}}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;
+  background:var(--cream);border-top:1px solid var(--line-strong);
+  box-shadow:0 -6px 24px rgba(26,21,32,.08);padding-bottom:env(safe-area-inset-bottom)}
+@media (min-width:1100px){.tabbar{display:none}}
+.tab{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:transparent;border:0;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);position:relative;padding:6px 2px}
+.tab .ic{width:20px;height:20px}
+.tab[aria-current="true"]{color:var(--ink);font-weight:700}
+.tab[aria-current="true"]::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:var(--ink)}
+.tabdot[data-zero="1"]{background:rgba(26,21,32,.12);color:var(--ink-soft)}
+.tabdot{position:absolute;top:6px;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;
+  border-radius:999px;background:var(--coral);color:var(--ink);font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+
+/* ---------- paper ---------- */
+.paperwrap{filter:drop-shadow(0 1px 0 rgba(26,21,32,.10)) drop-shadow(0 16px 26px rgba(26,21,32,.10))}
+.tear{height:9px;background:var(--cream);
+  --mA:linear-gradient(135deg,#0000 50%,#000 50%);
+  --mB:linear-gradient(45deg,#000 50%,#0000 50%);
+  -webkit-mask:var(--mA) 0 0/18px 9px repeat-x,var(--mB) 0 0/18px 9px repeat-x;
+  mask:var(--mA) 0 0/18px 9px repeat-x,var(--mB) 0 0/18px 9px repeat-x}
+.tear--b{transform:scaleY(-1)}
+.paper{background:var(--cream);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(26,21,32,.014) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, rgba(26,21,32,.010) 0 1px, transparent 1px 5px);
+  padding:0 clamp(14px,4vw,26px) 4px}
+
+/* receipt head */
+.rhead{padding:20px 0 14px;text-align:center;border-bottom:2px dashed var(--line-strong)}
+.rhead h1{margin:0;font-family:Gloock,Georgia,serif;font-weight:400;font-size:clamp(30px,8vw,42px);line-height:1.05;letter-spacing:.005em}
+.rhead .sub{margin-top:7px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.rmeta{display:flex;justify-content:space-between;gap:10px;padding:9px 0;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1px dashed var(--line-strong)}
+
+/* section labels */
+.slab{display:flex;align-items:center;gap:9px;padding:18px 0 9px;
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.slab .ic{width:15px;height:15px}
+.slab .rule{flex:1;height:0;border-top:1px dashed var(--line-strong)}
+
+/* ---------- needs you ---------- */
+.needs{background:var(--coral);color:var(--ink);margin:6px calc(-1*clamp(14px,4vw,26px));
+  padding:16px clamp(14px,4vw,26px) 18px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.needs h2{margin:0 0 3px;font-size:19px;font-weight:800;letter-spacing:-.01em}
+.needs .nsub{margin:0 0 13px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.qcard{background:var(--white);border:1.5px solid var(--ink);border-radius:var(--r-card);padding:14px;margin-top:10px}
+.qcard .qday{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.qcard h3{margin:4px 0 7px;font-size:17px;font-weight:800;line-height:1.3;letter-spacing:-.01em}
+.qcard p{margin:0 0 12px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.qcard p em{font-style:normal;background:var(--marigold);padding:1px 5px;border-radius:3px;color:var(--ink)}
+.answers{display:flex;flex-wrap:wrap;gap:8px}
+.abtn{flex:1 1 auto;min-height:44px;padding:10px 14px;border:1.5px solid var(--ink);border-radius:var(--r-btn);
+  background:var(--white);color:var(--ink);font-size:14px;font-weight:700;cursor:pointer}
+.abtn:hover{background:var(--ink);color:var(--cream)}
+.abtn:active{transform:scale(.96)}
+.answered{display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1.5px solid var(--ink);
+  border-radius:var(--r-card);padding:12px 14px;margin-top:10px}
+.answered .ic{width:19px;height:19px;margin-top:2px}
+.answered b{display:block;font-size:14px}
+.answered span{font-size:13.5px;color:var(--ink-soft)}
+.needs-done{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:6px calc(-1*clamp(14px,4vw,26px));
+  padding:16px clamp(14px,4vw,26px);background:var(--marigold);color:var(--ink);
+  border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.needs-done p{margin:0;font-size:15px;font-weight:700;flex:1 1 240px}
+
+/* ---------- post rows ---------- */
+.rows{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:64px 1fr;gap:13px;padding:15px 0;border-bottom:1px dashed var(--line-strong)}
+.row:last-child{border-bottom:0}
+.thumb{width:64px;height:64px;border-radius:6px;object-fit:cover;background:var(--cream2)}
+.rowhead{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:5px}
+.rowday{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.today{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--marigold);color:var(--ink);padding:3px 7px;border-radius:4px}
+.cap{margin:0;font-size:15px;line-height:1.58;color:var(--ink)}
+.rowmeta{margin-top:7px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rowacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+
+/* status pills + stamps */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:5px;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  border:1.5px solid var(--ink)}
+.pill .ic{width:13px;height:13px;stroke-width:2.4}
+.pill--posted{background:var(--green);color:var(--ink)}
+.pill--ready{background:var(--marigold);color:var(--ink)}
+.pill--scheduled{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.pill--held{background:var(--coral);color:var(--ink)}
+.stamp{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--coral);color:var(--ink);border:2px solid var(--ink);border-radius:4px;
+  transform:rotate(-4deg);box-shadow:2px 2px 0 rgba(26,21,32,.18)}
+.stamp .ic{width:14px;height:14px;stroke-width:2.4}
+.stamp--big{font-size:13px;padding:7px 14px;transform:rotate(-5deg)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 16px;
+  border-radius:var(--r-btn);border:1.5px solid var(--ink);background:var(--cream);color:var(--ink);
+  font-size:14.5px;font-weight:700;cursor:pointer;transition:background var(--t),border-color var(--t)}
+.btn .ic{width:17px;height:17px}
+.btn:hover{background:rgba(26,21,32,.07)}
+.btn:active{transform:scale(.96)}
+.btn--ink{background:var(--ink);color:var(--cream)}
+.btn--ink:hover{background:#000}
+.btn--coral{background:var(--coral);color:var(--ink)}
+.btn--coral:hover{background:var(--coral-deep)}
+.btn--mari{background:var(--marigold);color:var(--ink)}
+.btn--mari:hover{background:#F2AF2C}
+.btn--ghost{background:transparent;border-color:var(--line-strong)}
+.btn--ghost:hover{background:rgba(26,21,32,.06);border-color:var(--ink)}
+.btn--sm{min-height:44px;padding:9px 13px;font-size:13.5px}
+.btn--wide{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- totals ---------- */
+.totals{padding:16px 0 6px;border-top:2px dashed var(--line-strong)}
+.trow{display:flex;align-items:baseline;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);padding:5px 0}
+.trow .lead{flex:1;border-bottom:1.5px dotted var(--line-strong);transform:translateY(-4px)}
+.trow b{color:var(--ink);font-size:13px}
+.tsum{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;
+  background:var(--ink);color:var(--cream);padding:13px 15px;border-radius:6px;
+  font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.tsum span:last-child{font-size:17px}
+.batchwrap{margin-top:14px}
+.rfoot{text-align:center;padding:18px 0 22px}
+.barcode{height:40px;margin:0 auto 9px;max-width:260px;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,
+   transparent 5px 9px,var(--ink) 9px 12px,transparent 12px 14px,var(--ink) 14px 15px,transparent 15px 18px)}
+.rfoot .code{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- done state ---------- */
+.done{text-align:center;padding:30px 4px 26px}
+.done .seal{width:96px;height:96px;margin:0 auto 16px;border-radius:50%;background:var(--green);
+  border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;transform:rotate(-6deg)}
+.done .seal .ic{width:44px;height:44px;stroke-width:2.6;color:var(--ink)}
+.done h2{margin:0 0 8px;font-family:Gloock,Georgia,serif;font-weight:400;font-size:29px;line-height:1.15}
+.done p{margin:0 auto 18px;max-width:38ch;font-size:15.5px;line-height:1.6;color:var(--ink-soft)}
+
+/* ---------- panel (detail / refusals) ---------- */
+.panel{background:var(--cream)}
+.panel .paper{padding:0 clamp(14px,4vw,22px) 4px}
+.panelhead{display:flex;align-items:center;gap:10px;padding:14px 0 12px;border-bottom:2px dashed var(--line-strong)}
+.panelhead .ptitle{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.iconbtn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--line-strong);border-radius:var(--r-btn);background:transparent;cursor:pointer;
+  transition:background var(--t),border-color var(--t)}
+.iconbtn:hover{background:rgba(26,21,32,.07);border-color:var(--ink)}
+.iconbtn .ic{width:19px;height:19px}
+.iconbtn:active{transform:scale(.96)}
+
+.photowrap{position:relative;margin:14px 0 0;border-radius:10px;overflow:hidden}
+.photowrap img{width:100%;aspect-ratio:1/1;object-fit:cover}
+.wordmark{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:7px;
+  background:var(--cream);color:var(--ink);border:1.5px solid var(--ink);border-radius:7px;padding:6px 10px}
+.wordmark b{font-family:Gloock,Georgia,serif;font-weight:400;font-size:15px;line-height:1}
+.wordmark span{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+
+.field{margin-top:16px}
+.flab{display:block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+textarea.cap-edit{width:100%;min-height:150px;padding:13px;border:1.5px solid var(--line-strong);border-radius:10px;
+  background:var(--white);font-size:15.5px;line-height:1.6;resize:vertical;color:var(--ink)}
+textarea.cap-edit:focus{border-color:var(--ink)}
+input[type=text].tin,textarea.tin{width:100%;padding:12px;border:1.5px solid var(--line-strong);border-radius:10px;
+  background:var(--white);font-size:15px;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:10px 13px;border:1.5px solid var(--ink);border-radius:var(--r-btn);
+  background:var(--white);font-size:13.5px;font-weight:700;cursor:pointer}
+.chip:hover{background:var(--ink);color:var(--cream)}
+.chip[aria-pressed="true"]{background:var(--marigold)}
+.chip:active{transform:scale(.96)}
+
+.trace{list-style:none;margin:0;padding:0;border:1.5px solid var(--line-strong);border-radius:10px;overflow:hidden}
+.trace li{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:12px 13px;border-bottom:1px dashed var(--line-strong);background:var(--white)}
+.trace li:last-child{border-bottom:0}
+.trace .ic{width:18px;height:18px;margin-top:2px}
+.trace b{font-size:14.5px;font-weight:700;display:block}
+.trace span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.trace li.none{background:var(--marigold)}
+.trace li.none span{color:var(--ink-soft)}
+
+.pubrow{display:flex;align-items:center;gap:11px;padding:12px 13px;border:1.5px solid var(--line-strong);
+  border-radius:10px;background:var(--white);margin-bottom:8px}
+.pubrow .ic{width:20px;height:20px}
+.pubrow b{font-size:14.5px}
+.pubrow small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.pubrow .on{margin-left:auto;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;background:var(--green);color:var(--ink);border:1.5px solid var(--ink);padding:4px 8px;border-radius:5px}
+.note{font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:10px 0 0}
+
+/* refusals */
+.refuse{border:1.5px solid var(--ink);border-radius:var(--r-card);background:var(--white);padding:14px;margin-top:12px}
+.refuse .claim{margin:0 0 9px;font-size:16.5px;font-weight:700;line-height:1.35;color:var(--ink-soft);
+  text-decoration:line-through;text-decoration-color:var(--coral);text-decoration-thickness:2px}
+.refuse p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+.refuse .stamp{margin-bottom:15px}
+
+/* library */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.gcell{position:relative;padding:0;border:1.5px solid var(--line-strong);border-radius:10px;overflow:hidden;
+  background:var(--white);cursor:pointer;aspect-ratio:1/1;transition:border-color var(--t)}
+.gcell img{width:100%;height:100%;object-fit:cover}
+.gcell:hover{border-color:var(--ink)}
+.gcell[aria-pressed="true"]{border:3px solid var(--ink)}
+.gtag{position:absolute;left:6px;bottom:6px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;background:var(--cream);color:var(--ink);border:1px solid var(--ink);padding:3px 6px;border-radius:4px}
+.upload{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;
+  border:2px dashed var(--line-strong);border-radius:10px;aspect-ratio:1/1;cursor:pointer;background:transparent;
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+  transition:border-color var(--t),background var(--t)}
+.upload:hover{border-color:var(--ink);background:rgba(26,21,32,.04)}
+.upload .ic{width:22px;height:22px}
+.reflist{list-style:none;margin:0;padding:0}
+.reflist li{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:12px 0;border-bottom:1px dashed var(--line-strong)}
+.reflist b{font-size:14.5px}
+.reflist span{display:block;font-size:13.5px;color:var(--ink-soft)}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;z-index:80;background:rgba(26,21,32,.55);display:flex;align-items:center;
+  justify-content:center;padding:16px}
+.modal{width:min(520px,100%);max-height:min(86dvh,760px);overflow:auto;background:var(--cream);
+  border:2px solid var(--ink);border-radius:16px;padding:0 18px 18px}
+.modalhead{position:sticky;top:0;background:var(--cream);display:flex;align-items:center;gap:10px;
+  padding:16px 0 12px;border-bottom:2px dashed var(--line-strong);z-index:1}
+.modalhead h2{margin:0;flex:1;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.swatches{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sw{padding:16px 13px;border:1.5px solid var(--ink);border-radius:10px;color:var(--ink)}
+.sw b{display:block;font-size:15px}
+.sw span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line-strong);font-size:14.5px}
+.kv b{font-weight:700}
+.locked{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--cream);padding:5px 9px;border-radius:5px}
+.locked .ic{width:13px;height:13px}
+
+/* ---------- toast ---------- */
+#toastroot{position:fixed;left:0;right:0;bottom:74px;z-index:90;display:flex;justify-content:center;
+  padding:0 14px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:9px;background:var(--ink);color:var(--cream);
+  padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;max-width:min(420px,100%);
+  box-shadow:0 10px 30px rgba(26,21,32,.3)}
+.toast .ic{width:17px;height:17px;flex:none}
+@media (min-width:1100px){#toastroot{bottom:24px}}
+
+/* ---------- mobile panel = full sheet ---------- */
+@media (max-width:1099px){
+  .panelcol{position:fixed;inset:0;z-index:70;background:var(--cream2);overflow:auto;
+    padding:10px 14px 190px}
+  .panelcol[hidden]{display:none}
+  /* filter:drop-shadow would make this a containing block for the fixed action bar */
+  .panelcol .paperwrap{max-width:640px;margin:0 auto;filter:none}
+}
+@media (min-width:1100px){
+  .panelcol[hidden]{display:none}
+}
+
+/* sticky primary actions: thumb-reachable on a phone, inline on desktop */
+.stickyacts{display:flex;gap:8px;margin-top:14px}
+.stickyacts .btn{flex:1 1 auto}
+@media (max-width:1099px){
+  .stickyacts{position:fixed;left:0;right:0;bottom:56px;z-index:75;margin:0;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--cream);
+    border-top:1.5px solid var(--line-strong);box-shadow:0 -6px 20px rgba(26,21,32,.10)}
+}
+/* ---------- motion ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.firstpaint .anim{animation:rise 260ms cubic-bezier(.2,.7,.3,1) both}
+.firstpaint .anim:nth-child(2){animation-delay:40ms}
+.firstpaint .anim:nth-child(3){animation-delay:80ms}
+.firstpaint .anim:nth-child(4){animation-delay:120ms}
+.enter{animation:rise 200ms cubic-bezier(.2,.7,.3,1) both}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .btn:active,.abtn:active,.chip:active,.iconbtn:active{transform:none}
+}
+</style>
+</head>
+<body>
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M12 3v9M8 6v6M16 7v5M4 12v3a7 7 0 0 0 7 7h1a8 8 0 0 0 8-8V9"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-week" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><path d="M9.2 9a2.9 2.9 0 1 1 3.8 2.8c-.7.3-1 .9-1 1.7v.5"/><circle cx="12" cy="12" r="9"/><path d="M12 17.4v.2"/></symbol>
+  <symbol id="i-nowrite" viewBox="0 0 24 24"><path d="M4 20 20 4M6.5 17.5 4 20l.8-3.4L14 7.4l2.6 2.6zM16 5.4 18.6 8"/></symbol>
+  <symbol id="i-lib" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-4.5 4.5 4M13 14l2.5-2 5.5 5"/><circle cx="15.5" cy="8.5" r="1.4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M3.5 7h9M18.5 7h2M3.5 12h4M12.5 12h8M3.5 17h9M18.5 17h2"/><circle cx="15" cy="7" r="2.2"/><circle cx="10" cy="12" r="2.2"/><circle cx="15" cy="17" r="2.2"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M20 5v5h-5"/><path d="M19.4 10A8 8 0 1 0 20 14"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 16 4.5-4 3.5 3M12.5 13.5 15 11.5l6 5.5"/><circle cx="15" cy="9" r="1.3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 0 0-5.7-5.7L11.5 6.4"/><path d="M14 10.5a4 4 0 0 0-5.7 0L5.5 13.3a4 4 0 0 0 5.7 5.7l1.3-1.3"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14.5 21v-8h2.7l.5-3.3h-3.2V7.6c0-1 .3-1.6 1.7-1.6h1.6V3.1A22 22 0 0 0 15.3 3c-2.5 0-4.2 1.5-4.2 4.3v2.4H8.3V13h2.8v8z"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 14.5h3"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 4h9l5 5v11H5z"/><path d="M14 4v5h5M8.5 13h7M8.5 16.5h5"/></symbol>
+  <symbol id="i-source" viewBox="0 0 24 24"><path d="M4 5h11M4 10h16M4 15h11M4 20h7"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4.5 21 20H3z"/><path d="M12 10v4M12 16.8v.2"/></symbol>
+</svg>
+
+<div class="app">
+  <!-- ===== desktop rail ===== -->
+  <aside class="rail">
+    <div class="brandmark"><b>Suara</b><span>Melur&nbsp;Kopi</span></div>
+    <nav class="railnav" aria-label="Sections">
+      <button class="navbtn" data-nav="week" type="button"><svg class="ic"><use href="#i-week"/></svg>The week</button>
+      <button class="navbtn" data-nav="needs" type="button"><svg class="ic"><use href="#i-ask"/></svg>Needs you
+        <span class="badge" data-count="held">2</span></button>
+      <button class="navbtn" data-nav="refusals" type="button"><svg class="ic"><use href="#i-nowrite"/></svg>What I didn’t write</button>
+      <button class="navbtn" data-nav="library" type="button"><svg class="ic"><use href="#i-lib"/></svg>Library</button>
+      <button class="navbtn" data-nav="settings" type="button"><svg class="ic"><use href="#i-gear"/></svg>Settings</button>
+    </nav>
+    <div class="railfoot">
+      Melur Kopi · Bangsar<br>Week 24–30 Aug 2026<br>Instagram + Facebook
+    </div>
+  </aside>
+
+  <!-- ===== centre column ===== -->
+  <main class="stage">
+    <div class="topbar">
+      <div class="brandmark"><b>Suara</b><span>Melur&nbsp;Kopi</span></div>
+      <button class="iconbtn" type="button" data-nav="settings" aria-label="Settings"><svg class="ic"><use href="#i-gear"/></svg></button>
+    </div>
+    <div id="centre"></div>
+  </main>
+
+  <!-- ===== right column / mobile sheet ===== -->
+  <div class="panelcol" id="panelcol" hidden>
+    <div class="paperwrap panel">
+      <div class="tear"></div>
+      <div class="paper" id="panelbody"></div>
+      <div class="tear tear--b"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabbar" aria-label="Main">
+  <button class="tab" type="button" data-nav="week"><svg class="ic"><use href="#i-week"/></svg>Week</button>
+  <button class="tab" type="button" data-nav="needs"><svg class="ic"><use href="#i-ask"/></svg>Needs you
+    <span class="tabdot" data-count="held">2</span></button>
+  <button class="tab" type="button" data-nav="refusals"><svg class="ic"><use href="#i-nowrite"/></svg>Not written</button>
+  <button class="tab" type="button" data-nav="library"><svg class="ic"><use href="#i-lib"/></svg>Library</button>
+  <button class="tab" type="button" data-nav="settings"><svg class="ic"><use href="#i-gear"/></svg>Settings</button>
+</nav>
+
+<div id="modalroot"></div>
+<div id="toastroot"></div>
+<p class="sr" role="status" aria-live="polite" id="live"></p>
+
+<script>
+"use strict";
+/* ============================ DATA ============================ */
+var POSTS = [
+ {id:"mon", day:"Monday", dstr:"MON 24 AUG", time:"06:40", status:"posted", img:"img/p1.jpg",
+  alt:"A cup of white coffee on a worn wooden table, beans scattered beside it",
+  cap:"We open at seven because someone always needs the first cup before the rest of the city is awake. Same beans, same hands, same corner of Bangsar.",
+  trace:[{k:"fact",t:"opens at seven",s:"opening hours: 7:00am weekdays"},
+         {k:"fact",t:"Bangsar",s:"address on file"}],
+  rw:[{l:"Shorter",t:"Open at seven. Same beans, same hands, same corner of Bangsar."},
+      {l:"Warmer",t:"Six in the morning, and someone is always already waiting. We put the first pot on for them. Same beans, same hands, same corner of Bangsar."},
+      {l:"Mention the first cup",t:"The first cup goes out before six-thirty most mornings. Same beans, same hands, same corner of Bangsar."}]},
+
+ {id:"tue", day:"Tuesday", dstr:"TUE 25 AUG", time:"08:05", status:"posted", img:"img/p2.jpg",
+  alt:"Kaya toast and soft-boiled eggs on a marble table",
+  cap:"Kaya toast and two soft eggs. Nothing complicated, nothing that needs explaining.",
+  trace:[{k:"fact",t:"kaya toast",s:"menu: kaya toast, all day"},
+         {k:"fact",t:"soft eggs",s:"menu: soft-boiled eggs, 2 pcs"}],
+  rw:[{l:"Shorter",t:"Kaya toast and two soft eggs. That’s the whole thing."},
+      {l:"Warmer",t:"Kaya toast, two soft eggs, and enough time to eat them slowly. Nothing complicated, nothing that needs explaining."},
+      {l:"Mention the marble table",t:"Kaya toast and two soft eggs on the marble table by the door. Nothing complicated, nothing that needs explaining."}]},
+
+ {id:"wed", day:"Wednesday", dstr:"WED 26 AUG", time:"07:15", status:"ready", today:true, img:"img/p3.jpg",
+  alt:"The empty front room of the kopitiam, marble tables and a fan, morning light at the window",
+  cap:"Quarter past seven, before the room fills. The first pour is always the quietest one of the day — kaya toast is on from opening, and the window seat looks out onto Telawi.",
+  trace:[{k:"fact",t:"opens at 7",s:"opening hours: 7:00am"},
+         {k:"fact",t:"kaya toast from opening",s:"menu: kaya toast, all day"},
+         {k:"none",t:"no price stated",s:"nothing on file, so nothing claimed"}],
+  rw:[{l:"Shorter",t:"Quarter past seven, before the room fills. Kaya toast is on from opening and the corner table catches the morning light."},
+      {l:"Warmer",t:"Quarter past seven. The fan is turning, the toast is on, and the room is still quiet enough to hear it. Come and sit before the rest of Bangsar wakes up."},
+      {l:"Mention the window seat",t:"Quarter past seven, before the room fills. Kaya toast is on from opening, and the window seat — the one everybody asks for — catches the morning light."}]},
+
+ {id:"wed2", day:"Wednesday", dstr:"WED 26 AUG", time:"15:30", status:"ready", img:"img/p5.jpg",
+  alt:"Afternoon light across empty chairs and a ceiling fan",
+  cap:"Afternoon runs slower here. The fan turns, the toast is still on, and nobody is watching the clock.",
+  trace:[{k:"fact",t:"toast still on",s:"menu: kaya toast, all day"},
+         {k:"none",t:"no closing time stated",s:"hours unconfirmed, so nothing claimed"}],
+  rw:[{l:"Shorter",t:"Afternoon runs slower here. The fan turns, the toast is still on."},
+      {l:"Warmer",t:"Afternoons are the slow half of the day. The fan turns, the toast is still on, and the chair by the wall has your name on it if you want it."},
+      {l:"Mention the fan",t:"That fan has been turning since long before we got here. The toast is still on. Nobody is watching the clock."}]},
+
+ {id:"thu", day:"Thursday", dstr:"THU 27 AUG", time:"08:00", status:"held", img:"img/p4.jpg",
+  alt:"A plate of nasi lemak wrapped in paper",
+  cap:"Nasi lemak from eight in the morning until it runs out, which is usually before noon.",
+  trace:[{k:"fact",t:"from eight",s:"menu: nasi lemak, from 8:00am"},
+         {k:"none",t:"no halal claim",s:"no certificate number on file"}],
+  rw:[{l:"Shorter",t:"Nasi lemak from eight, until it runs out."},
+      {l:"Warmer",t:"Nasi lemak goes on at eight. It usually runs out before noon, and the people who know that come early."},
+      {l:"Mention it runs out",t:"Nasi lemak from eight in the morning. It goes before noon most Thursdays — that part is not a sales line, it is just what happens."}]},
+
+ {id:"fri", day:"Friday", dstr:"FRI 28 AUG", time:"09:20", status:"ready", img:"img/p1.jpg",
+  alt:"A cup of coffee on the wooden counter",
+  cap:"Long breakfast kind of day. We’re here until the afternoon, the toast is thick, and nobody is going to rush you out of your seat.",
+  trace:[{k:"fact",t:"open through the afternoon",s:"opening hours: 7:00am–6:00pm"},
+         {k:"fact",t:"thick toast",s:"menu: kaya toast, thick cut"}],
+  rw:[{l:"Shorter",t:"Long breakfast kind of day. Thick toast, no rush."},
+      {l:"Warmer",t:"The kind of Friday where breakfast turns into lunch. The toast is thick, the coffee keeps coming, and nobody is going to rush you out of your seat."},
+      {l:"Mention the window seat",t:"Long breakfast kind of day. The toast is thick, the window seat gets the good light, and nobody is going to rush you out of it."}]},
+
+ {id:"sat", day:"Saturday", dstr:"SAT 29 AUG", time:"08:30", status:"held", img:"img/p3.jpg",
+  alt:"The front room with the window seat, seen from the counter",
+  cap:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
+  trace:[{k:"fact",t:"window seat",s:"photo: front room, window table"},
+         {k:"none",t:"no closing time stated",s:"intake says 6pm, you said 9pm — unresolved"}],
+  rw:[{l:"Shorter",t:"Weekend mornings fill up. Come early for the window seat."},
+      {l:"Warmer",t:"Saturday mornings have their own crowd, and they arrive early. If the window seat matters to you, be one of them."},
+      {l:"Mention the window seat",t:"There is one window seat and everybody wants it on a Saturday. Come early."}]},
+
+ {id:"sat2", day:"Saturday", dstr:"SAT 29 AUG", time:"16:10", status:"ready", img:"img/p2.jpg",
+  alt:"Marble table top with old wooden chairs",
+  cap:"Marble tables, old chairs, and a fan that has been turning since before we got here.",
+  trace:[{k:"fact",t:"marble tables, old chairs",s:"photo: front room"},
+         {k:"none",t:"nothing about the crowd",s:"we don’t know how full you are"}],
+  rw:[{l:"Shorter",t:"Marble tables, old chairs, one fan. That’s the room."},
+      {l:"Warmer",t:"Marble tables that stay cold in the heat, chairs older than most of the street, and a fan that has been turning since before we got here."},
+      {l:"Mention the marble",t:"The marble stays cold even in August. That is most of why people sit here as long as they do."}]},
+
+ {id:"sun", day:"Sunday", dstr:"SUN 30 AUG", time:"14:45", status:"ready", img:"img/p4.jpg",
+  alt:"A single cup on a table in the late afternoon",
+  cap:"Sunday afternoon, one more before the week starts again.",
+  trace:[{k:"fact",t:"open Sunday afternoon",s:"opening hours: Sunday 8:00am–6:00pm"},
+         {k:"none",t:"no offer, no price",s:"nothing on file, so nothing claimed"}],
+  rw:[{l:"Shorter",t:"One more before the week starts again."},
+      {l:"Warmer",t:"Sunday afternoon. One more cup before the week starts again, and no reason at all to hurry it."},
+      {l:"Mention the corner table",t:"Sunday afternoon, corner table, one more before the week starts again."}]}
+];
+
+var QUESTIONS = [
+ {id:"q-halal", postId:"thu", day:"Thursday",
+  q:"Is the kitchen halal certified?",
+  body:"Thursday’s post says <em>“nasi lemak from eight”</em>. I won’t call anything halal without a certificate number on file — that one carries the heaviest penalty of anything you could put in a caption.",
+  answers:[{l:"Yes — add certificate number", r:"Noted. I still won’t write “halal” anywhere until the number is on file."},
+           {l:"No certificate", r:"Understood. No halal claim goes out, this week or any week."},
+           {l:"Skip this week", r:"Skipped. Thursday goes out with no halal claim in it."}],
+  answered:null},
+ {id:"q-close", postId:"sat", day:"Saturday",
+  q:"What time do you actually close?",
+  body:"Your intake says 6pm, but you told me last week you’ve been open till 9 on weekends. I’d rather ask than post the wrong time.",
+  answers:[{l:"6pm is right", r:"Kept 6pm on file. No weekend times in this week’s posts."},
+           {l:"9pm now", r:"Updated: open till 9pm on weekends. I’ll use it once you’ve seen it in writing."},
+           {l:"Leave the time out", r:"No closing time in this week’s posts."}],
+  answered:null}
+];
+
+var REFUSALS = [
+ {claim:"The best nasi lemak in Bangsar",
+  why:"That’s a comparison against every other shop on the street, and there’s nothing on file that could stand behind it if someone complained."},
+ {claim:"Halal certified kitchen",
+  why:"No certificate number on file. This is the one I’ll keep asking about."},
+ {claim:"Tables are filling fast — book now",
+  why:"I have no idea how full you are. If it isn’t true on the day, it’s the kind of line people remember."}
+];
+
+var REFERENCES = [
+ {name:"@kopi.brothers", note:"Plain photos, no filter. You said the captions sound like a person."},
+ {name:"@bangsar.eats — the toast post", note:"Saved 14 Aug. Short, one fact, no adjectives."},
+ {name:"Your own Monday post, June", note:"You said this one was closest to how you talk."}
+];
+
+var LIB = [
+ {src:"img/p1.jpg", tag:"Counter", alt:"Coffee on the wooden counter"},
+ {src:"img/p2.jpg", tag:"Toast", alt:"Kaya toast and eggs"},
+ {src:"img/p3.jpg", tag:"Front room", alt:"The front room in morning light"},
+ {src:"img/p4.jpg", tag:"Nasi lemak", alt:"Nasi lemak on a plate"},
+ {src:"img/p5.jpg", tag:"Afternoon", alt:"Afternoon light on the chairs"}
+];
+
+var state = {
+  view:"week",          /* week | library */
+  panel:null,           /* null | {type:"post",id} | {type:"refusals"} */
+  pickFor:null,         /* post id awaiting a photo choice */
+  selectedPhoto:null,
+  refNote:"",
+  firstPaint:true
+};
+
+/* ============================ HELPERS ============================ */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function ic(n,cls){return '<svg class="ic'+(cls?" "+cls:"")+'" aria-hidden="true"><use href="#i-'+n+'"/></svg>';}
+function post(id){for(var i=0;i<POSTS.length;i++){if(POSTS[i].id===id)return POSTS[i];}return null;}
+function counts(){
+  var c={total:POSTS.length,held:0,ready:0,scheduled:0,posted:0};
+  POSTS.forEach(function(p){c[p.status]++;});
+  return c;
+}
+function announce(msg){var l=$("#live"); if(l){l.textContent=msg;}}
+var toastTimer=null;
+function toast(msg){
+  var r=$("#toastroot");
+  r.innerHTML='<div class="toast enter">'+ic("check")+'<span>'+esc(msg)+'</span></div>';
+  announce(msg);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){r.innerHTML="";},2600);
+}
+function statusMark(p){
+  if(p.status==="held")   return '<span class="stamp">'+ic("hand")+'Held</span>';
+  if(p.status==="posted") return '<span class="pill pill--posted">'+ic("check")+'Posted</span>';
+  if(p.status==="ready")  return '<span class="pill pill--ready">'+ic("dot")+'Ready</span>';
+  return '<span class="pill pill--scheduled">'+ic("clock")+'Scheduled</span>';
+}
+function questionFor(pid){for(var i=0;i<QUESTIONS.length;i++){if(QUESTIONS[i].postId===pid)return QUESTIONS[i];}return null;}
+
+/* ============================ WEEK VIEW ============================ */
+function needsBlock(){
+  var open=QUESTIONS.filter(function(q){return !q.answered;});
+  var c=counts();
+  if(open.length===0){
+    if(c.ready===0){
+      return '<section class="done anim">'+
+        '<div class="seal">'+ic("check")+'</div>'+
+        '<h2>That’s the week.</h2>'+
+        '<p>Nine posts. Two already out, seven scheduled. Nothing is waiting on you, and nothing went out that you hadn’t confirmed.</p>'+
+        '<button class="btn btn--ink" type="button" data-act="refusals">'+ic("nowrite")+'See what I didn’t write</button>'+
+        '</section>';
+    }
+    return '<div class="needs-done anim">'+
+      '<p>Nothing is waiting on you. Both questions answered.</p>'+
+      '<button class="btn" type="button" data-act="batch">'+ic("check")+'Approve the '+c.ready+' that claim nothing</button>'+
+      '</div>'+
+      '<ul class="reflist anim">'+QUESTIONS.map(function(q){
+        return '<li>'+ic("check")+'<div><b>'+esc(q.day)+' — you said “'+esc(q.answered.l)+'”</b>'+
+               '<span>'+esc(q.answered.r)+'</span></div></li>';
+      }).join('')+'</ul>';
+  }
+  var h='<section class="needs anim" id="needs">'+
+        '<h2>Needs you</h2>'+
+        '<p class="nsub mono">'+open.length+' question'+(open.length===1?"":"s")+' · about a minute</p>';
+  QUESTIONS.forEach(function(q){
+    if(q.answered){
+      h+='<div class="answered">'+ic("check")+'<div><b>'+esc(q.day)+' — you said “'+esc(q.answered.l)+'”</b>'+
+         '<span>'+esc(q.answered.r)+'</span></div></div>';
+    }else{
+      h+='<div class="qcard" data-q="'+q.id+'">'+
+         '<div class="qday">'+esc(q.day)+'</div>'+
+         '<h3>'+esc(q.q)+'</h3><p>'+q.body+'</p>'+
+         '<div class="answers">'+
+         q.answers.map(function(a,i){
+           return '<button class="abtn" type="button" data-act="answer" data-q="'+q.id+'" data-i="'+i+'">'+esc(a.l)+'</button>';
+         }).join("")+
+         '</div></div>';
+    }
+  });
+  h+='</section>';
+  return h;
+}
+
+function rowHTML(p){
+  var q=questionFor(p.id);
+  var acts='<button class="btn btn--sm btn--ghost" type="button" data-act="open" data-id="'+p.id+'">Open</button>';
+  if(p.status==="ready") acts+='<button class="btn btn--sm btn--mari" type="button" data-act="approve" data-id="'+p.id+'">'+ic("check")+'Approve</button>';
+  if(p.status==="held"&&q) acts+='<button class="btn btn--sm btn--coral" type="button" data-act="toneeds">'+ic("ask")+'Answer the question</button>';
+  return '<li class="row" data-row="'+p.id+'">'+
+    '<img class="thumb img" src="'+p.img+'" alt="'+esc(p.alt)+'">'+
+    '<div><div class="rowhead"><span class="rowday">'+esc(p.dstr)+' · '+esc(p.time)+'</span>'+
+      (p.today?'<span class="today">Today</span>':'')+statusMark(p)+'</div>'+
+    '<p class="cap" data-cap="'+p.id+'">'+esc(p.cap)+'</p>'+
+    '<div class="rowmeta">'+ic("ig")+' Instagram &nbsp;·&nbsp; '+ic("fb")+' Facebook &nbsp;·&nbsp; 1 photo</div>'+
+    '<div class="rowacts">'+acts+'</div></div></li>';
+}
+
+function totalsBlock(){
+  var c=counts();
+  var rows=[["Posts this week",c.total],["Already posted",c.posted],["Held — waiting on you",c.held],
+            ["Ready to approve",c.ready],["Scheduled",c.scheduled]];
+  var h='<section class="totals anim">'+
+    rows.map(function(r){
+      return '<div class="trow"><span>'+esc(r[0])+'</span><i class="lead"></i><b data-total="'+esc(r[0])+'">'+r[1]+'</b></div>';
+    }).join("")+
+    '<div class="tsum"><span>'+c.total+' posts / '+c.held+' held / '+c.ready+' ready</span>'+
+      '<span>'+c.scheduled+' '+ic("check")+'</span></div>';
+  if(c.ready>0){
+    h+='<div class="batchwrap"><button class="btn btn--ink btn--wide" type="button" data-act="batch">'+
+       ic("check")+'Approve the '+c.ready+' that claim nothing</button>'+
+       '<p class="note">Every one of these states a fact that is already on file. Nothing in them is a claim.</p></div>';
+  }
+  h+='</section>';
+  return h;
+}
+
+function renderWeek(){
+  var c=counts();
+  return '<div class="paperwrap"><div class="tear"></div><div class="paper">'+
+    '<header class="rhead anim"><h1>Melur Kopi</h1>'+
+      '<div class="sub">Bangsar · Kuala Lumpur</div></header>'+
+    '<div class="rmeta"><span>Week 24–30 Aug 2026</span><span>Ticket no. 0041</span></div>'+
+    needsBlock()+
+    '<div class="slab">'+ic("source")+'<span>The week — '+c.total+' posts</span><i class="rule"></i></div>'+
+    '<ul class="rows">'+POSTS.map(rowHTML).join("")+'</ul>'+
+    totalsBlock()+
+    '<div class="rfoot"><div class="barcode" aria-hidden="true"></div>'+
+      '<div class="code">Suara · Melur Kopi · WK35 · 2026</div></div>'+
+    '</div><div class="tear tear--b"></div></div>';
+}
+
+/* ============================ LIBRARY ============================ */
+function renderLibrary(){
+  var picking=state.pickFor?post(state.pickFor):null;
+  var h='<div class="paperwrap"><div class="tear"></div><div class="paper">'+
+    '<header class="rhead anim"><h1>Library</h1><div class="sub">Your photos · your references</div></header>'+
+    '<div class="rmeta"><span>Melur Kopi</span><span>'+(LIB.length)+' photos on file</span></div>';
+  if(picking){
+    h+='<div class="needs-done" style="margin-top:0">'+
+       '<p>Choosing a photo for '+esc(picking.dstr)+'. Tap one.</p>'+
+       '<button class="btn btn--sm" type="button" data-act="cancelpick">Cancel</button></div>';
+  }
+  h+='<div class="slab">'+ic("img")+'<span>Her photos</span><i class="rule"></i></div>'+
+    '<div class="grid">'+
+      LIB.map(function(p,i){
+        return '<button class="gcell" type="button" data-act="pickphoto" data-src="'+esc(p.src)+'" '+
+          'aria-pressed="'+(state.selectedPhoto===p.src?"true":"false")+'">'+
+          '<img class="img" src="'+esc(p.src)+'" alt="'+esc(p.alt)+'">'+
+          '<span class="gtag">'+esc(p.tag)+'</span></button>';
+      }).join("")+
+      '<button class="upload" type="button" data-act="upfile">'+ic("plus")+'Add a photo</button>'+
+    '</div>'+
+    '<input type="file" id="fileinput" accept="image/*" class="sr">'+
+    '<p class="note">Photos stay on your phone until a post uses one. Nothing is uploaded to write a caption.</p>'+
+
+    '<div class="slab">'+ic("note")+'<span>References — what I learn your taste from</span><i class="rule"></i></div>'+
+    '<ul class="reflist">'+
+      REFERENCES.map(function(r){
+        return '<li>'+ic("link")+'<div><b>'+esc(r.name)+'</b><span>'+esc(r.note)+'</span></div></li>';
+      }).join("")+
+    '</ul>'+
+    '<div class="field"><label class="flab" for="refnote">Add a reference or a note about your taste</label>'+
+      '<textarea class="tin" id="refnote" rows="3" placeholder="e.g. I like it when the caption is one sentence.">'+esc(state.refNote)+'</textarea>'+
+      '<div class="rowacts"><button class="btn btn--ink btn--sm" type="button" data-act="savenote">'+ic("check")+'Save note</button></div>'+
+      '<p class="note">These are examples, not instructions. I read them for tone — I still won’t state a fact that isn’t on file.</p></div>'+
+    '<div class="rfoot"><div class="barcode" aria-hidden="true"></div>'+
+      '<div class="code">Suara · Library · Melur Kopi</div></div>'+
+    '</div><div class="tear tear--b"></div></div>';
+  return h;
+}
+
+/* ============================ PANEL: POST DETAIL ============================ */
+function renderDetail(p){
+  var q=questionFor(p.id);
+  var h='<div class="panelhead">'+
+      '<button class="iconbtn" type="button" data-act="closepanel" aria-label="Back to the week">'+ic("back")+'</button>'+
+      '<span class="ptitle">'+esc(p.dstr)+' · '+esc(p.time)+'</span>'+statusMark(p)+'</div>'+
+    '<div class="photowrap">'+
+      '<img class="img" src="'+p.img+'" alt="'+esc(p.alt)+'">'+
+      (p.logo?'<span class="wordmark"><b>Melur</b><span>Kopi · Bangsar</span></span>':'')+
+    '</div>'+
+    '<div class="rowacts">'+
+      '<button class="btn btn--sm" type="button" data-act="logo" data-id="'+p.id+'" aria-pressed="'+(p.logo?"true":"false")+'">'+
+        ic("img")+(p.logo?"Logo on":"Logo off")+'</button>'+
+      '<button class="btn btn--sm btn--ghost" type="button" data-act="usephoto" data-id="'+p.id+'">Use a different photo</button>'+
+      '<button class="btn btn--sm btn--ghost" type="button" data-act="download" data-id="'+p.id+'">'+ic("down")+'Download</button>'+
+    '</div>'+
+    '<div id="dl-'+p.id+'"></div>';
+
+  if(p.status==="held"&&q){
+    h+='<div class="field"><div class="stamp stamp--big">'+ic("hand")+'Held — one question</div>'+
+       '<p class="note" style="margin-top:10px">'+esc(q.q)+' Until you answer, this one does not go out.</p>'+
+       '<div class="rowacts"><button class="btn btn--coral" type="button" data-act="toneeds">'+ic("ask")+'Answer it</button></div></div>';
+  }
+
+  h+='<div class="field">'+
+      '<label class="flab" for="cap-'+p.id+'">The caption — edit it if it isn’t how you’d say it</label>'+
+      '<textarea class="cap-edit" id="cap-'+p.id+'" data-capedit="'+p.id+'">'+esc(p.cap)+'</textarea>'+
+      '</div>'+
+    '<div class="stickyacts">'+
+        '<button class="btn btn--ink" type="button" data-act="save" data-id="'+p.id+'">'+ic("check")+'Save caption</button>'+
+        (p.status==="ready"?'<button class="btn btn--mari" type="button" data-act="approve" data-id="'+p.id+'">'+ic("check")+'Approve</button>':'')+
+      '</div>'+
+
+    '<div class="field"><span class="flab">Ask it to redo the post</span>'+
+      '<div class="chips">'+
+        p.rw.map(function(v,i){return '<button class="chip" type="button" data-act="rewrite" data-id="'+p.id+'" data-i="'+i+'">'+ic("redo")+' '+esc(v.l)+'</button>';}).join("")+
+      '</div>'+
+      '<p class="note">A rewrite changes the wording, never the facts. If it isn’t on file, it won’t appear in any version.</p></div>'+
+
+    '<div class="field"><span class="flab">Where this came from</span>'+
+      '<ul class="trace">'+
+        p.trace.map(function(t){
+          return '<li class="'+(t.k==="none"?"none":"")+'">'+ic(t.k==="none"?"warn":"check")+
+            '<div><b>'+esc(t.t)+'</b><span>'+esc(t.s)+'</span></div></li>';
+        }).join("")+
+      '</ul></div>'+
+
+    '<div class="field"><span class="flab">Where it publishes</span>'+
+      '<div class="pubrow">'+ic("ig")+'<div><b>Instagram</b><small>@melurkopi</small></div><span class="on">Automatic</span></div>'+
+      '<div class="pubrow">'+ic("fb")+'<div><b>Facebook</b><small>Melur Kopi</small></div><span class="on">Automatic</span></div>'+
+      '<p class="note">Both run off one Meta connection — connect once, not twice. TikTok isn’t here: its API can only post to your own drafts until an audit passes, so I won’t draw a button that can’t work.</p>'+
+    '</div>'+
+    '<div class="rfoot"><div class="barcode" aria-hidden="true"></div><div class="code">Order ticket · '+esc(p.id).toUpperCase()+'</div></div>';
+  return h;
+}
+
+/* ============================ PANEL: REFUSALS ============================ */
+function renderRefusals(){
+  return '<div class="panelhead">'+
+      '<button class="iconbtn" type="button" data-act="closepanel" aria-label="Back to the week">'+ic("back")+'</button>'+
+      '<span class="ptitle">What I didn’t write</span></div>'+
+    '<p class="note" style="margin-top:14px">Three lines I could have written this week and didn’t. Each one is here with the reason, so you can overrule me if I’m wrong.</p>'+
+    REFUSALS.map(function(r){
+      return '<article class="refuse">'+
+        '<div class="stamp">'+ic("nowrite")+'Not written</div>'+
+        '<p class="claim">“'+esc(r.claim)+'”</p><p>'+esc(r.why)+'</p></article>';
+    }).join("")+
+    '<div class="rfoot"><div class="barcode" aria-hidden="true"></div><div class="code">Refusal log · week 35</div></div>';
+}
+
+/* ============================ MODALS ============================ */
+var MODAL_TITLES={settings:"Settings",brand:"Brand — locked",accounts:"Connected accounts",plan:"Plan"};
+function modalBody(kind){
+  if(kind==="settings"){
+    return '<p class="note" style="margin:14px 0 4px">Three things I am not allowed to drift from, and where they live.</p>'+
+      '<div class="rowacts" style="flex-direction:column;align-items:stretch">'+
+      '<button class="btn btn--wide" type="button" data-modal="brand">'+ic("lock")+'Brand — voice, colours, logo</button>'+
+      '<button class="btn btn--wide" type="button" data-modal="accounts">'+ic("link")+'Connected accounts</button>'+
+      '<button class="btn btn--wide" type="button" data-modal="plan">'+ic("card")+'Plan and billing</button>'+
+      '</div>';
+  }
+  if(kind==="brand"){
+    return '<div style="margin-top:14px"><span class="locked">'+ic("lock")+'Brand lock</span>'+
+      '<p class="note">Everything below is fixed. I write inside it; I do not redecorate it, and I do not invent a new one because a post would look better.</p></div>'+
+      '<div class="kv"><span>Business</span><b>Melur Kopi · Bangsar</b></div>'+
+      '<div class="kv"><span>Voice</span><b>Plain · unhurried · local</b></div>'+
+      '<div class="kv"><span>Never</span><b>Superlatives, prices, urgency</b></div>'+
+      '<div class="field"><span class="flab">Brand colours</span><div class="swatches">'+
+        '<div class="sw" style="background:#FF6A45"><b>Coral</b><span>#FF6A45</span></div>'+
+        '<div class="sw" style="background:#FFC24B"><b>Marigold</b><span>#FFC24B</span></div>'+
+      '</div></div>'+
+      '<div class="field"><span class="flab">Logo</span>'+
+        '<span class="wordmark" style="position:static;display:inline-flex"><b>Melur</b><span>Kopi · Bangsar</span></span>'+
+        '<p class="note">Placed bottom-left on a photo when you turn it on, never over a face or a plate.</p></div>';
+  }
+  if(kind==="accounts"){
+    return '<p class="note" style="margin:14px 0 12px">One Meta connection covers both. Connect once, not twice.</p>'+
+      '<div class="pubrow">'+ic("ig")+'<div><b>Instagram</b><small>@melurkopi · business account</small></div><span class="on">Connected</span></div>'+
+      '<div class="pubrow">'+ic("fb")+'<div><b>Facebook</b><small>Melur Kopi · linked page</small></div><span class="on">Connected</span></div>'+
+      '<div class="rowacts"><button class="btn btn--ink btn--wide" type="button" data-act="connect">'+ic("link")+'Reconnect Meta</button></div>'+
+      '<p class="note">TikTok is deliberately absent. Its API can only post to your own drafts until an audit passes, so a button here would be a lie.</p>';
+  }
+  return '<div style="margin-top:14px" class="kv"><span>Plan</span><b>Suara — full service</b></div>'+
+    '<div class="kv"><span>Price</span><b>RM1,200 / month</b></div>'+
+    '<div class="kv"><span>Next billing</span><b>24 September 2026</b></div>'+
+    '<div class="field"><span class="flab">What you get</span>'+
+    '<ul class="reflist">'+
+      '<li>'+ic("check")+'<div><b>Nine posts a week</b><span>Written in your voice, from your own facts.</span></div></li>'+
+      '<li>'+ic("check")+'<div><b>Instagram and Facebook, automatic</b><span>Scheduled once you approve.</span></div></li>'+
+      '<li>'+ic("check")+'<div><b>A written refusal log</b><span>Every claim I would not make, with the reason.</span></div></li>'+
+    '</ul></div>';
+}
+var lastFocused=null;
+function openModal(kind){
+  if(!lastFocused) lastFocused=document.activeElement;
+  state.modal=kind; renderModal();
+}
+function renderModal(){
+  var root=$("#modalroot");
+  if(!state.modal){ root.innerHTML=""; return; }
+  var back=state.modal!=="settings";
+  root.innerHTML='<div class="scrim" data-scrim="1">'+
+    '<div class="modal enter" role="dialog" aria-modal="true" aria-labelledby="modaltitle">'+
+      '<div class="modalhead">'+
+        (back?'<button class="iconbtn" type="button" data-modal="settings" aria-label="Back to settings">'+ic("back")+'</button>':'')+
+        '<h2 id="modaltitle">'+esc(MODAL_TITLES[state.modal])+'</h2>'+
+        '<button class="iconbtn" type="button" data-act="closemodal" aria-label="Close">'+ic("x")+'</button>'+
+      '</div>'+modalBody(state.modal)+'</div></div>';
+  var f=focusables(root);
+  if(f.length) f[0].focus();
+}
+function closeModal(){
+  state.modal=null; renderModal();
+  if(lastFocused&&lastFocused.focus) lastFocused.focus();
+  lastFocused=null;
+}
+function focusables(root){
+  return $$('a[href],button:not([disabled]),input:not([type=hidden]):not(.sr),textarea,select,[tabindex]:not([tabindex="-1"])',root)
+    .filter(function(e){
+      return e.namespaceURI==="http://www.w3.org/1999/xhtml" &&
+             (e.offsetParent!==null||e===document.activeElement);
+    });
+}
+document.addEventListener("focusin",function(e){
+  if(!state.modal) return;
+  var root=$("#modalroot");
+  if(root&&!root.contains(e.target)){
+    var f=focusables(root); if(f.length) f[0].focus();
+  }
+});
+document.addEventListener("keydown",function(e){
+  if(!state.modal) {
+    if(e.key==="Escape"&&state.panel){ closePanel(); }
+    return;
+  }
+  if(e.key==="Escape"){ e.preventDefault(); closeModal(); return; }
+  if(e.key!=="Tab") return;
+  var f=focusables($("#modalroot")); if(!f.length) return;
+  var first=f[0], last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+  else if(!$("#modalroot").contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+});
+
+/* ============================ RENDER ============================ */
+var wide=window.matchMedia("(min-width:1100px)");
+state.draft={};
+function stashDraft(){
+  $$("[data-capedit]").forEach(function(t){ state.draft[t.getAttribute("data-capedit")]=t.value; });
+  var rn=$("#refnote"); if(rn) state.refNote=rn.value;
+}
+function capOf(p){ return (state.draft[p.id]!=null)?state.draft[p.id]:p.cap; }
+function captureFocus(){
+  var a=document.activeElement;
+  if(!a||!a.id) return null;
+  return {id:a.id,s:a.selectionStart,e:a.selectionEnd};
+}
+function restoreFocus(f){
+  if(!f) return;
+  var el=document.getElementById(f.id); if(!el) return;
+  el.focus();
+  if(f.s!=null&&el.setSelectionRange){ try{ el.setSelectionRange(f.s,f.e); }catch(_){} }
+}
+function effPanel(){ return state.panel || (wide.matches?{type:"refusals"}:null); }
+function syncNav(){
+  var active = (state.panel&&state.panel.type==="refusals")?"refusals":(state.view==="library"?"library":"week");
+  $$("[data-nav]").forEach(function(b){
+    var n=b.getAttribute("data-nav");
+    if(n==="settings"||n==="needs"){ b.removeAttribute("aria-current"); return; }
+    b.setAttribute("aria-current", n===active?"true":"false");
+  });
+  var c=counts();
+  $$("[data-count='held']").forEach(function(el){
+    el.textContent=c.held;
+    el.setAttribute("data-zero", c.held===0?"1":"0");
+    el.setAttribute("aria-label", c.held+" waiting on you");
+  });
+}
+function renderPanelDom(){
+  var p=effPanel(), col=$("#panelcol"), body=$("#panelbody");
+  if(!p){ col.hidden=true; body.innerHTML=""; document.body.style.overflow=""; return; }
+  col.hidden=false;
+  document.body.style.overflow=(!wide.matches)?"hidden":"";
+  body.innerHTML = p.type==="post" ? renderDetail(post(p.id)) : renderRefusals();
+  var ta=$("[data-capedit]",body);
+  if(ta){ var pp=post(p.id); ta.value=capOf(pp); }
+}
+function render(){
+  stashDraft();
+  var f=captureFocus();
+  var centre=$("#centre");
+  centre.innerHTML = state.view==="library" ? renderLibrary() : renderWeek();
+  if(state.firstPaint){ centre.classList.add("firstpaint"); setTimeout(function(){centre.classList.remove("firstpaint");},700); state.firstPaint=false; }
+  renderPanelDom();
+  syncNav();
+  wireFile();
+  restoreFocus(f);
+}
+function wireFile(){
+  var fi=$("#fileinput"); if(!fi) return;
+  fi.onchange=function(){
+    var file=fi.files&&fi.files[0]; if(!file) return;
+    LIB.unshift({src:URL.createObjectURL(file),tag:"Yours",alt:"Photo you added: "+file.name});
+    render(); toast("Added “"+file.name+"” to your photos.");
+  };
+}
+function closePanel(){ state.panel=null; render(); }
+function openPost(id){
+  state.panel={type:"post",id:id}; render();
+  var b=$("#panelbody [data-act='closepanel']"); if(b&&!wide.matches) b.focus();
+}
+function scrollToNeeds(){
+  var n=$("#needs")||$(".needs-done")||$(".done");
+  if(!n) return;
+  var reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+  n.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+}
+
+/* ============================ ACTIONS ============================ */
+document.addEventListener("click",function(e){
+  var sc=e.target;
+  if(sc&&sc.hasAttribute&&sc.hasAttribute("data-scrim")){ closeModal(); return; }
+  var t=e.target.closest?e.target.closest("[data-act],[data-nav],[data-modal]"):null;
+  if(!t) return;
+
+  if(t.hasAttribute("data-modal")){ openModal(t.getAttribute("data-modal")); return; }
+
+  if(t.hasAttribute("data-nav")){
+    var n=t.getAttribute("data-nav");
+    if(n==="settings"){ openModal("settings"); return; }
+    if(n==="week"){ state.view="week"; state.panel=null; state.pickFor=null; render(); window.scrollTo(0,0); return; }
+    if(n==="library"){ state.view="library"; state.panel=null; render(); window.scrollTo(0,0); return; }
+    if(n==="refusals"){ state.view="week"; state.panel={type:"refusals"}; render(); return; }
+    if(n==="needs"){ state.view="week"; state.panel=null; render(); scrollToNeeds(); return; }
+  }
+
+  var act=t.getAttribute("data-act"), id=t.getAttribute("data-id"), p=id?post(id):null;
+
+  if(act==="open"){ openPost(id); return; }
+  if(act==="closepanel"){ closePanel(); return; }
+  if(act==="closemodal"){ closeModal(); return; }
+  if(act==="refusals"){ state.panel={type:"refusals"}; render(); return; }
+  if(act==="toneeds"){ state.panel=null; state.view="week"; render(); scrollToNeeds(); return; }
+
+  if(act==="answer"){
+    var qid=t.getAttribute("data-q"), i=+t.getAttribute("data-i");
+    for(var k=0;k<QUESTIONS.length;k++){
+      if(QUESTIONS[k].id===qid){
+        var q=QUESTIONS[k]; q.answered=q.answers[i];
+        var hp=post(q.postId); if(hp&&hp.status==="held") hp.status="ready";
+        render(); toast(q.day+" answered. "+q.answered.r); return;
+      }
+    }
+    return;
+  }
+  if(act==="approve"){
+    if(p&&p.status==="ready"){ p.status="scheduled"; render(); toast(p.day+" is scheduled."); }
+    return;
+  }
+  if(act==="batch"){
+    var n2=0; POSTS.forEach(function(x){ if(x.status==="ready"){ x.status="scheduled"; n2++; } });
+    render(); toast(n2+" posts scheduled. Nothing in them claims anything.");
+    window.scrollTo({top:0,behavior:"auto"});
+    return;
+  }
+  if(act==="save"){
+    var ta=$("#cap-"+id);
+    if(ta){ p.cap=ta.value.trim()||p.cap; }
+    delete state.draft[id];
+    state.panel=null; render(); toast("Caption saved to "+p.day+".");
+    return;
+  }
+  if(act==="rewrite"){
+    var v=p.rw[+t.getAttribute("data-i")];
+    var rta=$("#cap-"+id); if(rta) rta.value=v.t;   /* so stashDraft picks up the new text */
+    p.cap=v.t; delete state.draft[id]; render(); toast("Rewritten — "+v.l.toLowerCase()+".");
+    return;
+  }
+  if(act==="logo"){ p.logo=!p.logo; render(); toast(p.logo?"Wordmark on the photo.":"Wordmark removed."); return; }
+  if(act==="usephoto"){ state.pickFor=id; state.view="library"; state.panel=null; render(); window.scrollTo(0,0); return; }
+  if(act==="cancelpick"){ state.pickFor=null; render(); return; }
+  if(act==="pickphoto"){
+    var src=t.getAttribute("data-src");
+    if(state.pickFor){
+      var target=post(state.pickFor); target.img=src; state.pickFor=null; state.view="week";
+      state.panel={type:"post",id:target.id}; render(); toast("Photo swapped on "+target.day+".");
+    }else{
+      state.selectedPhoto=(state.selectedPhoto===src)?null:src; render();
+    }
+    return;
+  }
+  if(act==="upfile"){ var fi=$("#fileinput"); if(fi) fi.click(); return; }
+  if(act==="savenote"){
+    var rn=$("#refnote"); state.refNote=rn?rn.value:"";
+    toast(state.refNote.trim()?"Note saved to your references.":"Nothing to save yet.");
+    return;
+  }
+  if(act==="connect"){ toast("This is a prototype — no Meta window will open."); return; }
+  if(act==="download"){
+    var host=$("#dl-"+id); if(!host) return;
+    var blob=new Blob([p.cap+"\n\n— Melur Kopi · "+p.dstr+" · photo: "+p.img+"\n"],{type:"text/plain"});
+    var url=URL.createObjectURL(blob);
+    host.innerHTML='<div class="rowacts"><a class="btn btn--sm btn--ink" download="melur-kopi-'+id+'.txt" href="'+url+'">'+ic("down")+'Caption (.txt)</a>'+
+      '<a class="btn btn--sm btn--ink" download="melur-kopi-'+id+'.jpg" href="'+p.img+'">'+ic("down")+'Photo (.jpg)</a></div>'+
+      '<p class="note">Two real files, saved separately. Instagram wants them separately anyway.</p>';
+    announce("Download links ready");
+    return;
+  }
+});
+
+document.addEventListener("input",function(e){
+  if(e.target&&e.target.hasAttribute&&e.target.hasAttribute("data-capedit")){
+    state.draft[e.target.getAttribute("data-capedit")]=e.target.value;
+  }
+});
+if(wide.addEventListener) wide.addEventListener("change",function(){ render(); });
+
+render();
+</script>
+</body>
+</html>
