@@ -127,9 +127,11 @@ svg{display:block;flex:0 0 auto}
 }
 .brandmark{display:flex;align-items:center;gap:10px;min-width:0}
 .brandmark__sq{
-  width:40px;height:40px;flex:0 0 40px;border:var(--bd2);border-radius:11px;
-  background:var(--coral);display:flex;align-items:center;justify-content:center;
+  width:42px;height:42px;flex:0 0 42px;border:var(--bd2);border-radius:12px;
+  background:var(--paper);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
 }
+.brandmark__sq svg{width:26px;height:26px}
 .brandmark__txt{min-width:0}
 .brandmark__name{font-family:"Gloock",Georgia,serif;font-size:21px;line-height:1;letter-spacing:.01em}
 .brandmark__sub{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;
@@ -398,6 +400,85 @@ main{min-width:0}
   *,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;transition-duration:1ms !important}
 }
 
+/* ---------- the mark as decoration ----------
+   Two treatments, assigned by surface so each one actually reads:
+   D (cream knock-out) on coral/green fields, B (ink spray tag) on marigold.
+   Both live in layer 1; every other child of .deco is lifted to layer 2. */
+.deco{position:relative;overflow:hidden}
+.deco>*:not(.knock){position:relative;z-index:2}
+.knock{
+  position:absolute;z-index:1;pointer-events:none;
+  right:-84px;top:-72px;width:330px;height:330px;
+}
+.knock--spray{right:-72px;top:-58px;width:310px;height:310px}
+@media (min-width:720px){
+  .knock{right:-96px;top:-84px;width:400px;height:400px}
+  .knock--spray{right:-86px;top:-68px;width:380px;height:380px}
+}
+
+/* ---------- illustrated icons (raster, from the onboarding set) ---------- */
+.pico{outline:none !important;display:block;flex:0 0 auto}
+.icohead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.icohead>div{min-width:0}
+
+/* ---------- chat thread ---------- */
+.thread{display:grid;gap:10px;margin-top:14px}
+.msg{max-width:min(46ch,90%);border:2px solid var(--ink);border-radius:16px;padding:10px 13px;
+  font-size:15px;line-height:1.45;font-weight:500}
+.msg--her{margin-left:auto;background:var(--marigold);border-bottom-right-radius:5px}
+.msg--sys{background:var(--paper);border-bottom-left-radius:5px}
+.msg__who{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:4px;color:var(--muted)}
+.msg--her .msg__who{color:var(--ink-soft)}
+.composer{display:flex;gap:10px;margin-top:14px;align-items:stretch}
+.composer input{
+  flex:1 1 auto;min-width:0;border:var(--bd2);border-radius:999px;background:var(--paper);
+  padding:12px 18px;font-size:16px;font-weight:500;min-height:48px;
+}
+.composer input:focus{outline:3px solid var(--ink);outline-offset:2px}
+
+/* ---------- history ---------- */
+.perf{display:grid;gap:14px}
+.perfitem{border:var(--bd);border-radius:var(--r-card);box-shadow:var(--sh);background:var(--paper);
+  padding:var(--pad);display:grid;gap:11px}
+.perfitem__top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;row-gap:7px}
+/* 2x2, not 4 across: at 4 across the word COMMENTS does not fit the cell at any column width
+   this layout actually produces, and it broke out through its own border. */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{border:2px solid var(--ink);border-radius:var(--r-in);background:var(--cream2);
+  padding:8px 6px;text-align:center;min-width:0;overflow:hidden}
+.stat b{display:block;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat span{display:block;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--muted);margin-top:2px;white-space:nowrap}
+.learn{display:grid;gap:10px;margin-top:12px}
+.learnitem{display:flex;gap:11px;align-items:flex-start;border:2px solid var(--ink);
+  border-radius:var(--r-in);background:var(--paper);padding:11px 13px}
+.learnitem p{margin:0;font-size:15px;line-height:1.45;font-weight:500}
+
+/* ---------- platform preview ---------- */
+.pv{display:grid;gap:16px}
+.pvcard{border:var(--bd2);border-radius:16px;background:var(--paper);overflow:hidden}
+.pvcard__bar{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:2px solid var(--ink)}
+.pvcard__av{width:36px;height:36px;flex:0 0 36px;border:2px solid var(--ink);background:var(--marigold);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pv--ig .pvcard__av{border-radius:999px}
+.pv--fb .pvcard__av{border-radius:9px}
+.pvcard__h{font-weight:800;font-size:14.5px;line-height:1.2}
+.pvcard__m{font-size:12.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:5px}
+.pvcard img.shot{width:100%;object-fit:cover;display:block}
+.pv--ig img.shot{aspect-ratio:1/1}
+.pv--fb img.shot{aspect-ratio:4/3}
+.pvacts{display:flex;align-items:center;gap:14px;padding:10px 12px}
+.pvbody{padding:0 12px 12px;font-size:14px;line-height:1.5;font-weight:500}
+.pvbody .hd{font-weight:800}
+.pvcount{padding:2px 12px 0;font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.pvfoot{display:flex;border-top:2px solid var(--ink)}
+.pvfoot span{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 4px;font-size:13.5px;font-weight:800;color:var(--ink-soft)}
+.pvfoot span+span{border-left:2px solid var(--ink)}
+.pvhead{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+@media (min-width:720px){ .pv{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start} }
+
 /* ---------- responsive ---------- */
 @media (max-width:719px){
   .topbar .nav{display:none}
@@ -406,12 +487,13 @@ main{min-width:0}
 }
 @media (min-width:720px){
   .q__answers{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .postlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .postlist,.perf{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid-photos{grid-template-columns:repeat(3,minmax(0,1fr))}
   .modal{
     border-radius:22px;border-bottom:var(--bd);box-shadow:var(--sh-lg);
     margin:auto;max-height:88vh;
   }
+  .modal--wide{max-width:900px}
   .scrim{align-items:center;padding:24px}
   .detailgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 }
@@ -425,14 +507,14 @@ main{min-width:0}
   .side .navitem{width:100%;justify-content:flex-start;font-size:15.5px;min-height:52px;border-radius:16px}
   .side .badge{margin-left:auto}
   .topbar .nav{display:none}
-  .postlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .postlist,.perf{grid-template-columns:repeat(2,minmax(0,1fr))}
   .refgrid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
   .hero{padding:28px}
   .grid-photos{grid-template-columns:repeat(4,minmax(0,1fr))}
   .shell{padding-left:24px;padding-right:24px}
 }
 @media (min-width:1400px){
-  .postlist{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .postlist,.perf{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -441,8 +523,23 @@ main{min-width:0}
 <header class="topbar">
   <div class="topbar__in">
     <div class="brandmark">
-      <div class="brandmark__sq" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A1520" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15V9M8 18V6M12 20V4M16 17V7M20 14V10"/></svg>
+      <div class="brandmark__sq">
+        <!-- the real Suara mark: four stroked semicircular arcs radiating from one centre -->
+        <svg width="26" height="26" viewBox="0 0 512 512" role="img" aria-label="Suara">
+          <defs>
+            <linearGradient id="s-warm" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#FF5A45"/>
+              <stop offset="0.55" stop-color="#FF8A4B"/>
+              <stop offset="1" stop-color="#FFC24B"/>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#s-warm)" stroke-linecap="round" transform="translate(256 364)">
+            <path d="M -46 0 A 46 46 0 0 1 46 0" stroke-width="34"/>
+            <path d="M -104 0 A 104 104 0 0 1 104 0" stroke-width="30"/>
+            <path d="M -160 0 A 160 160 0 0 1 160 0" stroke-width="26"/>
+            <path d="M -214 0 A 214 214 0 0 1 214 0" stroke-width="22"/>
+          </g>
+        </svg>
       </div>
       <div class="brandmark__txt">
         <div class="brandmark__name">Suara</div>
@@ -483,10 +580,10 @@ main{min-width:0}
 
     <main>
       <section class="view" id="view-week" aria-labelledby="weekTitle"></section>
-      <section class="view" id="view-needs" hidden aria-labelledby="needsTitle"></section>
+      <section class="view" id="view-chat" hidden aria-labelledby="chatTitle"></section>
       <section class="view" id="view-post" hidden></section>
       <section class="view" id="view-library" hidden></section>
-      <section class="view" id="view-refusals" hidden></section>
+      <section class="view" id="view-history" hidden></section>
     </main>
   </div>
 </div>
@@ -526,8 +623,63 @@ const ico = {
   lock:   s => I('<rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>', s),
   plug:   s => I('<path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0Z"/><path d="M12 17v5"/>', s),
   card:   s => I('<rect x="2.5" y="5" width="19" height="14" rx="2.6"/><path d="M2.5 10h19"/>', s),
-  dot:    s => I('<circle cx="12" cy="12" r="5.5" fill="currentColor" stroke="none"/>', s)
+  dot:    s => I('<circle cx="12" cy="12" r="5.5" fill="currentColor" stroke="none"/>', s),
+  chat:   s => I('<path d="M20.5 11.6a7.9 7.9 0 0 1-8.5 7.9l-5.3 1.6 1.5-4.2a7.9 7.9 0 1 1 12.3-5.3Z"/>', s),
+  heart:  s => I('<path d="M12 20.4S4.6 15.9 4.6 10.8A4.1 4.1 0 0 1 12 8.3a4.1 4.1 0 0 1 7.4 2.5c0 5.1-7.4 9.6-7.4 9.6Z"/>', s),
+  save:   s => I('<path d="M6.5 3.5h11v17L12 16.4 6.5 20.5Z"/>', s),
+  share:  s => I('<path d="M4 13v6.5h16V13"/><path d="M12 16V3.6"/><path d="m7.6 8 4.4-4.4L16.4 8"/>', s),
+  globe:  s => I('<circle cx="12" cy="12" r="9"/><path d="M3.3 9.2h17.4M3.3 14.8h17.4"/><path d="M12 3a15.5 15.5 0 0 1 0 18 15.5 15.5 0 0 1 0-18Z"/>', s),
+  thumb:  s => I('<path d="M7.5 20.5V10L12 3.5l1.4.9a2 2 0 0 1 .8 2.2L13.6 10h4.9a2 2 0 0 1 2 2.4l-1.2 6.2a2 2 0 0 1-2 1.9Z"/><path d="M7.5 10.5H4v10h3.5"/>', s),
+  more:   s => I('<circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none"/>', s),
+  eye:    s => I('<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.2"/>', s)
 };
+
+/* ---------- the four-arc mark, used as card decoration ----------
+   D — cream knock-out, for the CORAL and GREEN fields.
+   B — ink spray tag, for the MARIGOLD fields (cream on marigold washes out: 1.49:1 at full
+       strength, so a knock-out there could only ever be a smudge).
+   Opacities were picked to land every treatment at roughly the same measured 1.5:1 against
+   its own field, so the mark is visible and can never rival ink text (which sits at 6.31+). */
+const ARCS = `<path d="M -46 0 A 46 46 0 0 1 46 0" stroke-width="34"/>
+    <path d="M -104 0 A 104 104 0 0 1 104 0" stroke-width="30"/>
+    <path d="M -160 0 A 160 160 0 0 1 160 0" stroke-width="26"/>
+    <path d="M -214 0 A 214 214 0 0 1 214 0" stroke-width="22"/>`;
+
+let sprayN = 0;
+/* D — knocked out of the card in cream */
+function markKnock(op){
+  return `<svg class="knock" viewBox="0 0 512 512" style="opacity:${op}" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="#FDF7EF" stroke-linecap="round" transform="translate(256 364)">${ARCS}</g></svg>`;
+}
+/* B — sprayed, rough-edged, rotated, in ink */
+function markSpray(op, col){
+  const id = "spray" + (++sprayN);
+  return `<svg class="knock knock--spray" viewBox="0 0 512 512" style="opacity:${op};transform:rotate(-13deg)" aria-hidden="true" focusable="false">
+    <defs><filter id="${id}" x="-25%" y="-25%" width="150%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+    </filter></defs>
+    <g fill="none" stroke="${col}" stroke-linecap="round" filter="url(#${id})" transform="translate(256 364)">${ARCS}</g></svg>`;
+}
+/* REPORTED DEVIATION — the marigold spray is coral-deep, not ink.
+   Ink over marigold desaturates it to khaki: #1A1520 @ .22 over #FFC24B composites to #CC9C41,
+   which reads as a coffee stain rather than as a tag. That is structural, not a tuning problem —
+   any neutral dark at low alpha over a saturated yellow goes muddy, and at .16 (the lowest
+   opacity that still reads) it was dull rather than clean. Coral-deep takes its separation from
+   HUE instead of from lightness, so it reads as sprayed and stays clean on gold.
+   Set SPRAY_INK = true to go back to ink #1A1520 @ .16. */
+const SPRAY_INK = false;
+const MARK = {
+  coral:  () => markKnock(0.55),                                    /* cream on coral  — 1.53:1 */
+  green:  () => markKnock(0.45),                                    /* cream on green  — 1.52:1 */
+  gold:   () => SPRAY_INK ? markSpray(0.16, "#1A1520")
+                          : markSpray(0.30, "#E24A28")
+};
+
+/* illustrated PNG icons from the Suara onboarding set — decorative unless given an alt */
+function pico(name, size, alt){
+  return `<img class="pico" src="icons/${name}.png" width="${size}" height="${size}" alt="${alt ? esc(alt) : ""}"${alt ? "" : ' aria-hidden="true"'}>`;
+}
 
 /* ============================ data ============================ */
 const V = (label, text) => ({ label, text });
@@ -626,8 +778,8 @@ const posts = [
     id:"sat", day:"Saturday", time:"8:30am", status:"held", img:"img/p3.jpg", logo:true,
     caption:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
     variants:[
-      V("Shorter","Weekend mornings run slower here. Come early."),
-      V("Warmer","Weekend mornings have their own pace here. Come early if the window seat is the one you want.")
+      V("Shorter","Weekend mornings run slower here. Kaya toast and the papers."),
+      V("Warmer","Weekend mornings have their own pace here. The window seat looks out onto Telawi.")
     ],
     trace:[
       {c:"the window seat", s:"floor plan: window table, two seats"},
@@ -666,6 +818,66 @@ const refusals = [
     why:"I have no idea how full you are. If it isn’t true on the day, it’s the kind of line people remember." }
 ];
 
+/* ---------- history: what has already gone out ----------
+   ILLUSTRATIVE SAMPLE DATA. Invented for this prototype, sized for a small Bangsar cafe.
+   Every observation in LEARNED is arithmetic on the numbers below — nothing else. */
+const published = [
+  {day:"Monday",   date:"25 August",  time:"6:30am", img:"img/p1.jpg", subject:"The first cup",
+   caption:"We open at seven because someone always needs the first cup before the rest of the city is awake. Same beans, same hands, same corner of Bangsar.",
+   likes:118, comments:9, saves:24, reach:1460},
+  {day:"Tuesday",  date:"26 August",  time:"8:00am", img:"img/p2.jpg", subject:"Kaya toast",
+   caption:"Kaya toast and two soft eggs. Nothing complicated, nothing that needs explaining.",
+   likes:134, comments:6, saves:31, reach:1180},
+  {day:"Saturday", date:"23 August",  time:"9:00am", img:"img/p3.jpg", subject:"The room",
+   caption:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
+   likes:91, comments:4, saves:12, reach:870},
+  {day:"Thursday", date:"21 August",  time:"3:00pm", img:"img/p5.jpg", subject:"The counter",
+   caption:"Second half of the day. The grinder is still going, and there is always one more cup in it.",
+   likes:47, comments:2, saves:5,  reach:610},
+  {day:"Sunday",   date:"17 August",  time:"8:00am", img:"img/p4.jpg", subject:"Nasi lemak",
+   caption:"Nasi lemak goes on at eight and stays until it doesn’t. Most mornings that’s before noon, so you know how it goes.",
+   likes:156, comments:11, saves:38, reach:1930}
+];
+
+const learned = [
+  "Your four morning posts reached 1,360 people on average. The one afternoon post reached 610. Mornings are when your account gets read, and it is not close.",
+  "Food on a plate gets saved. Nasi lemak (38) and kaya toast (31) were saved more than the room (12) and the counter (5) put together. A save usually means someone intends to come.",
+  "Kaya toast had the best save rate of the five — 31 saves against 1,180 reached, where nasi lemak managed 38 against 1,930. It was also the plainest caption: one dish, no explaining.",
+  "Comments sat between 2 and 11 all month. That is ordinary for an account this size, and it is not a thing to fix by asking questions in a caption."
+];
+
+const HELD_TOTAL = 6, PUBLISHED_TOTAL = 47;
+
+/* ---------- chat: canned replies, keyed off simple keyword matching ----------
+   Every reply has to obey the same rule the captions do: nothing claimed that is not on file. */
+const REPLIES = [
+  {k:["short","shorter","cut","trim","tighten","brief"],
+   t:"I can go shorter. The Wednesday one drops to “Quarter past seven, before the room fills. Kaya toast is on from opening.” Open the post and the Shorter button puts it in — nothing is lost from your file, only words."},
+  {k:["warm","warmer","friendly","softer","nice"],
+   t:"Warmer is easy — it is a rewrite, not a new fact. Thursday and Wednesday both have a Warmer version waiting on the post itself. Same three things on file, said more slowly."},
+  {k:["halal","certificate","cert","jakim"],
+   t:"I will not put the word halal in a caption until a certificate number is on your brand lock. That is the one line with a real penalty behind it, so it stays a question, not a guess."},
+  {k:["busy","full","fill","book","booking","seat","table","queue"],
+   t:"I cannot say how full you are — I have no way of knowing it on the day, and if it is wrong it is the kind of line people remember. I can say what is on the menu and what time you open. Both of those are on file."},
+  {k:["price","cost","rm","cheap","promo","discount","offer"],
+   t:"There are no prices on your file, so I will not put one in a caption. Send me the menu with prices and I will use them exactly as written — until then the posts stay quiet about money."},
+  {k:["photo","picture","image","pic","camera"],
+   t:"Photos come from your Library. Open the post, choose “Use a different photo”, and pick one — I will not go looking for a picture that is not yours."},
+  {k:["thursday","thu","nasi"],
+   t:"Thursday is held, not stuck. It says nasi lemak from eight, which is on your menu, and nothing about certification. Answer the halal question above and it schedules itself."},
+  {k:["saturday","sat","close","closing","time","hours"],
+   t:"Saturday is waiting on your closing time. Your intake says 6pm and you told me 9pm on weekends — I would rather ask twice than post the wrong hour once."},
+  {k:["thank","thanks","good","great","nice job","ok","okay"],
+   t:"Noted. I will keep the same shape for next week unless you tell me otherwise."}
+];
+const REPLY_FALLBACK = "I have got that. I will work it into next week's drafts — and if doing it would mean stating something that is not on your file, I will come back and ask instead of guessing.";
+
+function replyFor(text){
+  const t = String(text).toLowerCase();
+  for (const r of REPLIES){ if (r.k.some(k => t.includes(k))) return r.t; }
+  return REPLY_FALLBACK;
+}
+
 const library = {
   photos:[
     {src:"img/p1.jpg", name:"First cup", own:false},
@@ -688,7 +900,10 @@ const state = {
   pickingFor:null,     // post id awaiting a photo pick
   answered:{},         // postId -> ack text
   refsNote:library.note,
-  firstWeekPaint:true
+  firstWeekPaint:true,
+  thread:[             // chat messages, oldest first
+    {who:"sys", text:"Nine posts are written for this week. Two of them are waiting on you — they are above. Anything else you want changed, type it here and I will do it."}
+  ]
 };
 
 /* ============================ helpers ============================ */
@@ -727,16 +942,25 @@ function statusChip(st){
   return `<span class="chip ${s.chip}">${s.icon(14)}${esc(s.word)}</span>`;
 }
 
+/* the illustrated icon is an ADDITION to the chip, never a replacement:
+   status still carries a glyph, a word and a colour on its own */
+const STATUSPIC = { held:"pn-lock", scheduled:"pn-cal" };
+function statusMark(st){
+  const p = STATUSPIC[st];
+  return `<span style="margin-left:auto;display:inline-flex;align-items:center;gap:8px">${
+    p ? pico(p, 24) : ""}${statusChip(st)}</span>`;
+}
+
 function wordmarkHTML(){
   return `<div class="wordmark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A1520" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 14V10M9.5 17V7M14 20V4M18.5 15V9"/></svg><span class="wordmark__t">Melur Kopi</span></div>`;
 }
 
 /* ============================ nav ============================ */
 const NAVITEMS = [
-  {id:"week",     label:"Week",      icon:ico.grid},
-  {id:"needs",    label:"Needs you", icon:ico.ask,  badge:true},
-  {id:"library",  label:"Library",   icon:ico.book},
-  {id:"refusals", label:"Didn’t write", icon:ico.ban}
+  {id:"week",    label:"Week",    icon:ico.grid},
+  {id:"chat",    label:"Chat",    icon:ico.chat, badge:true},
+  {id:"library", label:"Library", icon:ico.book},
+  {id:"history", label:"History", icon:ico.clock}
 ];
 
 function renderNav(){
@@ -757,7 +981,7 @@ function renderNav(){
 /* ============================ views ============================ */
 function show(view){
   state.view = view;
-  ["week","needs","post","library","refusals"].forEach(v => {
+  ["week","chat","post","library","history"].forEach(v => {
     const node = el("view-" + v);
     node.hidden = v !== view;
     node.classList.remove("enter");
@@ -777,7 +1001,8 @@ function renderWeek(){
   const done = held === 0 && ready === 0;
 
   const top = done ? `
-    <div class="hero block--green" style="background:var(--green)">
+    <div class="hero block--green deco" style="background:var(--green)">
+      ${MARK.green()}
       <div class="eyebrow">${"Melur Kopi &middot; this week"}</div>
       <h1 style="margin-top:8px">Nothing left for you.</h1>
       <p style="margin:14px 0 0;font-size:16.5px;font-weight:600;max-width:46ch">
@@ -785,10 +1010,11 @@ function renderWeek(){
         Two questions answered. Nothing was published that you had not seen.
       </p>
       <div class="row" style="margin-top:18px">
-        <button class="btn btn--ink" data-nav="refusals">${ico.ban(18)}See what I didn’t write</button>
+        <button class="btn btn--ink" data-nav="history">${ico.ban(18)}See what I held back</button>
       </div>
     </div>` : `
-    <div class="hero">
+    <div class="hero deco">
+      ${MARK.gold()}
       <div class="eyebrow">Melur Kopi &middot; this week</div>
       <h1 id="weekTitle" style="margin-top:8px">Nine posts.<br>${
         held > 0
@@ -803,26 +1029,36 @@ function renderWeek(){
     </div>`;
 
   const needsCard = held > 0 ? `
-    <div class="block block--coral">
-      <div class="eyebrow">Needs you</div>
-      <h2 style="font-size:clamp(21px,5vw,26px);margin-top:8px">
-        <span class="num">${cap(numword(held))}</span> ${held === 1 ? "question" : "questions"} before I can finish the week.
-      </h2>
-      <p style="margin:10px 0 0;font-size:15.5px;font-weight:600">
+    <div class="block block--coral deco">
+      ${MARK.coral()}
+      <div class="icohead">
+        ${pico("pn-lock", 44)}
+        <div>
+          <div class="eyebrow">Chat &middot; held</div>
+          <h2 style="font-size:clamp(20px,4.6vw,25px);margin-top:6px">
+            <span class="num">${cap(numword(held))}</span> ${held === 1 ? "question" : "questions"} before I can finish the week.
+          </h2>
+        </div>
+      </div>
+      <p style="margin:12px 0 0;font-size:15.5px;font-weight:600">
         Both are things I refuse to guess at. Each one takes a tap.
       </p>
-      <button class="btn" style="margin-top:16px" data-nav="needs">
-        ${ico.ask(18)}Answer ${held === 1 ? "it" : "them"}
+      <button class="btn" style="margin-top:16px" data-nav="chat">
+        ${ico.chat(18)}Answer ${held === 1 ? "it" : "them"}
       </button>
     </div>` : `
     <div class="block block--cream">
-      <div class="eyebrow">Needs you</div>
+      <div class="eyebrow">Chat</div>
       <h2 style="font-size:20px;margin-top:8px">Nothing needs you.</h2>
       <p class="small" style="margin:8px 0 0;font-weight:600">Both questions are answered. I have not guessed at anything.</p>
+      <div class="row" style="margin-top:14px">
+        <button class="btn btn--sm" data-nav="chat">${ico.chat(16)}Open the chat</button>
+      </div>
     </div>`;
 
   const batchCard = ready > 0 ? `
-    <div class="block block--gold">
+    <div class="block block--gold deco">
+      ${MARK.gold()}
       <div class="eyebrow">Ready to go out</div>
       <h2 style="font-size:clamp(21px,5vw,26px);margin-top:8px">
         <span class="num">${cap(numword(ready))}</span> ${ready === 1 ? "post claims" : "posts claim"} nothing you haven’t confirmed.
@@ -847,7 +1083,7 @@ function renderWeek(){
         <span class="post__day">${esc(p.day)}</span>
         <span class="post__time num">${esc(p.time)}</span>
         ${p.today ? '<span class="chip chip--ink">Today</span>' : ""}
-        <span style="margin-left:auto">${statusChip(p.status)}</span>
+        ${statusMark(p.status)}
       </div>
       <div class="post__media">
         <img src="${p.img}" alt="${esc(p.day)} photo for Melur Kopi">
@@ -879,45 +1115,76 @@ function renderWeek(){
   state.firstWeekPaint = false;
 }
 
-/* ---------- needs you ---------- */
-function renderNeeds(){
+/* ---------- chat ---------- */
+function renderChat(){
   const open = posts.filter(p => p.q && p.status === "held");
   const answered = posts.filter(p => p.q && state.answered[p.id]);
 
-  const head = `<div class="sectionhead" style="margin-top:18px">
-      <h2 id="needsTitle" style="font-size:clamp(26px,7vw,36px)">Needs you</h2>
+  const head = `
+    <div class="sectionhead" style="margin-top:18px;align-items:center">
+      <div class="icohead">
+        ${pico("pn-voice", 44)}
+        <h2 id="chatTitle" style="font-size:clamp(26px,7vw,36px)">Chat</h2>
+      </div>
+      <span class="small muted" style="font-weight:700">
+        ${open.length > 0
+          ? `<span class="num">${open.length}</span> held ${open.length === 1 ? "question" : "questions"} first &middot; then anything you want changed`
+          : "Nothing held. Ask for a change below."}
+      </span>
     </div>`;
 
-  if (open.length === 0){
-    el("view-needs").innerHTML = head + `
-      <div class="q q--done">
+  const questions = open.length === 0 ? `
+      <div class="q q--done deco">
+        ${MARK.gold()}
         <div class="eyebrow">Done</div>
         <h3 style="margin-top:8px">Nothing needs you.</h3>
         <p class="q__why">Both questions are answered and on file. I did not guess at either of them.</p>
-        <div class="row" style="margin-top:18px">
-          <button class="btn" data-nav="week">${ico.back(18)}Back to the week</button>
-        </div>
       </div>
-      ${answered.length ? `<div class="stack" style="margin-top:16px">${answered.map(p => ackCard(p)).join("")}</div>` : ""}`;
-    return;
-  }
-
-  el("view-needs").innerHTML = head + `
-    <p style="margin:-4px 0 16px;font-size:16px;font-weight:600;max-width:56ch">
-      <span class="num">${cap(numword(open.length))}</span> ${open.length === 1 ? "thing" : "things"} I will not guess at.
-      Answer and the post finishes itself.
-    </p>
+      ${answered.length ? `<div class="stack" style="margin-top:14px">${answered.map(p => ackCard(p)).join("")}</div>` : ""}
+    ` : `
     <div class="stack">
       ${open.map(p => `
-        <div class="q" data-q="${p.id}">
-          <div class="eyebrow">${esc(p.day)} &middot; ${esc(p.time)}</div>
-          <h3 style="margin-top:8px">${esc(p.q.title)}</h3>
+        <div class="q deco" data-q="${p.id}">
+          ${MARK.coral()}
+          <div class="icohead">
+            ${pico("pn-lock", 44)}
+            <div>
+              <div class="eyebrow">${esc(p.day)} &middot; ${esc(p.time)} &middot; held</div>
+              <h3 style="margin-top:6px">${esc(p.q.title)}</h3>
+            </div>
+          </div>
           <p class="q__why">${esc(p.q.why)}</p>
           <div class="q__answers">
             ${p.q.answers.map((a,i) => `<button class="btn btn--block" data-answer="${p.id}" data-i="${i}">${esc(a.label)}</button>`).join("")}
           </div>
         </div>`).join("")}
       ${answered.map(p => ackCard(p)).join("")}
+    </div>`;
+
+  el("view-chat").innerHTML = head + questions + `
+    <div class="sectionhead" style="margin-top:26px">
+      <h2>Ask for a change</h2>
+      <span class="small muted" style="font-weight:700">Type it the way you would say it</span>
+    </div>
+    <div class="block block--paper">
+      <div class="thread" id="thread">
+        ${state.thread.map(m => `
+          <div class="msg msg--${m.who === "her" ? "her" : "sys"}">
+            <div class="msg__who">${m.who === "her" ? "You" : "Suara"}</div>
+            ${esc(m.text)}
+          </div>`).join("")}
+      </div>
+      <form class="composer" id="chatForm" autocomplete="off">
+        <label class="sr" for="chatInput">Ask Suara for a change</label>
+        <input type="text" id="chatInput" placeholder="make thursday warmer">
+        <button class="btn btn--primary" type="submit" id="chatSend" aria-label="Send">
+          ${ico.send(18)}<span>Send</span>
+        </button>
+      </form>
+      <p class="small muted" style="margin:12px 0 0;font-weight:600">
+        Anything you ask for here is a rewrite of what is already on your file. If it would need a
+        fact I do not have, I come back and ask instead.
+      </p>
     </div>`;
 }
 
@@ -941,7 +1208,10 @@ function renderPost(){
 
   const variantPills = p.variants.length ? `
     <div class="block block--paper">
-      <div class="eyebrow eyebrow--ico">${ico.redo(14)}<span>Ask it to redo the post</span></div>
+      <div class="icohead">
+        ${pico("pn-brush", 30)}
+        <div class="eyebrow">Ask it to redo the post</div>
+      </div>
       <p class="small" style="margin:8px 0 12px;font-weight:600">Same facts, different shape. Nothing new gets claimed.</p>
       <div class="row">
         <button class="btn btn--sm" data-variant="orig" aria-pressed="${p.active === undefined || p.active === "orig"}">Original</button>
@@ -956,6 +1226,7 @@ function renderPost(){
         ${p.logo ? wordmarkHTML() : ""}
       </div>
       <div class="row">
+        <button class="btn btn--sm btn--gold" id="previewBtn" aria-haspopup="dialog">${ico.eye(16)}Preview</button>
         <button class="btn btn--sm" id="logoBtn" aria-pressed="${!!p.logo}">
           ${ico.image(16)}Logo ${p.logo ? "on" : "off"}
         </button>
@@ -965,7 +1236,11 @@ function renderPost(){
       <div class="note" id="dlNote" hidden></div>
 
       <div class="block block--paper">
-        <div class="eyebrow">Where this came from</div>
+        <div class="icohead">
+          ${pico("pn-quote", 30)}
+          <div class="eyebrow">Where this came from</div>
+        </div>
+        <div style="height:2px"></div>
         <div class="trace">
           ${p.trace.map(t => `
             <div class="traceitem ${t.none ? "traceitem--none" : ""}">
@@ -999,7 +1274,7 @@ function renderPost(){
           <span class="post__day" style="font-size:22px">${esc(p.day)}</span>
           <span class="post__time num">${esc(p.time)}</span>
           ${p.today ? '<span class="chip chip--ink">Today</span>' : ""}
-          <span style="margin-left:auto">${statusChip(p.status)}</span>
+          ${statusMark(p.status)}
         </div>
         ${editable ? `
           <label class="eyebrow" for="capField">The caption</label>
@@ -1007,7 +1282,7 @@ function renderPost(){
           <div class="row" style="margin-top:12px">
             <button class="btn btn--ink" id="saveBtn">${ico.check(18)}Save caption</button>
             ${p.status === "ready" ? `<button class="btn" id="approveBtn">${ico.send(18)}Approve &amp; schedule</button>` : ""}
-            ${p.status === "held" ? `<button class="btn" data-nav="needs">${ico.ask(18)}Answer the question first</button>` : ""}
+            ${p.status === "held" ? `<button class="btn" data-nav="chat">${ico.chat(18)}Answer the question first</button>` : ""}
           </div>
           <div class="note" id="saveNote" hidden></div>
         ` : `
@@ -1018,10 +1293,16 @@ function renderPost(){
       </div>
       ${editable ? variantPills : ""}
       ${p.status === "scheduled" ? `
-        <div class="block block--green">
-          <div class="eyebrow">Scheduled</div>
-          <h3 style="font-size:19px;margin-top:7px">Going out ${esc(p.day)} at ${esc(p.time)}.</h3>
-          <p class="small" style="margin:8px 0 0;font-weight:600">Instagram and Facebook, both from one connection.</p>
+        <div class="block block--green deco">
+          ${MARK.green()}
+          <div class="icohead">
+            ${pico("pn-cal", 40)}
+            <div>
+              <div class="eyebrow">Scheduled</div>
+              <h3 style="font-size:19px;margin-top:6px">Going out ${esc(p.day)} at ${esc(p.time)}.</h3>
+            </div>
+          </div>
+          <p class="small" style="margin:10px 0 0;font-weight:600">Instagram and Facebook, both from one connection.</p>
         </div>` : ""}
       ${p.q && state.answered[p.id] ? `
         <div class="block block--paper">
@@ -1095,14 +1376,96 @@ function renderLibrary(){
   growAll();
 }
 
-/* ---------- refusals ---------- */
-function renderRefusals(){
-  el("view-refusals").innerHTML = `
+/* ---------- history ---------- */
+function renderHistory(){
+  const n = published.length;
+  const totalReach = published.reduce((a,p) => a + p.reach, 0);
+  const totalSaves = published.reduce((a,p) => a + p.saves, 0);
+
+  el("view-history").innerHTML = `
     <div class="sectionhead" style="margin-top:18px">
-      <h2 style="font-size:clamp(26px,7vw,36px)">What I didn’t write</h2>
+      <h2 style="font-size:clamp(26px,7vw,36px)">History</h2>
+      <span class="small muted" style="font-weight:700">What went out, how it did, and what I held back</span>
+    </div>
+
+    <div class="block block--gold deco" style="margin-bottom:18px">
+      ${MARK.gold()}
+      <div class="icohead">
+        ${pico("pn-people", 48)}
+        <div>
+          <div class="eyebrow">This month</div>
+          <h3 style="font-size:clamp(20px,4.6vw,25px);margin-top:6px">
+            <span class="num">${PUBLISHED_TOTAL}</span> published &middot;
+            <span class="num">${HELD_TOTAL}</span> held.
+          </h3>
+        </div>
+      </div>
+      <p style="margin:12px 0 0;font-size:15.5px;font-weight:600;max-width:52ch">
+        The last <span class="num">${n}</span> are below with their numbers, then what those numbers
+        say, then the lines I would not write.
+      </p>
+    </div>
+
+    <div class="note" style="margin-bottom:18px;display:flex;gap:10px;align-items:flex-start">
+      ${ico.ban(18)}
+      <span><b>Illustrative sample data.</b> Every engagement figure on this page is invented for
+      this prototype. None of it came from a real Instagram or Facebook account, and it must not be
+      shown to anyone as if it did.</span>
+    </div>
+
+    <div class="sectionhead">
+      <h2>Published</h2>
+      <span class="small muted" style="font-weight:700">
+        <span class="num">${n}</span> posts &middot; <span class="num">${totalReach.toLocaleString("en-GB")}</span> reached &middot;
+        <span class="num">${totalSaves}</span> saves
+      </span>
+    </div>
+    <div class="perf">
+      ${published.map(p => `
+        <div class="perfitem">
+          <div class="perfitem__top">
+            <span class="post__day">${esc(p.day)}</span>
+            <span class="post__time num">${esc(p.date)} &middot; ${esc(p.time)}</span>
+            <span style="margin-left:auto" class="chip chip--ink">${ico.dot(13)}Posted</span>
+          </div>
+          <div class="post__media">
+            <img src="${p.img}" alt="${esc(p.subject)} — the ${esc(p.day)} post">
+          </div>
+          <p class="post__caption">${esc(p.caption)}</p>
+          <div class="stats">
+            <div class="stat"><b class="num">${p.likes}</b><span>Likes</span></div>
+            <div class="stat"><b class="num">${p.comments}</b><span>Comments</span></div>
+            <div class="stat"><b class="num">${p.saves}</b><span>Saves</span></div>
+            <div class="stat"><b class="num">${p.reach.toLocaleString("en-GB")}</b><span>Reach</span></div>
+          </div>
+        </div>`).join("")}
+    </div>
+
+    <div class="sectionhead" style="margin-top:30px">
+      <div class="icohead">
+        ${pico("cat-edu", 40)}
+        <h2>What was learned</h2>
+      </div>
+    </div>
+    <p style="margin:-4px 0 14px;font-size:16px;font-weight:600;max-width:58ch">
+      Four things the numbers above actually say. Nothing here is a guess — each one is arithmetic
+      on the five posts.
+    </p>
+    <div class="learn">
+      ${learned.map(t => `
+        <div class="learnitem">${ico.check(18)}<p>${esc(t)}</p></div>`).join("")}
+    </div>
+
+    <div class="sectionhead" style="margin-top:30px">
+      <div class="icohead">
+        ${pico("pn-no", 40)}
+        <h2>Held back — here’s why</h2>
+      </div>
     </div>
     <p style="margin:-4px 0 16px;font-size:16px;font-weight:600;max-width:58ch">
-      Three lines I could have written this week and did not. This list is the product, not a limitation.
+      <span class="num">${PUBLISHED_TOTAL}</span> published, <span class="num">${HELD_TOTAL}</span> held.
+      Three of those six are below: lines I could have written and did not. This list is the product,
+      not a limitation.
     </p>
     <div class="stack refgrid">
       ${refusals.map(r => `
@@ -1119,9 +1482,9 @@ function renderRefusals(){
 /* ============================ render ============================ */
 function render(){
   renderWeek();
-  renderNeeds();
+  renderChat();
   renderLibrary();
-  renderRefusals();
+  renderHistory();
   if (state.view === "post") renderPost();
   renderNav();
 }
@@ -1142,11 +1505,22 @@ const MODALS = {
   brand: () => ({
     title:"Brand lock",
     body:`
-      <div class="block block--gold" style="margin-bottom:14px">
-        <div class="eyebrow">What I am not allowed to drift from</div>
-        <p style="margin:8px 0 0;font-size:15.5px;font-weight:600">
+      <div class="block block--gold deco" style="margin-bottom:14px">
+        ${MARK.gold()}
+        <div class="icohead">
+          ${pico("cafe", 48, "Melur Kopi, a cafe")}
+          <div>
+            <div class="eyebrow">What I am not allowed to drift from</div>
+            <h3 style="font-size:19px;margin-top:6px">Melur Kopi &middot; Bangsar</h3>
+          </div>
+        </div>
+        <p style="margin:12px 0 0;font-size:15.5px;font-weight:600">
           Everything below is fixed. If a post would need something that is not here, I ask you instead of inventing it.
         </p>
+      </div>
+      <div class="icohead" style="margin:0 0 8px">
+        ${pico("pn-voice", 28)}
+        <div class="eyebrow">The voice</div>
       </div>
       <dl style="margin:0">
         <div class="kv"><dt>Business</dt><dd>Melur Kopi</dd></div>
@@ -1198,6 +1572,85 @@ const MODALS = {
         </p>
       </div>`
   }),
+  preview: () => {
+    const p = post(state.openPostId) || posts[0];
+    /* invented numbers, sized for a small Bangsar cafe — labelled as such, prominently */
+    const ig = {likes:127, comments:8, saves:22};
+    const fb = {reacts:64, comments:5, shares:3};
+    const avatar = `<span class="pvcard__av">${pico("cafe", 30)}</span>`;
+    const capHTML = esc(p.caption);
+
+    return {
+      title:"Preview",
+      wide:true,
+      body:`
+      <div class="block block--gold" style="margin-bottom:16px;display:flex;gap:11px;align-items:flex-start">
+        ${ico.ban(20)}
+        <p style="margin:0;font-size:15px;font-weight:700;line-height:1.45">
+          The likes, comments and shares below are <b>illustrative only</b> — invented for this
+          preview. They are not real numbers from any account, and nothing here has been published.
+        </p>
+      </div>
+
+      <div class="pv">
+        <div>
+          <div class="pvhead">As it looks on Instagram</div>
+          <div class="pvcard pv--ig">
+            <div class="pvcard__bar">
+              ${avatar}
+              <div style="min-width:0">
+                <div class="pvcard__h">melurkopi</div>
+                <div class="pvcard__m">Bangsar, Kuala Lumpur</div>
+              </div>
+              <span style="margin-left:auto;color:var(--ink-soft)">${ico.more(18)}</span>
+            </div>
+            <img class="shot" src="${p.img}" alt="The ${esc(p.day)} photo as it would appear on Instagram">
+            <div class="pvacts">
+              ${ico.heart(21)}${ico.chat(21)}${ico.send(21)}
+              <span style="margin-left:auto">${ico.save(21)}</span>
+            </div>
+            <div class="pvcount"><span class="num">${ig.likes}</span> likes</div>
+            <p class="pvbody" style="margin:6px 0 0"><span class="hd">melurkopi</span> ${capHTML}</p>
+            <p class="pvbody muted" style="margin:6px 0 0;font-size:13px;font-weight:700">
+              View all <span class="num">${ig.comments}</span> comments &middot;
+              <span class="num">${ig.saves}</span> saves &middot; ${esc(p.time)}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="pvhead">As it looks on Facebook</div>
+          <div class="pvcard pv--fb">
+            <div class="pvcard__bar">
+              ${avatar}
+              <div style="min-width:0">
+                <div class="pvcard__h">Melur Kopi</div>
+                <div class="pvcard__m">${esc(p.day)}, ${esc(p.time)} ${ico.globe(13)}</div>
+              </div>
+              <span style="margin-left:auto;color:var(--ink-soft)">${ico.more(18)}</span>
+            </div>
+            <p class="pvbody" style="padding-top:12px">${capHTML}</p>
+            <img class="shot" src="${p.img}" alt="The ${esc(p.day)} photo as it would appear on Facebook">
+            <div class="pvcount" style="padding:10px 12px 8px;font-weight:700;color:var(--ink-soft)">
+              <span class="num">${fb.reacts}</span> reactions &middot;
+              <span class="num">${fb.comments}</span> comments &middot;
+              <span class="num">${fb.shares}</span> shares
+            </div>
+            <div class="pvfoot">
+              <span>${ico.thumb(17)}Like</span>
+              <span>${ico.chat(17)}Comment</span>
+              <span>${ico.share(17)}Share</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="small muted" style="font-weight:600;margin:16px 0 0">
+        Both come off one Meta connection. This is a drawing of the post, not the post — nothing
+        publishes until you approve it.
+      </p>`
+    };
+  },
   plan: () => ({
     title:"Plan",
     body:`
@@ -1222,12 +1675,14 @@ function openModal(name){
   const m = MODALS[name]();
   lastFocus = lastFocus || document.activeElement;
   const modal = el("modal");
+  modal.className = "modal" + (m.wide ? " modal--wide" : "");
+  const inSettings = ["brand","accounts","plan"].includes(name);
   modal.innerHTML = `
     <div class="modal__head">
       <h2 id="modalTitle">${esc(m.title)}</h2>
       <button class="iconbtn" style="margin-left:auto" id="modalClose" aria-label="Close">${ico.x(20)}</button>
     </div>
-    ${name !== "menu" ? `<div class="row" style="margin-bottom:14px"><button class="btn btn--sm" data-modal="menu">${ico.back(16)}All settings</button></div>` : ""}
+    ${inSettings ? `<div class="row" style="margin-bottom:14px"><button class="btn btn--sm" data-modal="menu">${ico.back(16)}All settings</button></div>` : ""}
     ${m.body}`;
   const scrim = el("scrim");
   scrim.hidden = false;
@@ -1283,9 +1738,16 @@ document.addEventListener("click", e => {
   if (nav){
     const v = nav.dataset.nav;
     if (v === "library") state.pickingFor = null;
-    if (v === "needs") renderNeeds();
+    if (v === "chat") renderChat();
     if (v === "library") renderLibrary();
+    if (v === "history") renderHistory();
     show(v);
+    return;
+  }
+
+  if (e.target.closest("#previewBtn")){
+    lastFocus = e.target.closest("#previewBtn");
+    openModal("preview");
     return;
   }
 
@@ -1303,8 +1765,9 @@ document.addEventListener("click", e => {
     const a = p.q.answers[+ans.dataset.i];
     p.status = "ready";
     state.answered[p.id] = a.ack;
+    state.thread.push({who:"her", text:a.label});
+    state.thread.push({who:"sys", text:a.ack});
     render();
-    renderNeeds();
     say(a.ack + " " + countHeld() + " left needing you.");
     return;
   }
@@ -1444,6 +1907,27 @@ document.addEventListener("click", e => {
     n.textContent = "This is a prototype — no real Meta window opens. In the product this is one login that covers both accounts.";
     return;
   }
+});
+
+/* ---------- chat compose ---------- */
+document.addEventListener("submit", e => {
+  if (!e.target.closest("#chatForm")) return;
+  e.preventDefault();
+  const input = el("chatInput");
+  const text = (input.value || "").trim();
+  if (!text){
+    input.focus();
+    say("Type what you want changed first.");
+    return;
+  }
+  state.thread.push({who:"her", text:text});
+  state.thread.push({who:"sys", text:replyFor(text)});
+  renderChat();
+  const again = el("chatInput");
+  if (again){ again.value = ""; again.focus(); }
+  const th = el("thread");
+  if (th && th.lastElementChild) th.lastElementChild.scrollIntoView({block:"nearest"});
+  say("Sent. Suara replied.");
 });
 
 document.addEventListener("change", e => {
