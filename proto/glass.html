@@ -518,43 +518,64 @@ main{min-width:0}
 }
 
 /* ================================================================
-   GLASS VARIANT — override layer. Everything above is bold.html
-   untouched, so this file diffs cleanly against it and reverts by
-   deleting this one block.
+   GLASS VARIANT v2 — "clean". Override layer. Everything above is
+   bold.html verbatim, so this diffs cleanly and reverts by deleting
+   this one block.
 
-   Why the ground is dark: glass is a material that refracts what is
-   BEHIND it. On our flat cream it has nothing to refract and renders
-   as a grey box. And white knock-out over marigold or cream was
-   MEASURED at 1.49:1 on 27 Aug — unreadable. So the brand colours
-   become the light SOURCES behind the glass instead of the surface
-   under it. Coral and marigold stay loud; the reference component's
-   white text actually works.
+   v1 was too loud: coral and marigold were huge glows behind the
+   glass and every card carried a tint. v2 demotes colour to an
+   ACCENT. The ground is near-neutral, every panel is the same
+   neutral glass, and the only saturated things left on the screen
+   are the logo, the one primary button, and a 3px status bar on the
+   left edge of a card. Colour now MEANS something instead of
+   decorating everything.
+
+   The ground stays dark because glass refracts what is behind it —
+   on flat cream it has nothing to refract and reads as a grey box,
+   and white knock-out on cream/marigold measured 1.49:1 on 27 Aug.
    ================================================================ */
 :root{
-  --g-fill:rgba(255,255,255,.10);
-  --g-fill-2:rgba(255,255,255,.14);
-  --g-edge:1px solid rgba(255,255,255,.22);
-  --g-sh:0 10px 34px rgba(0,0,0,.34);
-  --g-sh-lg:0 18px 52px rgba(0,0,0,.42);
-  --g-blur:saturate(150%) blur(18px);
-  --r-card:22px;
+  /* TOKEN FLIP — the structural fix. bold.html paints ~30 rules with
+     var(--paper) / var(--cream2) / var(--ink). Overriding each one is
+     whack-a-mole and guarantees a missed component renders light-on-light.
+     Redefining the tokens themselves fixes every one of them at once,
+     including any component added later. */
+  --paper:rgba(255,255,255,.06);
+  --cream:#15131A;
+  --cream2:rgba(255,255,255,.045);
+  --ink:#F4F2F5;
+  --ink-soft:rgba(244,242,245,.80);
+  --muted:rgba(244,242,245,.62);
+  --hair:rgba(255,255,255,.10);
+  --hair-strong:rgba(255,255,255,.17);
+  --bd:1px solid rgba(255,255,255,.12);
+  --bd2:1px solid rgba(255,255,255,.12);
+  --sh:none; --sh-sm:none; --sh-lg:none;
+
+  --g-fill:rgba(255,255,255,.055);
+  --g-fill-2:rgba(255,255,255,.085);
+  --g-edge:1px solid rgba(255,255,255,.12);
+  --g-sh:0 8px 28px rgba(0,0,0,.30);
+  --g-sh-lg:0 16px 44px rgba(0,0,0,.38);
+  --g-blur:saturate(115%) blur(20px);
+  --r-card:20px;
   --pad:16px;
+  --tx:#F4F2F5;
+  --tx-2:rgba(244,242,245,.68);
 }
-body{
-  background:#160F1C;
-  color:#fff;
-}
-/* the light behind the glass — brand colour, not an Unsplash photo */
+body{background:#15131A;color:var(--tx)}
+
+/* near-neutral ground. One faint warm wash so the glass has
+   something to refract; no brand-colour floodlights. */
 body::before{
   content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(58vw 52vw at 12% 6%,  rgba(255,106,69,.62), transparent 62%),
-    radial-gradient(52vw 48vw at 92% 20%, rgba(255,194,75,.50), transparent 60%),
-    radial-gradient(64vw 60vw at 70% 96%, rgba(226,74,40,.44), transparent 64%),
-    linear-gradient(168deg,#1E1326 0%,#160F1C 52%,#241430 100%);
+    radial-gradient(70vw 60vw at 78% 4%, rgba(255,138,75,.10), transparent 64%),
+    radial-gradient(80vw 70vw at 10% 100%, rgba(120,110,150,.10), transparent 66%),
+    linear-gradient(170deg,#191720 0%,#15131A 55%,#131118 100%);
 }
 
-/* ---- the material ---- */
+/* ---- one material, used everywhere ---- */
 .card,.block,.post,.hero,.q,.tally{
   border:var(--g-edge);
   border-radius:var(--r-card);
@@ -562,120 +583,227 @@ body::before{
   -webkit-backdrop-filter:var(--g-blur);
   backdrop-filter:var(--g-blur);
   box-shadow:var(--g-sh);
-  color:#fff;
+  color:var(--tx);
 }
 .hero,.q{background:var(--g-fill-2);box-shadow:var(--g-sh-lg)}
 .post{transition:transform var(--t),box-shadow var(--t),background-color var(--t)}
 .post:hover{background:var(--g-fill-2);box-shadow:var(--g-sh-lg);transform:translateY(-2px)}
 .post:active{transform:translateY(0) scale(.995);box-shadow:var(--g-sh)}
 
-/* semantic colour survives as a TINT in the glass, not a flat fill.
-   Alphas kept low so the composite stays dark enough for white text. */
-.block--coral,.post--held{background:rgba(255,106,69,.30);border-color:rgba(255,152,124,.42)}
-.block--gold,.post--ready{background:rgba(255,194,75,.24);border-color:rgba(255,213,133,.44)}
-.block--green{background:rgba(38,179,122,.26);border-color:rgba(120,224,183,.40)}
-.block--cream,.post--posted{background:rgba(255,255,255,.07)}
+/* ---- colour is now a 3px edge, not a fill. Same scan-in-one-glance
+   read as bold, without four saturated cards fighting each other. ---- */
+.block--coral,.post--held   {background:var(--g-fill);box-shadow:var(--g-sh),inset 3px 0 0 #FF6A45}
+.block--gold,.post--ready   {background:var(--g-fill);box-shadow:var(--g-sh),inset 3px 0 0 #FFC24B}
+.block--green               {background:var(--g-fill);box-shadow:var(--g-sh),inset 3px 0 0 #26B37A}
+.block--cream,.post--posted {background:rgba(255,255,255,.03)}
 .block--paper,.post--scheduled{background:var(--g-fill)}
-.block--ink{background:rgba(0,0,0,.34);color:#fff}
+.block--ink{background:rgba(0,0,0,.26);color:var(--tx)}
+.post--held:hover  {box-shadow:var(--g-sh-lg),inset 3px 0 0 #FF6A45}
+.post--ready:hover {box-shadow:var(--g-sh-lg),inset 3px 0 0 #FFC24B}
 
 /* ---- the bar ---- */
 .topbar{
-  background:rgba(22,15,28,.55);
-  -webkit-backdrop-filter:var(--g-blur);
-  backdrop-filter:var(--g-blur);
+  background:rgba(21,19,26,.60);
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
   border-bottom:var(--g-edge);
-  box-shadow:0 6px 24px rgba(0,0,0,.30);
+  box-shadow:0 4px 20px rgba(0,0,0,.26);
 }
-.navitem{
-  background:var(--g-fill);border:var(--g-edge);color:#fff;
-  box-shadow:none;border-radius:12px;
-}
-.navitem:hover{background:var(--g-fill-2)}
-.navitem:active{transform:translateY(1px);box-shadow:none}
-.navitem[aria-current="page"],.navitem.is-on{background:rgba(255,255,255,.20)}
 
-/* ---- controls ----
-   The ONE primary action stays a solid opaque coral. A translucent
-   primary button is the thing that actually fails outdoors, and the
-   ICP is a phone in daylight. Glass everywhere except the tap target. */
+/* ---- LOGO: no box, larger, sitting on the clean ground.
+   The mark keeps its coral-to-marigold gradient, which makes it the
+   single most saturated thing on the screen. That is the point. ---- */
+.brandmark{gap:13px}
+.brandmark__sq{
+  width:auto;height:auto;flex:0 0 auto;
+  border:none;background:none;border-radius:0;overflow:visible;
+}
+.brandmark__sq svg{width:46px;height:46px;display:block}
+.brandmark__name{font-size:25px;letter-spacing:.005em;color:var(--tx)}
+.brandmark__sub{color:var(--tx-2);font-size:12px}
+
+.navitem{
+  background:transparent;border:1px solid transparent;color:var(--tx-2);
+  box-shadow:none;border-radius:11px;
+}
+.navitem:hover{background:var(--g-fill);color:var(--tx)}
+.navitem:active{transform:translateY(1px);box-shadow:none}
+.navitem[aria-current="page"],.navitem.is-on{
+  background:rgba(255,255,255,.11);color:var(--tx);border-color:rgba(255,255,255,.14);
+}
+
+/* ---- controls. The one primary action stays solid coral: a
+   translucent primary button is what actually fails in daylight,
+   and the buyer is on a phone in a shop. ---- */
 .btn{
-  border:var(--g-edge);border-radius:14px;
-  background:var(--g-fill);color:#fff;
-  box-shadow:var(--g-sh);
+  border:var(--g-edge);border-radius:13px;
+  background:var(--g-fill);color:var(--tx);
+  box-shadow:none;
   -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
 }
 .btn:hover{background:var(--g-fill-2)}
-.btn:active{transform:translateY(1px);box-shadow:0 4px 14px rgba(0,0,0,.30)}
+.btn:active{transform:translateY(1px)}
 .btn--primary,.btn.is-primary{
-  background:#FF6A45;border-color:#FF6A45;color:#231018;
+  background:#FF6A45;border-color:#FF6A45;color:#22101A;
   -webkit-backdrop-filter:none;backdrop-filter:none;
 }
 .btn--primary:hover,.btn.is-primary:hover{background:#FF7D5C}
 .iconbtn{
-  background:var(--g-fill);border:var(--g-edge);color:#fff;box-shadow:none;
+  background:var(--g-fill);border:var(--g-edge);color:var(--tx);box-shadow:none;
   -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
 }
 .iconbtn:active{transform:translateY(1px);box-shadow:none}
-input,textarea,select{
-  background:rgba(0,0,0,.26);border:var(--g-edge);color:#fff;
-}
-input::placeholder,textarea::placeholder{color:rgba(255,255,255,.55)}
+.tally{background:var(--g-fill);box-shadow:none}
+input,textarea,select{background:rgba(0,0,0,.22);border:var(--g-edge);color:var(--tx)}
+input::placeholder,textarea::placeholder{color:rgba(244,242,245,.45)}
 
-/* ---- text tiers on a dark ground ---- */
-.muted,.dek,small,.meta{color:rgba(255,255,255,.72)}
-h1,h2,h3,b,strong{color:#fff}
-hr{border-color:rgba(255,255,255,.16)}
+/* ---- text tiers ---- */
+.muted,.dek,small,.meta{color:var(--tx-2)}
+h1,h2,h3,b,strong{color:var(--tx)}
+hr{border-color:rgba(255,255,255,.10)}
 
 /* ---- the silent breakage: the 8 onboarding icons are INK artwork.
    On a dark ground they render black-on-black with no error. ---- */
-.pico{filter:brightness(0) invert(1);opacity:.92}
+.pico{filter:brightness(0) invert(1);opacity:.80}
 
-/* photos need a hairline or they float with no edge */
-.post img,.card img{border-radius:12px;outline:1px solid rgba(255,255,255,.18);outline-offset:-1px}
+.post img,.card img{border-radius:12px;outline:1px solid rgba(255,255,255,.12);outline-offset:-1px}
 
 :where(a,button,input,textarea,[tabindex]):focus-visible{
   outline:3px solid #FFC24B;outline-offset:3px;
 }
 
-/* ---- bottom nav (phone). Was cream; my white text made the labels
-   invisible on it. Found by screenshotting, not by the CSS. ---- */
+/* ---- bottom nav (phone). Was cream; white labels vanished on it. ---- */
 .botnav{
-  background:rgba(22,15,28,.62);
+  background:rgba(21,19,26,.72);
   -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
   border-top:var(--g-edge);
-  box-shadow:0 -8px 28px rgba(0,0,0,.34);
+  box-shadow:0 -6px 22px rgba(0,0,0,.28);
 }
-.botnav .navitem{background:transparent;border:1px solid transparent;color:rgba(255,255,255,.78);box-shadow:none}
+.botnav .navitem{background:transparent;border:1px solid transparent;color:var(--tx-2);box-shadow:none}
 .botnav .navitem[aria-current="page"],.botnav .navitem.is-on{
-  background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.22);
+  background:rgba(255,255,255,.11);color:var(--tx);border-color:rgba(255,255,255,.14);
 }
-.navitem[aria-current="page"] .badge{border-color:rgba(22,15,28,.9)}
+.navitem[aria-current="page"] .badge{border-color:rgba(21,19,26,.9)}
 
-/* ---- modal was cream: same failure, white text on a light sheet ---- */
+/* ---- modal was cream: same white-on-light failure ---- */
 .modal{
-  background:rgba(30,20,38,.86);
-  -webkit-backdrop-filter:saturate(150%) blur(26px);backdrop-filter:saturate(150%) blur(26px);
-  border:var(--g-edge);border-bottom:none;color:#fff;
+  background:rgba(26,23,32,.90);
+  -webkit-backdrop-filter:saturate(120%) blur(28px);backdrop-filter:saturate(120%) blur(28px);
+  border:var(--g-edge);border-bottom:none;color:var(--tx);
   box-shadow:var(--g-sh-lg);
 }
-.scrim{background:rgba(8,4,12,.62)}
+.scrim{background:rgba(6,4,10,.62)}
 
-/* ---- the IG / FB preview cards must STAY light: they are simulating
-   Instagram and Facebook, which are white UIs. Making them glass would
-   misrepresent what the post will actually look like, which is the one
-   thing this modal exists to show. Text forced back to ink. ---- */
+/* ---- the IG / FB preview cards STAY light: they simulate Instagram
+   and Facebook, which are white UIs. Glassing them would misrepresent
+   what the post will actually look like — the only job that modal has. ---- */
 .pvcard{
-  background:#fff;color:var(--ink);
+  background:#fff;color:#1A1520;
   -webkit-backdrop-filter:none;backdrop-filter:none;
-  border:2px solid rgba(0,0,0,.14);border-radius:14px;
-  box-shadow:0 8px 26px rgba(0,0,0,.30);
+  border:1px solid rgba(0,0,0,.12);border-radius:14px;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);
 }
-.pvcard h1,.pvcard h2,.pvcard h3,.pvcard b,.pvcard strong,.pvcard .pvcard__h,.pvcard .pvbody,.pvcard .pvcount{color:var(--ink)}
-.pvcard .pvcard__m,.pvcard .pvfoot span{color:var(--ink-soft)}
-.pvcard .pvfoot{border-top:2px solid rgba(0,0,0,.12)}
-.pvcard .pvfoot span+span{border-left:2px solid rgba(0,0,0,.12)}
+.pvcard h1,.pvcard h2,.pvcard h3,.pvcard b,.pvcard strong,.pvcard .pvcard__h,.pvcard .pvbody,.pvcard .pvcount{color:#1A1520}
+.pvcard .pvcard__m,.pvcard .pvfoot span{color:#3B3145}
+.pvcard .chip,.pvcard .chip--ink{background:#1A1520;color:#fff;border-color:#1A1520}
+.pvcard .pvfoot{border-top:1px solid rgba(0,0,0,.10)}
+.pvcard .pvfoot span+span{border-left:1px solid rgba(0,0,0,.10)}
 .pvcard img.shot{outline:none;border-radius:0}
 .pvcard .pico{filter:none;opacity:1}
+/* ---- the arc watermark: its opacity is set INLINE by JS, tuned for
+   bold's saturated fields. On this near-neutral ground those values
+   are the loudest thing on the screen, so they need !important to be
+   overridden at all. Clean means the mark is felt, not read. ---- */
+.knock{opacity:.05 !important}
+.knock--spray{opacity:.05 !important}
+/* ---- v3 additions: library tabs, history timeline, calendar ---- */
+.tabs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.tab{
+  display:inline-flex;align-items:center;gap:7px;
+  min-height:44px;padding:9px 15px;border-radius:12px;
+  background:var(--g-fill);border:var(--g-edge);color:var(--tx-2);
+  font:inherit;font-weight:700;font-size:14px;cursor:pointer;
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  transition:background-color var(--t),color var(--t);
+}
+.tab:hover{background:var(--g-fill-2);color:var(--tx)}
+.tab[aria-selected="true"]{background:rgba(255,255,255,.14);color:var(--tx);border-color:rgba(255,255,255,.22)}
+.tab__n{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:21px;height:21px;padding:0 6px;border-radius:999px;
+  background:rgba(255,255,255,.13);font-size:12px;
+}
+.tab[aria-selected="true"] .tab__n{background:rgba(255,255,255,.22)}
+
+.photo__tag--gen{background:rgba(21,19,26,.82);color:#F4F2F5;border-color:rgba(255,255,255,.30)}
+
+.timeline{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;-webkit-overflow-scrolling:touch}
+.tlchip{
+  flex:0 0 auto;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  min-width:56px;min-height:56px;padding:8px 10px;border-radius:14px;
+  background:var(--g-fill);border:var(--g-edge);color:var(--tx-2);
+  font:inherit;font-weight:700;font-size:13px;cursor:pointer;
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  transition:background-color var(--t),color var(--t);
+}
+.tlchip:hover{background:var(--g-fill-2);color:var(--tx)}
+.tlchip[aria-selected="true"]{background:rgba(255,255,255,.15);color:var(--tx);border-color:rgba(255,255,255,.24)}
+.tlchip__d{font-size:17px;line-height:1.05}
+.tlchip__m{font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.75}
+
+.cal__head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal__head span{text-align:center;font-size:11px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--tx-2)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal__pad{aspect-ratio:1}
+.cal__d{
+  position:relative;aspect-ratio:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  border-radius:11px;background:rgba(255,255,255,.04);
+  font-size:14px;font-weight:700;color:var(--tx-2);
+}
+.cal__d--today{outline:2px solid rgba(255,255,255,.42);outline-offset:-2px;color:var(--tx)}
+.cal__d--posted,.cal__d--ready,.cal__d--scheduled,.cal__d--held{background:rgba(255,255,255,.10);color:var(--tx)}
+.cal__dot{width:6px;height:6px;border-radius:999px;background:var(--tx-2);display:block}
+.cal__d--posted   .cal__dot{background:rgba(244,242,245,.55)}
+.cal__d--scheduled .cal__dot{background:#26B37A}
+.cal__d--ready    .cal__dot{background:#FFC24B}
+.cal__d--held     .cal__dot{background:#FF6A45}
+.cal__key{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:12.5px;font-weight:700;color:var(--tx-2)}
+.cal__key span{display:inline-flex;align-items:center;gap:6px}
+.cal__dot--held{background:#FF6A45}
+.cal__dot--ready{background:#FFC24B}
+.cal__dot--scheduled{background:#26B37A}
+.cal__dot--posted{background:rgba(244,242,245,.55)}
+.cal__mini{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;flex:0 0 34px;border-radius:10px;
+  background:rgba(255,255,255,.09);font-weight:800;font-size:14px;color:var(--tx);
+}
+/* ---- variants the token flip cannot reach, because they set a
+   SATURATED fill rather than a token ---- */
+.q--done{background:rgba(255,194,75,.20);box-shadow:var(--g-sh),inset 3px 0 0 #FFC24B}
+.btn--gold{background:#FFC24B;color:#22101A;border-color:#FFC24B;-webkit-backdrop-filter:none;backdrop-filter:none}
+.btn--gold:hover{background:#FFCE6B}
+.btn--ink{background:rgba(255,255,255,.14);color:var(--tx);border-color:rgba(255,255,255,.20)}
+.btn--ink:hover{background:rgba(255,255,255,.20)}
+.chip--ink{background:rgba(255,255,255,.15);color:var(--tx);border-color:rgba(255,255,255,.20)}
+.chip--coral{background:rgba(255,106,69,.30);color:var(--tx);border-color:rgba(255,152,124,.45)}
+.chip--gold{background:rgba(255,194,75,.26);color:var(--tx);border-color:rgba(255,213,133,.45)}
+.chip--green{background:rgba(38,179,122,.28);color:var(--tx);border-color:rgba(120,224,183,.45)}
+.msg--me{background:rgba(255,106,69,.28);color:var(--tx)}
+.uploader:hover{background:rgba(255,194,75,.22)}
+.field:focus{outline:3px solid #FFC24B;outline-offset:2px}
+.wordmark{background:#FFC24B;border:none;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.wordmark__t{color:#22101A}
+/* ---- saturated coral fills need DARK text, not the flipped light --ink.
+   ink-on-coral was measured at 6.31:1 on 27 Aug; light-on-coral is 2.55:1.
+   Caught by the compositing contrast sweep, not by eye. ---- */
+.badge{background:#FF6A45;color:#22101A;border:1px solid rgba(0,0,0,.28)}
+.navitem[aria-current="page"] .badge,.botnav .badge{border-color:rgba(0,0,0,.28)}
+.refusal__head{background:#FF6A45;border-bottom:none}
+.refusal__head,.refusal__head *{color:#22101A}
+.refusal{background:var(--g-fill);border:var(--g-edge);box-shadow:var(--g-sh);
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur)}
 </style>
 </head>
 <body>
@@ -982,19 +1110,19 @@ const refusals = [
    ILLUSTRATIVE SAMPLE DATA. Invented for this prototype, sized for a small Bangsar cafe.
    Every observation in LEARNED is arithmetic on the numbers below — nothing else. */
 const published = [
-  {day:"Monday",   date:"25 August",  time:"6:30am", img:"img/p1.jpg", subject:"The first cup",
+  {day:"Monday",   date:"24 August",  time:"6:30am", img:"img/p1.jpg", subject:"The first cup",
    caption:"We open at seven because someone always needs the first cup before the rest of the city is awake. Same beans, same hands, same corner of Bangsar.",
    likes:118, comments:9, saves:24, reach:1460},
-  {day:"Tuesday",  date:"26 August",  time:"8:00am", img:"img/p2.jpg", subject:"Kaya toast",
+  {day:"Tuesday",  date:"25 August",  time:"8:00am", img:"img/p2.jpg", subject:"Kaya toast",
    caption:"Kaya toast and two soft eggs. Nothing complicated, nothing that needs explaining.",
    likes:134, comments:6, saves:31, reach:1180},
-  {day:"Saturday", date:"23 August",  time:"9:00am", img:"img/p3.jpg", subject:"The room",
+  {day:"Sunday",   date:"23 August",  time:"9:00am", img:"img/p3.jpg", subject:"The room",
    caption:"Weekend mornings run slower here. Kaya toast, soft eggs, and the papers.",
    likes:91, comments:4, saves:12, reach:870},
-  {day:"Thursday", date:"21 August",  time:"3:00pm", img:"img/p5.jpg", subject:"The counter",
+  {day:"Friday",   date:"21 August",  time:"3:00pm", img:"img/p5.jpg", subject:"The counter",
    caption:"Second half of the day. The grinder is still going, and there is always one more cup in it.",
    likes:47, comments:2, saves:5,  reach:610},
-  {day:"Sunday",   date:"17 August",  time:"8:00am", img:"img/p4.jpg", subject:"Nasi lemak",
+  {day:"Monday",   date:"17 August",  time:"8:00am", img:"img/p4.jpg", subject:"Nasi lemak",
    caption:"Nasi lemak goes on at eight and stays until it doesn’t. Most mornings that’s before noon, so you know how it goes.",
    likes:156, comments:11, saves:38, reach:1930}
 ];
@@ -1040,10 +1168,10 @@ function replyFor(text){
 
 const library = {
   photos:[
-    {src:"img/p1.jpg", name:"First cup", own:false},
-    {src:"img/p2.jpg", name:"Kaya toast", own:false},
+    {src:"img/p1.jpg", name:"First cup", own:true},
+    {src:"img/p2.jpg", name:"Kaya toast", own:true},
     {src:"img/p3.jpg", name:"The room", own:false},
-    {src:"img/p4.jpg", name:"Nasi lemak", own:false},
+    {src:"img/p4.jpg", name:"Nasi lemak", own:true},
     {src:"img/p5.jpg", name:"Counter", own:false}
   ],
   refs:[
@@ -1058,6 +1186,8 @@ const state = {
   view:"week",
   openPostId:null,
   pickingFor:null,     // post id awaiting a photo pick
+  libTab:"own",        // library: "own" = hers, "gen" = made by Suara
+  histDate:"all",      // history: date filter
   answered:{},         // postId -> ack text
   refsNote:library.note,
   firstWeekPaint:true,
@@ -1171,6 +1301,7 @@ function renderWeek(){
       </p>
       <div class="row" style="margin-top:18px">
         <button class="btn btn--ink" data-nav="history">${ico.ban(18)}See what I held back</button>
+        <button class="btn btn--sm" data-modal="calendar">${ico.grid(16)}Calendar view</button>
       </div>
     </div>` : `
     <div class="hero deco">
@@ -1185,6 +1316,9 @@ function renderWeek(){
         <span class="tally">${ico.ask(16)}<b class="num" data-count="held">${held}</b> need you</span>
         <span class="tally">${ico.pen(16)}<b class="num" data-count="ready">${ready}</b> ready</span>
         <span class="tally">${ico.check(16)}<b class="num" data-count="scheduled">${scheduled}</b> scheduled</span>
+      </div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn btn--sm" data-modal="calendar">${ico.grid(16)}Calendar view</button>
       </div>
     </div>`;
 
@@ -1495,24 +1629,50 @@ function renderLibrary(){
         </div>
       </div>` : ""}
 
+    ${(() => {
+      const own = library.photos.filter(p => p.own).length;
+      const gen = library.photos.length - own;
+      const tab = state.libTab;
+      const shown = library.photos
+        .map((ph,i) => ({ph, i}))
+        .filter(o => tab === "own" ? o.ph.own : !o.ph.own);
+      return `
     <div class="block block--paper">
-      <div class="eyebrow">Her photos</div>
-      <p class="small muted" style="margin:8px 0 14px;font-weight:600">
-        Your own pictures. Add one and it is available to every post.
+      <div class="eyebrow">Photos</div>
+      <div class="tabs" role="tablist" aria-label="Photo source">
+        <button class="tab" role="tab" data-libtab="own" aria-selected="${tab === "own"}">
+          ${ico.image(16)}Yours <span class="tab__n num">${own}</span>
+        </button>
+        <button class="tab" role="tab" data-libtab="gen" aria-selected="${tab === "gen"}">
+          ${ico.redo(16)}Made by Suara <span class="tab__n num">${gen}</span>
+        </button>
+      </div>
+      <p class="small muted" style="margin:12px 0 14px;font-weight:600">
+        ${tab === "own"
+          ? "Pictures you gave me. These are the only ones I treat as evidence of what the shop actually looks like."
+          : "Pictures I generated. They are labelled here and wherever they appear, and I will never use one as proof of a real dish, a real price or a real crowd."}
       </p>
       <div class="grid-photos">
-        ${library.photos.map((ph,i) => `
-          <button class="photo" data-photo="${i}">
-            <img src="${ph.src}" alt="${esc(ph.name)}">
-            ${ph.own ? '<span class="photo__tag">Yours</span>' : ""}
+        ${shown.map(o => `
+          <button class="photo" data-photo="${o.i}">
+            <img src="${o.ph.src}" alt="${esc(o.ph.name)}">
+            <span class="photo__tag${o.ph.own ? "" : " photo__tag--gen"}">${o.ph.own ? "Yours" : "Made by Suara"}</span>
           </button>`).join("")}
+        ${tab === "own" ? `
         <label class="uploader" for="uploadInput">
           ${ico.plus(22)}<span>Add a photo</span>
           <input type="file" id="uploadInput" accept="image/*">
-        </label>
+        </label>` : ""}
       </div>
+      ${shown.length === 0 ? `<p class="small muted" style="font-weight:600">Nothing here yet.</p>` : ""}
+      <p class="small muted" style="font-weight:600;margin-top:14px">
+        <b>Illustrative provenance.</b> These are demo images for the prototype. Which ones are
+        marked yours and which are marked generated is invented to show the feature — it is not
+        the real origin of these pictures.
+      </p>
       <div class="note" id="upNote" hidden></div>
-    </div>
+    </div>`;
+    })()}
 
     <div class="block block--paper" style="margin-top:16px">
       <div class="eyebrow">References — what I learn your taste from</div>
@@ -1573,15 +1733,39 @@ function renderHistory(){
       shown to anyone as if it did.</span>
     </div>
 
-    <div class="sectionhead">
+    ${(() => {
+      const dates = published.map(p => p.date);
+      const sel = dates.includes(state.histDate) ? state.histDate : "all";
+      return `
+    <div class="sectionhead" style="margin-bottom:6px">
       <h2>Published</h2>
+      <span class="small muted" style="font-weight:700">Jump to a date</span>
+    </div>
+    <div class="timeline" role="tablist" aria-label="Filter by date">
+      <button class="tlchip" role="tab" data-histdate="all" aria-selected="${sel === "all"}">All</button>
+      ${published.map(p => `
+        <button class="tlchip" role="tab" data-histdate="${esc(p.date)}" aria-selected="${sel === p.date}">
+          <span class="tlchip__d num">${esc(p.date.split(" ")[0])}</span>
+          <span class="tlchip__m">${esc(p.day.slice(0,3))}</span>
+        </button>`).join("")}
+    </div>`;
+    })()}
+    ${(() => {
+      const sel = published.some(p => p.date === state.histDate) ? state.histDate : "all";
+      const shown = sel === "all" ? published : published.filter(p => p.date === sel);
+      const sReach = shown.reduce((a,p) => a + p.reach, 0);
+      const sSaves = shown.reduce((a,p) => a + p.saves, 0);
+      return `
+    <div class="sectionhead" style="margin-top:14px">
       <span class="small muted" style="font-weight:700">
-        <span class="num">${n}</span> posts &middot; <span class="num">${totalReach.toLocaleString("en-GB")}</span> reached &middot;
-        <span class="num">${totalSaves}</span> saves
+        <span class="num">${shown.length}</span> ${shown.length === 1 ? "post" : "posts"} &middot;
+        <span class="num">${sReach.toLocaleString("en-GB")}</span> reached &middot;
+        <span class="num">${sSaves}</span> saves
+        ${sel === "all" ? "" : ` &middot; <b>${esc(sel)}</b> only`}
       </span>
     </div>
     <div class="perf">
-      ${published.map(p => `
+      ${shown.map(p => `
         <div class="perfitem">
           <div class="perfitem__top">
             <span class="post__day">${esc(p.day)}</span>
@@ -1599,7 +1783,8 @@ function renderHistory(){
             <div class="stat"><b class="num">${p.reach.toLocaleString("en-GB")}</b><span>Reach</span></div>
           </div>
         </div>`).join("")}
-    </div>
+    </div>`;
+    })()}
 
     <div class="sectionhead" style="margin-top:30px">
       <div class="icohead">
@@ -1811,6 +1996,64 @@ const MODALS = {
       </p>`
     };
   },
+  calendar: () => {
+    /* Built from the data, not hardcoded. 1 August 2026 is a Saturday, so a
+       Monday-first grid needs five leading blanks. The day names in the
+       published data disagreed with their own dates until this build — a
+       calendar makes that kind of error visible on screen, which is the
+       argument for having one. */
+    const WEEK = {Monday:24,Tuesday:25,Wednesday:26,Thursday:27,Friday:28,Saturday:29,Sunday:30};
+    const RANK = {posted:0, scheduled:1, ready:2, held:3};
+    const marks = {};
+    published.forEach(p => { marks[parseInt(p.date,10)] = "posted"; });
+    posts.forEach(p => {
+      const d = WEEK[p.day]; if (!d) return;
+      const cur = marks[d];
+      if (cur === undefined || RANK[p.status] > RANK[cur]) marks[d] = p.status;
+    });
+    const FIRST_PAD = 5, DAYS = 31, TODAY = 28;
+    let cells = "";
+    for (let i = 0; i < FIRST_PAD; i++) cells += `<span class="cal__pad" aria-hidden="true"></span>`;
+    for (let d = 1; d <= DAYS; d++){
+      const m = marks[d];
+      cells += `<span class="cal__d${m ? " cal__d--" + m : ""}${d === TODAY ? " cal__d--today" : ""}">`
+             + `<b class="num">${d}</b>${m ? '<i class="cal__dot"></i>' : ""}</span>`;
+    }
+    const thisWeek = posts.map(p => ({p, d:WEEK[p.day]})).sort((a,b) => a.d - b.d);
+    return {
+      title:"August 2026",
+      body:`
+      <div class="block block--paper">
+        <div class="cal__head">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x => `<span>${x}</span>`).join("")}</div>
+        <div class="cal">${cells}</div>
+        <div class="cal__key">
+          <span><i class="cal__dot cal__dot--held"></i>Needs you</span>
+          <span><i class="cal__dot cal__dot--ready"></i>Ready</span>
+          <span><i class="cal__dot cal__dot--scheduled"></i>Scheduled</span>
+          <span><i class="cal__dot cal__dot--posted"></i>Posted</span>
+        </div>
+      </div>
+      <div class="block block--paper" style="margin-top:14px">
+        <div class="eyebrow">This week &middot; 24 to 30 August</div>
+        <div class="reflist" style="margin-top:10px">
+          ${thisWeek.map(o => `
+            <div class="refitem">
+              <span class="cal__mini num">${o.d}</span>
+              <div>
+                <div style="font-weight:800;font-size:15px">${esc(o.p.day)} &middot; ${esc(o.p.time)}</div>
+                <div class="small muted" style="font-weight:600">${
+                  o.p.status === "held" ? "Held — needs a word from you"
+                  : o.p.status === "ready" ? "Written, waiting on your yes"
+                  : o.p.status === "scheduled" ? "Scheduled" : "Posted"}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>
+      <p class="small muted" style="font-weight:600;margin-top:14px">
+        Dates are illustrative for this prototype. Nothing here is connected to a real account.
+      </p>`
+    };
+  },
   plan: () => ({
     title:"Plan",
     body:`
@@ -1887,6 +2130,12 @@ document.addEventListener("click", e => {
 
   const close = e.target.closest("#modalClose");
   if (close){ closeModal(); return; }
+
+  const lt = e.target.closest("[data-libtab]");
+  if (lt){ state.libTab = lt.dataset.libtab; renderLibrary(); return; }
+
+  const hd = e.target.closest("[data-histdate]");
+  if (hd){ state.histDate = hd.dataset.histdate; renderHistory(); return; }
 
   const mo = e.target.closest("[data-modal]");
   if (mo){ openModal(mo.dataset.modal); return; }
