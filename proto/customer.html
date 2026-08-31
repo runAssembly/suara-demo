@@ -1,0 +1,890 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Suara — customer dashboard</title>
+<style>
+/* ============================================================================
+   SUARA CUSTOMER DASHBOARD
+   Style: "Programa" from styles.refero.design — an interior-design studio tool.
+   Chosen structurally, not aesthetically: Programa's three main surfaces are a
+   product library, mood boards for choosing a direction, and a client dashboard
+   where someone approves work. That is Suara's library, references and approval
+   loop, already solved by people whose business is presenting OTHER people's
+   images so a client can choose.
+   ⛔ NOTE ON THE REFERENCE: Refero's own screenshot of Programa is their
+   Acceptable Use Policy page — a wall of legal text. The tokens below are taken
+   from the actual application, not from that capture.
+   TAKEN: bone canvas, never white · photographs are the only colour · serif
+   display against small grotesk body · tiny letterspaced eyebrow labels ·
+   one dark pill button per screen · status chips float on the image · generous
+   air between blocks.
+   CHANGED: Programa's bone goes warmer to sit with Suara's cream, and its
+   yellow accent becomes Suara coral, used ONCE per screen. The client's brand
+   outranks the reference — same call made on Vue.
+   ============================================================================ */
+@font-face{font-family:'PJS';src:url('fonts/PlusJakartaSans.ttf') format('truetype');font-weight:200 800;font-display:block}
+@font-face{font-family:'Gloock';src:url('fonts/Gloock-Regular.ttf') format('truetype');font-weight:400;font-display:block}
+:root{
+  --bone:#F3F0E9;      /* canvas — never white */
+  --paper:#fff;        /* cards that must lift off the canvas */
+  --ink:#1A1520;       /* warm near-black, never #000 */
+  --stone:#5F5866;     /* the only mid-grey — 5.9:1 on bone */
+  --quiet:#8A8290;     /* 3.4:1 — LARGE TEXT ONLY, never body copy */
+  --hair:#E2DDD2;
+  --coral:#FF6A45;     /* accent fill. Ink on coral = 5.4:1. White on coral FAILS at 2.9. */
+  --coral-ink:#A8320F; /* coral as text on bone — 6.2:1 */
+  --leaf:#2F6B4F;      /* the one non-coral signal: approved */
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bone);color:var(--ink);font-family:'PJS',system-ui,sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button{font:inherit;cursor:pointer}
+
+/* ---- type ---- */
+.eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--stone)}
+h1{font-family:'Gloock',Georgia,serif;font-weight:400;letter-spacing:-.01em;line-height:1.06;
+  font-size:clamp(32px,4vw,52px)}
+h2{font-family:'Gloock',Georgia,serif;font-weight:400;font-size:27px;letter-spacing:-.01em;line-height:1.15}
+h3{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.lede{color:var(--stone);font-size:16px;margin-top:12px;max-width:56ch}
+.sub{color:var(--stone);font-size:13.5px}
+
+/* ---- shell ---- */
+.app{display:flex;min-height:100vh}
+.side{width:228px;flex:0 0 228px;padding:26px 18px;display:flex;flex-direction:column;
+  border-right:1px solid var(--hair)}
+.brand{display:flex;align-items:center;gap:9px;padding:0 6px 26px}
+.brand .mk{width:30px;height:30px;margin-left:-2px}
+.brand b{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.side nav{display:grid;gap:1px}
+.side nav button{display:flex;align-items:center;gap:10px;width:100%;min-height:38px;padding:8px 11px;
+  border:none;background:none;font-size:14.5px;color:var(--stone);border-radius:10px;text-align:left}
+.side nav button:hover{background:rgba(0,0,0,.035);color:var(--ink)}
+.side nav button[aria-current="page"]{background:var(--ink);color:#fff;font-weight:500}
+.side nav .pip{margin-left:auto;font-size:11px;font-weight:600;background:var(--coral);color:var(--ink);
+  border-radius:999px;min-width:19px;height:19px;display:grid;place-items:center;padding:0 6px}
+.side nav button[aria-current="page"] .pip{background:var(--coral);color:var(--ink)}
+.side .who{margin-top:auto;border-top:1px solid var(--hair);padding-top:14px;font-size:13px}
+.side .who b{display:block;font-weight:600}
+.side .who span{color:var(--stone);font-size:12px}
+main{flex:1;min-width:0}
+.head{padding:34px 40px 0}
+.body{padding:26px 40px 56px}
+
+/* ---- buttons: exactly one dark pill per screen ---- */
+.btn{border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:10px 17px;
+  font-size:14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:#cfc9bc}
+.btn--p{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn--p:hover{background:#000}
+.btn--s{padding:7px 13px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn--ghost{background:none;border-color:transparent;color:var(--stone)}
+.btn--ghost:hover{background:rgba(0,0,0,.04);color:var(--ink)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row .r{margin-left:auto}
+
+/* ---- chips ---- */
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--hair);background:var(--paper);
+  border-radius:999px;padding:4px 11px;font-size:12px;color:var(--stone);white-space:nowrap}
+.chip--coral{background:var(--coral);border-color:var(--coral);color:var(--ink);font-weight:600}
+.chip--ok{border-color:rgba(47,107,79,.3);color:var(--leaf);font-weight:600}
+.chip--ok::before{content:"";width:5px;height:5px;border-radius:99px;background:var(--leaf)}
+.chip--flag{border-color:var(--coral);color:var(--coral-ink);font-weight:600}
+
+/* ---- the post card: photo carries it, chrome recedes ---- */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.post{background:var(--paper);border-radius:var(--r);overflow:hidden;border:1px solid var(--hair);
+  display:flex;flex-direction:column}
+.shotwrap{position:relative;background:var(--bone)}
+.shotwrap img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.float{position:absolute;top:11px;left:11px;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100% - 22px)}
+.float .chip{background:rgba(255,255,255,.94);backdrop-filter:blur(6px)}
+.post .pb{padding:14px 15px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.cap{font-size:13.5px;line-height:1.55;color:var(--ink)}
+.tags{font-size:12.5px;color:var(--stone)}
+.acts{display:flex;gap:7px;margin-top:auto;padding-top:4px}
+.acts .btn{flex:1;justify-content:center;text-align:center;padding:9px 8px;font-size:13px}
+
+/* ---- panels ---- */
+.panel{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);padding:20px}
+.panel+.panel{margin-top:16px}
+.sec{margin-top:44px}
+.sec:first-child{margin-top:0}
+.note{border:1px solid var(--hair);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--stone);
+  background:var(--paper)}
+.note b{color:var(--ink);font-weight:600}
+.note--flag{border-color:var(--coral);background:#FFF4F0}
+.list div{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair);font-size:13.5px}
+.list div:last-child{border-bottom:none}
+.list .d{font-size:11px;color:var(--stone);flex:0 0 82px;padding-top:3px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:600}
+
+/* ---- calendar ---- */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal .dow{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);
+  padding-bottom:4px}
+.day{background:var(--paper);border:1px solid var(--hair);border-radius:11px;min-height:106px;padding:9px;
+  display:flex;flex-direction:column;gap:6px}
+.day.out{background:none;border-color:transparent}
+.day .n{font-size:12px;color:var(--stone);font-weight:600}
+.day.today{border-color:var(--ink)}
+.day.closed{background:repeating-linear-gradient(135deg,transparent,transparent 6px,rgba(0,0,0,.028) 6px,rgba(0,0,0,.028) 12px)}
+.slot{border-radius:8px;overflow:hidden;border:1px solid var(--hair);background:var(--bone);
+  display:flex;align-items:center;gap:6px;padding:4px 6px;font-size:11px;color:var(--ink);text-align:left;
+  width:100%;border-width:1px}
+.slot img{width:20px;height:20px;border-radius:4px;object-fit:cover;flex:0 0 20px}
+.slot b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.occ{font-size:11px;font-weight:600;color:var(--coral-ink);display:flex;align-items:center;gap:5px}
+.occ::before{content:"";width:5px;height:5px;border-radius:99px;background:var(--coral);flex:0 0 5px}
+
+/* ---- library ---- */
+.tabs{display:inline-flex;background:var(--paper);border:1px solid var(--hair);border-radius:999px;padding:3px}
+.tabs button{border:none;background:none;border-radius:999px;padding:7px 15px;font-size:13.5px;color:var(--stone)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;font-weight:500}
+.gridlib{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.tile{background:var(--paper);border:1px solid var(--hair);border-radius:12px;overflow:hidden;text-align:left}
+.tile img{width:100%;aspect-ratio:1;object-fit:cover}
+.tile .tb{padding:11px 12px}
+.tile .tb b{font-size:13.5px;font-weight:600;display:block}
+.tile .tb span{font-size:12px;color:var(--stone)}
+.drop{border:1.5px dashed var(--hair);border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;color:var(--stone);font-size:13.5px;background:none;
+  min-height:180px;text-align:center;padding:16px}
+.search{background:var(--paper);border:1px solid var(--hair);border-radius:999px;padding:9px 15px;
+  font-size:14px;color:var(--ink);min-width:230px;outline:none}
+.search:focus{border-color:var(--ink)}
+
+/* ---- brand ---- */
+/* The label is a SIBLING of the colour chip, never a child. As a child it was
+   absolutely positioned outside its parent's box — it rendered on white but every
+   contrast check composited it against the swatch colour and read 1.09:1. */
+.sw{display:flex;gap:10px}
+.sw>div{flex:1}
+.sw .chipcol{border-radius:10px;height:64px;border:1px solid rgba(0,0,0,.07)}
+.sw .lab{font-size:11px;color:var(--stone);margin-top:7px;display:block}
+.never{display:flex;flex-wrap:wrap;gap:7px}
+.never .chip{border-style:dashed;text-decoration:line-through;color:var(--stone)}
+
+/* ---- modal ---- */
+.scrim{position:fixed;inset:0;background:rgba(26,21,32,.34);display:grid;place-items:center;padding:26px;
+  z-index:60;overflow:auto}
+.mo{background:var(--paper);border-radius:18px;width:min(660px,100%);max-height:calc(100vh - 52px);
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:rgba(26,21,32,.16) 0 18px 50px -12px}
+.mo.wide{width:min(880px,100%)}
+.mo>.mh{padding:20px 24px 16px;display:flex;align-items:flex-start;gap:14px}
+.mo>.mh h2{font-size:23px}
+.mo>.mh .sub{margin-top:4px}
+.mo>.mh .x{margin-left:auto;border:none;background:none;font-size:21px;line-height:1;color:var(--stone);
+  padding:2px 5px;flex-shrink:0}
+.mo>.mb{padding:0 24px 20px;overflow:auto}
+.mo>.mf{padding:15px 24px;border-top:1px solid var(--hair);display:flex;gap:9px;align-items:center;
+  flex-wrap:wrap;background:var(--bone)}
+.mo>.mf .r{margin-left:auto}
+.fld{display:block;margin-top:15px}
+.fld>span{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--stone);
+  display:block;margin-bottom:7px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--hair);border-radius:12px;padding:11px 13px;outline:none;line-height:1.6}
+textarea:focus,input:focus{border-color:var(--ink)}
+textarea{resize:vertical}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--hair);
+  font-size:14px;text-align:left;background:none;border-left:none;border-right:none;border-top:none;width:100%}
+.opt:last-child{border-bottom:none}
+.opt i{flex:0 0 17px;width:17px;height:17px;border:1px solid #c6bfb4;border-radius:999px;margin-top:3px;
+  display:grid;place-items:center;font-style:normal;font-size:9px;color:#fff}
+.opt[aria-checked="true"] i{background:var(--ink);border-color:var(--ink)}
+.opt[aria-checked="true"] i::before{content:"✓"}
+
+/* ---- toast ---- */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;
+  border-radius:999px;padding:13px 22px;font-size:14px;z-index:80;max-width:min(560px,92vw);
+  box-shadow:rgba(26,21,32,.25) 0 12px 34px -10px}
+.toast b{font-weight:600}
+.toast span{display:block;font-size:12px;color:#BDB4C4;margin-top:1px}
+
+@media(max-width:1000px){
+  .app{display:block}
+  .side{width:auto;border-right:none;border-bottom:1px solid var(--hair);flex-direction:row;
+    align-items:center;gap:12px;padding:12px 18px;overflow-x:auto}
+  .brand{padding:0}.side nav{display:flex;gap:4px}.side .who{display:none}
+  .side nav button{white-space:nowrap}
+  .head{padding:22px 18px 0}.body{padding:18px 18px 44px}
+  .grid3{grid-template-columns:1fr}
+  .gridlib{grid-template-columns:repeat(2,1fr)}
+  .cal{gap:4px}.day{min-height:78px;padding:6px}
+}
+
+/* ================= GLASS: the chosen surface (Reza, 30 Aug) =================
+   A translucent rail over a warm bleed. The bleed is what the panel refracts — a
+   backdrop-filter over a flat colour is just a grey box. */
+.side{background:rgba(255,255,255,.58);
+  -webkit-backdrop-filter:blur(20px) saturate(125%);backdrop-filter:blur(20px) saturate(125%);
+  border-right:1px solid rgba(255,255,255,.9);
+  box-shadow:1px 0 1px rgba(26,21,32,.04),6px 0 28px rgba(26,21,32,.045)}
+.side nav button[aria-current="page"]{background:rgba(26,21,32,.92);color:#fff}
+.side nav button:hover{background:rgba(255,255,255,.5)}
+.side .who{border-top-color:rgba(26,21,32,.14)}
+
+</style></head><body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg class="mk" viewBox="0 0 512 512" aria-hidden="true">
+        <defs><linearGradient id="suara-mark-warm" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#FF5A45"/><stop offset=".55" stop-color="#FF8A4B"/>
+          <stop offset="1" stop-color="#FFC24B"/></linearGradient></defs>
+        <g fill="none" stroke="url(#suara-mark-warm)" stroke-linecap="round" transform="translate(256 364)">
+          <path d="M -46 0 A 46 46 0 0 1 46 0" stroke-width="34"/>
+          <path d="M -104 0 A 104 104 0 0 1 104 0" stroke-width="30"/>
+          <path d="M -160 0 A 160 160 0 0 1 160 0" stroke-width="26"/>
+          <path d="M -214 0 A 214 214 0 0 1 214 0" stroke-width="22"/>
+        </g></svg><b>suara</b></div>
+    <nav id="nav"></nav>
+    <div class="who"><b>Melur Kopi</b><span>Bangsar, Kuala Lumpur</span></div>
+  </aside>
+  <main><div class="head" id="head"></div><div class="body" id="body"></div></main>
+</div>
+<div id="layer"></div>
+<script>
+/* ===========================================================================
+   Melur Kopi — a fictional kopitiam in Bangsar. Every caption, correction and
+   date below is written for this prototype.
+   ⛔ THE MODEL, from the brief: approve-and-handoff, NOT auto-post. We cannot
+   publish to Instagram today. "Connect socials" is a coming-soon setting and is
+   never a live button we cannot honour.
+   =========================================================================== */
+const POSTS=[
+ {id:1,img:"img/p1.jpg",intent:"Hero",title:"The 4pm kopi",state:"waiting",
+  cap:"Kopi O kosong, pulled the way Pak Din has pulled it since 1998. Thick, bitter, no sugar unless you ask.\n\nOpen till 6.",
+  tags:"#kopitiam #bangsar #kopiokosong",
+  why:"Your most-saved photo last month was the kopi pour. This is the same shot, closer."},
+ {id:2,img:"img/p2.jpg",intent:"Educational",title:"How the kaya is made",state:"waiting",
+  cap:"Kaya takes four hours. Pandan, coconut, egg, palm sugar, stirred the whole time.\n\nThat is the entire recipe and it is why we only make it twice a week.",
+  tags:"#kaya #kayatoast #madehere",
+  why:"You told us the kaya is made in-house twice a week. Nobody who follows you knows that."},
+ {id:3,img:"img/p4.jpg",intent:"Occasion",title:"Merdeka",state:"flagged",
+  cap:"Merdeka. Nasi lemak, kopi, and the flag out front.\n\nOpen from 8.",
+  tags:"#merdeka #nasilemak #malaysia",
+  why:"Merdeka falls on Monday 31 August.",
+  flag:"You are closed on Mondays. This post says “Open from 8”.",
+  fix:"Move it to Sunday 30 August, or change the line to say you are closed."}];
+
+const LIB=[
+ {id:11,img:"img/p1.jpg",t:"The 4pm kopi",m:"August",intent:"Hero",state:"Handed off"},
+ {id:12,img:"img/p2.jpg",t:"Kaya, four hours",m:"August",intent:"Educational",state:"Handed off"},
+ {id:13,img:"img/p3.jpg",t:"Empty at 7am",m:"August",intent:"Hero",state:"Handed off"},
+ {id:14,img:"img/p4.jpg",t:"Nasi lemak Fridays",m:"July",intent:"Promo",state:"Handed off"},
+ {id:15,img:"img/p5.jpg",t:"Behind the counter",m:"July",intent:"Behind the scenes",state:"Handed off"},
+ {id:16,img:"img/p2.jpg",t:"Toast, cut thick",m:"July",intent:"Hero",state:"Handed off"},
+ {id:17,img:"img/p1.jpg",t:"Second pour",m:"June",intent:"Hero",state:"Handed off"}];
+
+const REFS=[
+ {id:21,img:"img/p3.jpg",t:"The morning light",note:"Dropped 12 Aug — “this is the feeling, not the busy shots”"},
+ {id:22,img:"img/p5.jpg",t:"Hands, not faces",note:"Dropped 19 Aug — “we don't want customers in frame”"}];
+
+const LEARNED=[
+ ["12 Aug","“Less pink.” Warm browns and cream only since."],
+ ["19 Aug","“More about the price.” Prices now named when you have given us one."],
+ ["24 Aug","“Don't say authentic.” Added to never-say."],
+ ["26 Aug","“Shorter.” Captions cut to about forty words."]];
+
+let view="week", modal=null, mstate={tab:"posts",empty:false};
+const el=id=>document.getElementById(id);
+
+/* -------------------------------------------------------------- chrome -- */
+const NAV=[["week","This week","3"],["cal","Calendar",""],["lib","Posts & references",""],
+           ["brand","Brand",""],["set","Settings",""]];
+function nav(){
+  el("nav").innerHTML=NAV.map(([k,t,n])=>
+    `<button data-v="${k}" ${view===k?'aria-current="page"':''}>${t}${n?`<span class="pip">${n}</span>`:''}</button>`).join("");
+}
+function head(eyebrow,title,lede,actions){
+  el("head").innerHTML=`<div class="eyebrow">${eyebrow}</div>
+    <div class="row" style="margin-top:10px;align-items:flex-end">
+      <div style="min-width:0"><h1>${title}</h1>${lede?`<p class="lede">${lede}</p>`:""}</div>
+      ${actions?`<span class="r row">${actions}</span>`:""}
+    </div>`;
+}
+function toast(msg,sub){
+  const t=document.createElement("div");
+  t.className="toast"; t.innerHTML=`<b>${msg}</b>${sub?`<span>${sub}</span>`:""}`;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),4200);
+}
+
+/* ------------------------------------------------------- 1 · this week -- */
+function week(){
+  if(mstate.empty){
+    head("This week","Nothing to approve.","Your next batch lands Friday. We will message you when it does.",
+      `<button class="btn btn--s" data-act="fill">Show a batch</button>`);
+    el("body").innerHTML=`
+      <div class="panel" style="text-align:center;padding:64px 24px">
+        <h2 style="max-width:24ch;margin:0 auto">You are up to date.</h2>
+        <p class="lede" style="margin:12px auto 0;text-align:center">Three posts went out this month.
+        The next batch is being made now and lands Friday morning.</p>
+        <div class="row" style="justify-content:center;margin-top:22px">
+          <button class="btn" data-m="pack">Re-send August's pack</button>
+        </div>
+      </div>
+      <div class="note" style="margin-top:20px"><b>Why this screen says a date.</b> An empty dashboard
+      reads as broken. Naming the next batch is the difference between “nothing here” and “nothing needed”.</div>`;
+    return;
+  }
+  const waiting=POSTS.filter(p=>p.state!=="approved").length;
+  head("This week · Friday 28 August",
+    `${["","One post","Two posts","Three posts"][waiting]||waiting+" posts"} ready to review.`,
+    "Approve them and we send the pack to your WhatsApp, ready to paste.",
+    `<button class="btn" data-m="pack">What is a pack?</button>
+     <button class="btn btn--p" data-m="batch">Approve all ${waiting}</button>`);
+  el("body").innerHTML=`
+  ${POSTS.some(p=>p.state==="flagged")?`
+  <div class="note note--flag" style="margin-bottom:22px">
+    <b>One needs a decision from you.</b> ${POSTS.find(p=>p.state==="flagged").flag}
+    <button class="btn btn--s" data-m="flag" style="margin-left:8px">Look at it</button></div>`:""}
+  <div class="grid3">
+    ${POSTS.map(p=>`<article class="post">
+      <div class="shotwrap"><img src="${p.img}" alt="">
+        <div class="float"><span class="chip">${p.intent}</span>
+          ${p.state==="flagged"?`<span class="chip chip--flag">Needs a decision</span>`:""}
+          ${p.state==="approved"?`<span class="chip chip--ok">Approved</span>`:""}</div></div>
+      <div class="pb">
+        <h3>${p.title}</h3>
+        <p class="cap">${p.cap.split("\n\n")[0]}</p>
+        <p class="tags">${p.tags}</p>
+        <div class="acts">
+          ${p.state==="approved"
+            ? `<button class="btn btn--s" data-m="pack">Get the pack</button>`
+            : `<button class="btn btn--s btn--p" data-act="approve" data-id="${p.id}">Approve</button>
+               <button class="btn btn--s" data-m="tweak" data-id="${p.id}">Tweak</button>
+               <button class="btn btn--s" data-m="regen" data-id="${p.id}">Redo</button>`}
+        </div>
+      </div></article>`).join("")}
+  </div>
+  <div class="note" style="margin-top:24px"><b>Nothing posts itself.</b> Approving bundles the picture,
+  the caption and the hashtags into a pack and sends it to your WhatsApp. You paste it when you want it up.</div>`;
+}
+
+/* --------------------------------------------------------- 2 · calendar -- */
+function cal(){
+  const slots={
+    5:{img:"img/p1.jpg",t:"The 4pm kopi",s:"done"},
+    8:{img:"img/p2.jpg",t:"Kaya",s:"done"},
+    12:{img:"img/p3.jpg",t:"Empty at 7am",s:"done"},
+    19:{img:"img/p4.jpg",t:"Nasi lemak",s:"done"},
+    28:{img:"img/p1.jpg",t:"The 4pm kopi",s:"wait"},
+    29:{img:"img/p2.jpg",t:"Kaya, four hours",s:"wait"},
+    31:{img:"img/p4.jpg",t:"Merdeka",s:"flag"}};
+  const occ={31:"Merdeka"};
+  const closed=[3,10,17,24,31];   // Melur Kopi is shut on Mondays
+  const dow=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  head("Calendar · August 2026","The month, at a glance.",
+    "What is coming, what you have approved, and what has already been handed off.");
+  let cells="";
+  for(let d=1;d<=31;d++){
+    const sl=slots[d];
+    cells+=`<div class="day${d===30?" today":""}${closed.includes(d)?" closed":""}"${sl?` data-m="slot" data-day="${d}"`:""}>
+      <span class="n">${d}</span>
+      ${occ[d]?`<span class="occ">${occ[d]}</span>`:""}
+      ${sl?`<button class="slot" data-m="slot" data-day="${d}"><img src="${sl.img}" alt=""><b>${sl.t}</b></button>`:""}
+      ${closed[0]!==undefined&&closed.includes(d)?`<span style="font-size:10.5px;color:var(--stone);margin-top:auto">Closed</span>`:""}
+    </div>`;
+  }
+  el("body").innerHTML=`
+  <div class="row" style="margin-bottom:18px">
+    <span class="chip chip--ok">Handed off</span>
+    <span class="chip">Waiting on you</span>
+    <span class="chip chip--flag">Needs a decision</span>
+    <span class="r sub">Shaded days are Mondays — you are closed.</span>
+  </div>
+  <div class="cal">${dow.map(d=>`<div class="dow">${d}</div>`).join("")}
+    <div class="day out"></div><div class="day out"></div><div class="day out"></div>
+    <div class="day out"></div>${cells}</div>
+  <div class="note note--flag" style="margin-top:22px"><b>Merdeka is on a Monday this year.</b>
+  We put a post there because the date matters, then flagged it because you are shut.
+  <button class="btn btn--s" data-m="flag" style="margin-left:8px">Decide</button></div>`;
+}
+
+/* ------------------------------------------- 3 · posts and references -- */
+function lib(){
+  const tab=mstate.tab;
+  head("Posts & references","Everything made, and everything you have shown us.",
+    "Search it, download any post, or drop in a picture to steer the next batch.",
+    `<button class="btn btn--p" data-m="drop">Drop a reference</button>`);
+  el("body").innerHTML=`
+  <div class="row" style="margin-bottom:20px">
+    <span class="tabs">
+      <button data-tab="posts" aria-pressed="${tab==="posts"}">Posts ${LIB.length}</button>
+      <button data-tab="refs" aria-pressed="${tab==="refs"}">Your references ${REFS.length}</button>
+    </span>
+    ${tab==="posts"?`<input class="search" placeholder="Search captions and titles">
+      <span class="chip">All intents</span><span class="chip">All months</span>`:""}
+  </div>
+  ${tab==="posts"?`
+    <div class="gridlib">
+      ${LIB.map(p=>`<button class="tile" data-m="libpost" data-id="${p.id}">
+        <img src="${p.img}" alt="">
+        <div class="tb"><b>${p.t}</b><span>${p.intent} · ${p.m}</span></div></button>`).join("")}
+    </div>
+    <div class="note" style="margin-top:22px">Every post you have ever been sent stays here. Download it
+    again any time, or ask for the whole month as one pack.</div>`
+  :`
+    <div class="gridlib">
+      ${REFS.map(r=>`<button class="tile" data-m="ref" data-id="${r.id}">
+        <img src="${r.img}" alt="">
+        <div class="tb"><b>${r.t}</b><span>${r.note.split(" — ")[0]}</span></div></button>`).join("")}
+      <button class="drop" data-m="drop"><b style="font-size:22px;font-weight:400">+</b>
+        Drop a picture you like<span class="sub">It steers the next batch</span></button>
+    </div>
+    <div class="note" style="margin-top:22px"><b>This is how you give direction without describing it.</b>
+    Your pictures already say what you like — warm or cold, close or wide, busy or still. We read it from
+    them rather than asking you to put it into words.</div>`}`;
+}
+
+/* ------------------------------------------------------------ 4 · brand -- */
+function brand(){
+  head("Brand","Your look, written down.",
+    "Set once with you, and corrected every time you tell us something.",
+    `<button class="btn btn--p" data-m="nudge">Nudge the brand</button>`);
+  el("body").innerHTML=`
+  <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:22px;align-items:start">
+    <div>
+      <div class="panel">
+        <h2>Colours</h2><p class="sub" style="margin-top:4px">Three, and nothing else.</p>
+        <div class="sw" style="margin-top:18px">
+          <div><div class="chipcol" style="background:#4A3428"></div><span class="lab">Kopi brown</span></div>
+          <div><div class="chipcol" style="background:#F3EADA"></div><span class="lab">Kaya cream</span></div>
+          <div><div class="chipcol" style="background:#2F6B4F"></div><span class="lab">Pandan</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Voice</h2>
+        <div class="list" style="margin-top:12px">
+          <div><span class="d">Sounds like</span><span>Plain Malaysian English. Short sentences. No exclamation marks.</span></div>
+          <div><span class="d">Length</span><span>About forty words.</span></div>
+          <div><span class="d">Names</span><span>Pak Din by name. No customers in frame, ever.</span></div>
+          <div><span class="d">Prices</span><span>Named only when you have given us one.</span></div>
+        </div>
+        <div class="eyebrow" style="margin-top:20px;margin-bottom:9px">Never say</div>
+        <div class="never">
+          ${["authentic","hidden gem","best in KL","world-class","must-try","cosy vibes"]
+            .map(w=>`<span class="chip">${w}</span>`).join("")}
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Type</h2>
+        <div class="list" style="margin-top:12px">
+          <div><span class="d">Headings</span><span style="font-family:Gloock,serif;font-size:19px">Gloock</span></div>
+          <div><span class="d">Body</span><span>Plus Jakarta Sans</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h2>What we have learned</h2>
+        <p class="sub" style="margin-top:4px">Every correction you have given us, and the date.</p>
+        <div class="list" style="margin-top:12px">
+          ${LEARNED.map(([d,t])=>`<div><span class="d">${d}</span><span>${t}</span></div>`).join("")}
+        </div>
+        <div class="note" style="margin-top:16px"><b>This panel is the product.</b> It is the proof that
+        telling us something once was enough, and you can see exactly what we heard.</div>
+      </div>
+      <div class="panel">
+        <h2 style="font-size:20px">Changing things</h2>
+        <p class="sub" style="margin-top:6px">Swap a colour or add a never-say yourself. Anything bigger —
+        a new logo, a different voice — comes to us first so nothing breaks quietly.</p>
+        <div class="row" style="margin-top:14px">
+          <button class="btn btn--s" data-m="never">Add a never-say</button>
+          <button class="btn btn--s" data-m="big">Change something bigger</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* --------------------------------------------------------- 5 · settings -- */
+function set(){
+  head("Settings","Set once.","How we reach you, what you are on, and what is not ready yet.");
+  el("body").innerHTML=`
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:start">
+    <div>
+      <div class="panel">
+        <h2>How we reach you</h2>
+        <p class="sub" style="margin-top:4px">This is the important setting. Almost everything happens here,
+        not in this dashboard.</p>
+        <div class="list" style="margin-top:14px">
+          <div><span class="d">WhatsApp</span><span><b>+60 12 ••• 4471</b> · connected
+            <span class="chip chip--ok" style="margin-left:8px">On</span></span></div>
+          <div><span class="d">Telegram</span><span>Not connected
+            <button class="btn btn--s" data-m="connect" style="margin-left:8px">Connect</button></span></div>
+          <div><span class="d">Email</span><span>hello@melurkopi.my · a copy of every pack</span></div>
+        </div>
+        <div class="note" style="margin-top:16px"><b>We message you when a batch is ready.</b> You can
+        approve straight from the message without opening this at all.</div>
+      </div>
+      <div class="panel">
+        <h2>Posting to Instagram</h2>
+        <div class="row" style="margin-top:12px">
+          <span class="chip">Coming soon</span>
+          <button class="btn btn--s" disabled>Connect socials</button>
+        </div>
+        <div class="note" style="margin-top:14px"><b>Deliberately not switched on.</b> Posting on your
+        behalf needs Meta's review, and until that is granted we will not put a button here that we cannot
+        honour. Today we hand you a pack and you paste it — which takes about ten seconds.</div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h2>Your plan</h2>
+        <div class="list" style="margin-top:12px">
+          <div><span class="d">Plan</span><span>Suara monthly · RM299</span></div>
+          <div><span class="d">Includes</span><span>Eight posts a month, made and packed</span></div>
+          <div><span class="d">Next bill</span><span>1 September 2026</span></div>
+          <div><span class="d">Business</span><span>Melur Kopi · Bangsar, Kuala Lumpur</span></div>
+        </div>
+        <div class="row" style="margin-top:14px"><button class="btn btn--s" data-m="billing">Billing</button></div>
+      </div>
+      <div class="panel">
+        <h2 style="font-size:20px">Need a person</h2>
+        <p class="sub" style="margin-top:6px">Not a chat box. If something is wrong, a human answers.</p>
+        <div class="row" style="margin-top:12px"><button class="btn btn--s" data-m="help">Message us</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* =========================================================================
+   MODALS. Every one is reachable from a button above.
+   ========================================================================= */
+function shell(o){
+  return `<div class="scrim" data-scrim><div class="mo${o.wide?" wide":""}" role="dialog" aria-modal="true">
+    <div class="mh"><div><h2>${o.t}</h2>${o.s?`<p class="sub">${o.s}</p>`:""}</div>
+      <button class="x" data-close aria-label="Close">×</button></div>
+    <div class="mb">${o.b}</div><div class="mf">${o.f}</div></div></div>`;
+}
+const P=id=>POSTS.find(p=>p.id===+id)||POSTS[0];
+
+const M={
+
+/* --- the post, full --- */
+post(id){const p=P(id);
+ return shell({wide:true,t:p.title,s:`${p.intent} · ready to review`,
+ b:`<div style="display:grid;grid-template-columns:300px 1fr;gap:24px">
+      <img src="${p.img}" style="border-radius:12px;aspect-ratio:4/5;object-fit:cover" alt="">
+      <div>
+        <div class="eyebrow">Why this one</div>
+        <p style="font-size:14px;color:var(--stone);margin-top:7px">${p.why}</p>
+        <label class="fld"><span>Caption</span><textarea rows="6">${p.cap}</textarea></label>
+        <label class="fld"><span>Hashtags</span><input type="text" value="${p.tags}"></label>
+      </div>
+    </div>
+    <div class="note" style="margin-top:18px">Type a change straight onto the caption. What you change
+    here is what we learn — it goes into your brand and applies to everything after it.</div>`,
+ f:`<button class="btn" data-m="regen" data-id="${p.id}">Redo it</button>
+    <span class="r row"><button class="btn" data-m="tweak" data-id="${p.id}">Tweak</button>
+    <button class="btn btn--p" data-act="approve" data-id="${p.id}">Approve</button></span>`});
+},
+
+/* --- the tweak: the gesture the whole product runs on --- */
+tweak(id){const p=P(id);
+ return shell({t:"Tell us what to change",s:`On “${p.title}” — and on everything after it.`,
+ b:`<p style="font-size:14px;color:var(--stone)">Say it the way you would say it out loud. Short is fine.</p>
+    <label class="fld"><span>Your note</span>
+      <textarea rows="3" placeholder="e.g. less pink · more about the price · shorter"></textarea></label>
+    <div class="eyebrow" style="margin-top:20px;margin-bottom:8px">Others have said</div>
+    <div class="row">${["Shorter","Less pink","More about the price","Warmer","Don't name the price"]
+      .map(t=>`<span class="chip">${t}</span>`).join("")}</div>
+    <div class="note" style="margin-top:20px"><b>This is not a support ticket.</b> A note here changes this
+    post and updates your brand. You will see it appear under “What we have learned”.</div>`,
+ f:`<span class="sub">We redo the post and message you when it is ready.</span>
+    <span class="r"><button class="btn btn--p" data-act="tweak">Send the note</button></span>`});
+},
+
+regen(id){const p=P(id);
+ return shell({t:"Redo this one",s:`A different take on “${p.title}”.`,
+ b:`<p style="font-size:14px;color:var(--stone)">Tell us what to keep and what to change, or let us try
+    something else entirely from the same photo.</p>
+    <div style="margin-top:14px">
+      ${[["Same photo, new words",true],["New photo from your library",false],
+         ["Different angle altogether",false],["Skip this one this week",false]]
+        .map(([t,on])=>`<button class="opt" role="checkbox" aria-checked="${on}" data-chk><i></i><span>${t}</span></button>`).join("")}
+    </div>
+    <div class="note" style="margin-top:18px">Redoing costs you nothing and does not use up one of your
+    eight posts. Only what you approve counts.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="regen">Redo it</button></span>`});
+},
+
+/* --- the flagged post: the noticing --- */
+flag(){const p=POSTS.find(x=>x.state==="flagged")||POSTS[2];
+ return shell({wide:true,t:"You are closed that day",s:"Merdeka · Monday 31 August",
+ b:`<div style="display:grid;grid-template-columns:250px 1fr;gap:24px">
+      <img src="${p.img}" style="border-radius:12px;aspect-ratio:4/5;object-fit:cover" alt="">
+      <div>
+        <div class="note note--flag"><b>${p.flag}</b></div>
+        <p style="font-size:14px;color:var(--stone);margin-top:14px">Merdeka is worth posting for and it
+        falls on your closed day this year. We wrote the post and stopped before sending it, because the
+        caption invites people to a shut shop.</p>
+        <div class="eyebrow" style="margin-top:20px;margin-bottom:8px">The caption as written</div>
+        <div class="note">${p.cap.replace(/\n\n/g,"<br>")}</div>
+        <div class="eyebrow" style="margin-top:18px;margin-bottom:8px">What you can do</div>
+        <div>
+          ${[["Move it to Sunday 30 August",true],
+             ["Keep the date, change the line to “closed today”",false],
+             ["Skip Merdeka this year",false]]
+            .map(([t,on])=>`<button class="opt" role="checkbox" aria-checked="${on}" data-chk><i></i><span>${t}</span></button>`).join("")}
+        </div>
+      </div></div>
+    <div class="note" style="margin-top:18px"><b>This is the part you are paying for.</b> Anyone can write
+    a Merdeka caption. Knowing you are shut on Mondays, and stopping, is the difference.</div>`,
+ f:`<span class="sub">Nothing goes anywhere until you choose.</span>
+    <span class="r"><button class="btn btn--p" data-act="fixflag">Move it to Sunday</button></span>`});
+},
+
+batch(){const n=POSTS.filter(p=>p.state!=="approved").length;
+ return shell({t:`Approve all ${n}`,s:"One pack, straight to your WhatsApp.",
+ b:`<div class="row" style="gap:12px">
+      ${POSTS.map(p=>`<img src="${p.img}" style="width:92px;aspect-ratio:4/5;object-fit:cover;border-radius:10px" alt="">`).join("")}
+    </div>
+    ${POSTS.some(p=>p.state==="flagged")?`<div class="note note--flag" style="margin-top:18px">
+      <b>One of these is flagged.</b> Merdeka falls on your closed Monday. Approving all three sends it as
+      written. Deal with that one first if you would rather.</div>`:""}
+    <div class="note" style="margin-top:14px">The pack has each picture, its caption and its hashtags,
+    ready to paste. Nothing is published for you.</div>`,
+ f:`<button class="btn" data-m="flag">Look at the flagged one</button>
+    <span class="r"><button class="btn btn--p" data-act="batch">Approve all ${n}</button></span>`});
+},
+
+/* --- the handoff pack: the honest substitute for auto-posting --- */
+pack(){
+ return shell({t:"Your pack",s:"What lands on your phone when you approve.",
+ b:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div class="eyebrow" style="margin-bottom:9px">On WhatsApp</div>
+        <div style="background:#ECE5DD;border-radius:14px;padding:14px">
+          <div style="background:#fff;border-radius:12px;padding:12px;font-size:13.5px;line-height:1.6">
+            <b>Suara</b><br>Your three posts for this week are ready.<br><br>
+            <img src="img/p1.jpg" style="border-radius:8px;margin:8px 0" alt="">
+            <b>The 4pm kopi</b><br>
+            Kopi O kosong, pulled the way Pak Din has pulled it since 1998…<br>
+            <span style="color:#5F5866">#kopitiam #bangsar #kopiokosong</span><br><br>
+            Copy the caption, save the picture, post when you like.
+          </div></div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:9px">What is in it</div>
+        <div class="list">
+          <div><span class="d">Picture</span><span>Full size, already cropped square and 4:5</span></div>
+          <div><span class="d">Caption</span><span>Ready to copy, nothing to edit</span></div>
+          <div><span class="d">Hashtags</span><span>On a separate line so you can drop them</span></div>
+          <div><span class="d">Also</span><span>A copy by email, and it stays in your library</span></div>
+        </div>
+        <div class="note" style="margin-top:16px"><b>Why not just post it for you?</b> Because we cannot
+        yet. Posting on your behalf needs Meta's approval and we do not have it. This takes ten seconds
+        and it is honest.</div>
+      </div>
+    </div>`,
+ f:`<button class="btn" data-act="download">Download instead</button>
+    <span class="r"><button class="btn btn--p" data-act="resend">Send it to WhatsApp</button></span>`});
+},
+
+/* --- library --- */
+libpost(id){const p=LIB.find(x=>x.id===+id)||LIB[0];
+ return shell({wide:true,t:p.t,s:`${p.intent} · ${p.m} · ${p.state}`,
+ b:`<div style="display:grid;grid-template-columns:260px 1fr;gap:24px">
+      <img src="${p.img}" style="border-radius:12px;aspect-ratio:1;object-fit:cover" alt="">
+      <div>
+        <div class="eyebrow">Caption</div>
+        <p style="font-size:14px;margin-top:7px">Kopi O kosong, pulled the way Pak Din has pulled it
+        since 1998. Thick, bitter, no sugar unless you ask.</p>
+        <div class="list" style="margin-top:16px">
+          <div><span class="d">Made</span><span>5 August 2026</span></div>
+          <div><span class="d">Handed off</span><span>5 August, to WhatsApp</span></div>
+          <div><span class="d">From</span><span>Your photo, uploaded 2 August</span></div>
+        </div>
+      </div></div>`,
+ f:`<button class="btn" data-act="download">Download</button>
+    <span class="r"><button class="btn btn--p" data-act="resend">Send the pack again</button></span>`});
+},
+
+ref(id){const r=REFS.find(x=>x.id===+id)||REFS[0];
+ return shell({t:r.t,s:r.note,
+ b:`<img src="${r.img}" style="border-radius:12px;width:100%;max-height:300px;object-fit:cover" alt="">
+    <div class="eyebrow" style="margin-top:18px;margin-bottom:8px">What we read from it</div>
+    <div class="list">
+      <div><span class="d">Light</span><span>Warm, morning, from one side</span></div>
+      <div><span class="d">Framing</span><span>Wide, room in the shot, no people</span></div>
+      <div><span class="d">Mood</span><span>Still and early rather than busy</span></div>
+    </div>
+    <div class="note" style="margin-top:16px"><b>You never had to describe any of that.</b> The picture
+    said it. That is the whole idea — you choose and we read, instead of asking you to art-direct.</div>`,
+ f:`<button class="btn" data-act="removeref">Remove it</button>
+    <span class="r"><button class="btn btn--p" data-close>Done</button></span>`});
+},
+
+drop(){
+ return shell({t:"Drop a reference",s:"A picture you like. It steers the next batch.",
+ b:`<button class="drop" style="width:100%;min-height:190px"><b style="font-size:26px;font-weight:400">+</b>
+      Drag a picture here, or take one<span class="sub">Yours or anyone's — we only read the look, never copy it</span></button>
+    <label class="fld"><span>Anything to say about it</span>
+      <input type="text" placeholder="Optional. e.g. “this light, not the busy ones”"></label>
+    <div class="note" style="margin-top:18px"><b>References set the look, never the words.</b> We take
+    framing, light and mood from a picture. We never take a claim from it — nothing about your shop gets
+    written because it was true of somebody else's.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="addref">Add it</button></span>`});
+},
+
+/* --- brand --- */
+nudge(){
+ return shell({t:"Nudge the brand",s:"Small changes you can make yourself.",
+ b:`<div>
+      ${[["Swap a colour",false],["Add a never-say word",true],["Make captions shorter",false],
+         ["Stop naming prices",false]]
+        .map(([t,on])=>`<button class="opt" role="checkbox" aria-checked="${on}" data-chk><i></i><span>${t}</span></button>`).join("")}
+    </div>
+    <label class="fld"><span>Or just say it</span>
+      <textarea rows="3" placeholder="e.g. warmer, less green, stop saying cosy"></textarea></label>
+    <div class="note" style="margin-top:16px">Anything bigger than this — a new logo, a different voice —
+    goes to a person here first, so nothing changes quietly under you.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="nudge">Apply it</button></span>`});
+},
+
+never(){
+ return shell({t:"Add a never-say",s:"We will not write it again.",
+ b:`<label class="fld" style="margin-top:0"><span>The word or phrase</span>
+      <input type="text" placeholder="e.g. cosy"></label>
+    <div class="eyebrow" style="margin-top:20px;margin-bottom:8px">Already on the list</div>
+    <div class="never">${["authentic","hidden gem","best in KL","world-class","must-try","cosy vibes"]
+      .map(w=>`<span class="chip">${w}</span>`).join("")}</div>
+    <div class="note" style="margin-top:18px">This is a hard rule, not a preference. A caption containing
+    it will not be produced.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="never">Add it</button></span>`});
+},
+
+big(){
+ return shell({t:"Change something bigger",s:"A new logo, a different voice, a new direction.",
+ b:`<p style="font-size:14px;color:var(--stone)">Tell us what you want and a person picks it up. We will
+    come back with options rather than changing it and hoping.</p>
+    <label class="fld"><span>What you want to change</span><textarea rows="4"></textarea></label>
+    <div class="note" style="margin-top:16px"><b>Why this is not a self-serve button.</b> Your brand is
+    the thing keeping every post consistent. Letting it be rewritten in one click is how a month of work
+    starts contradicting itself.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="big">Send it to us</button></span>`});
+},
+
+/* --- calendar --- */
+slot(day){
+ const flagged=String(day)==="31";
+ return shell({t:flagged?"Merdeka":"The 4pm kopi",s:`${day} August 2026`,
+ b:`<div style="display:grid;grid-template-columns:210px 1fr;gap:20px">
+      <img src="${flagged?"img/p4.jpg":"img/p1.jpg"}" style="border-radius:12px;aspect-ratio:4/5;object-fit:cover" alt="">
+      <div>
+        ${flagged?`<div class="note note--flag"><b>You are closed on Mondays.</b></div>`:""}
+        <div class="list" style="margin-top:${flagged?"14px":"0"}">
+          <div><span class="d">Intent</span><span>${flagged?"Occasion":"Hero"}</span></div>
+          <div><span class="d">State</span><span>${flagged?"Needs a decision":"Handed off 5 August"}</span></div>
+          <div><span class="d">Caption</span><span>${flagged?"Merdeka. Nasi lemak, kopi, and the flag out front.":"Kopi O kosong, pulled the way Pak Din has…"}</span></div>
+        </div>
+      </div></div>`,
+ f:`<span class="r row"><button class="btn" data-v="week">Open in this week</button>
+    ${flagged?`<button class="btn btn--p" data-m="flag">Decide</button>`
+             :`<button class="btn btn--p" data-act="resend">Send the pack again</button>`}</span>`});
+},
+
+/* --- settings --- */
+connect(){
+ return shell({t:"Connect Telegram",s:"So we can reach you there too.",
+ b:`<p style="font-size:14px;color:var(--stone)">Three steps, about a minute.</p>
+    <div class="list" style="margin-top:12px">
+      <div><span class="d">One</span><span>Open Telegram and search for <b>@suarakopi_bot</b>.</span></div>
+      <div><span class="d">Two</span><span>Press start. That is the whole connection.</span></div>
+      <div><span class="d">Three</span><span>We send a test message so you know it worked.</span></div>
+    </div>
+    <div class="eyebrow" style="margin-top:20px;margin-bottom:8px">What you will get there</div>
+    <div class="row">
+      <span class="chip">Batch ready</span><span class="chip">Approve or tweak</span>
+      <span class="chip">Your pack</span><span class="chip">Nothing else</span>
+    </div>
+    <div class="note" style="margin-top:18px"><b>Why we ask for a messenger and not just email.</b> You
+    will not open this dashboard every week, and you should not have to. The message is the product;
+    this screen is for when you want the fuller view.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="connect">Send the test message</button></span>`});
+},
+
+billing(){
+ return shell({t:"Billing",s:"Suara monthly · RM299",
+ b:`<div class="list">
+      <div><span class="d">Plan</span><span>Suara monthly, RM299</span></div>
+      <div><span class="d">Includes</span><span>Eight posts a month, made, checked and packed</span></div>
+      <div><span class="d">Next bill</span><span>1 September 2026</span></div>
+      <div><span class="d">Method</span><span>Card ending 4471</span></div>
+      <div><span class="d">Invoices</span><span>Sent by email each month</span></div>
+    </div>
+    <div class="note" style="margin-top:16px">No contract. Stop any month and the posts already made stay
+    yours to use.</div>`,
+ f:`<button class="btn" data-act="invoice">Download invoices</button>
+    <span class="r"><button class="btn" data-close>Close</button></span>`});
+},
+
+help(){
+ return shell({t:"Message us",s:"A person, not a bot.",
+ b:`<label class="fld" style="margin-top:0"><span>What is wrong</span><textarea rows="4"></textarea></label>
+    <div class="note" style="margin-top:16px">We answer on WhatsApp within a working day. This is
+    deliberately small — the place to tell us about the work is on the post itself, not here.</div>`,
+ f:`<span class="r"><button class="btn btn--p" data-act="help">Send</button></span>`});
+}
+};
+
+/* ============================================================ wiring ==== */
+const VIEWS={week,cal,lib,brand,set};
+function render(){nav();VIEWS[view]();window.scrollTo(0,0);}
+function openModal(name,arg){
+  if(!M[name])return;
+  modal=name;
+  el("layer").innerHTML=M[name](arg);
+  const f=el("layer").querySelector("textarea,input,.btn--p");
+  if(f)f.focus({preventScroll:true});
+}
+function closeModal(){modal=null;el("layer").innerHTML="";}
+
+const ACT={
+  approve:id=>{const p=P(id);p.state="approved";
+    return ["Approved.","The pack is on its way to your WhatsApp"];},
+  batch:()=>{POSTS.forEach(p=>{if(p.state!=="flagged")p.state="approved";});
+    return ["Approved.","One pack, three posts, sent to WhatsApp"];},
+  tweak:()=>["Note sent.","Added to your brand — you will see it under what we have learned"],
+  regen:()=>["Redoing it.","We will message you when the new one is ready"],
+  fixflag:()=>{const p=POSTS.find(x=>x.state==="flagged");if(p){p.state="approved";}
+    return ["Moved to Sunday 30 August.","Approved and packed for a day you are open"];},
+  resend:()=>["Sent to WhatsApp.","Ready to paste"],
+  download:()=>["Downloaded.","Picture, caption and hashtags in one folder"],
+  addref:()=>["Reference added.","It will steer the next batch"],
+  removeref:()=>["Removed.","It will not steer anything from now on"],
+  nudge:()=>["Applied.","Everything made after this follows it"],
+  never:()=>["Added to never-say.","A caption containing it will not be produced"],
+  big:()=>["Sent to a person here.","We will come back with options, not a silent change"],
+  connect:()=>["Test message sent.","Check Telegram"],
+  invoice:()=>["Invoices downloaded.",""],
+  help:()=>["Sent.","We answer on WhatsApp within a working day"],
+  fill:()=>{mstate.empty=false;return ["Batch loaded.",""];}
+};
+
+document.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-tab]");
+  if(tab){mstate.tab=tab.dataset.tab;render();return;}
+  const chk=e.target.closest("[data-chk]");
+  if(chk){const g=chk.parentElement;
+    [...g.querySelectorAll("[data-chk]")].forEach(x=>x.setAttribute("aria-checked","false"));
+    chk.setAttribute("aria-checked","true");return;}
+  const act=e.target.closest("[data-act]");
+  if(act){const r=ACT[act.dataset.act]?ACT[act.dataset.act](act.dataset.id):null;
+    closeModal(); if(r)toast(r[0],r[1]); render(); return;}
+  if(e.target.closest("[data-close]")||e.target.matches("[data-scrim]")){closeModal();return;}
+  const m=e.target.closest("[data-m]");
+  if(m){openModal(m.dataset.m,m.dataset.id||m.dataset.day);return;}
+  const v=e.target.closest("[data-v]");
+  if(v){closeModal();view=v.dataset.v;render();return;}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal)closeModal();});
+render();
+</script>
+</body></html>

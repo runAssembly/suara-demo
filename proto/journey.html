@@ -1,0 +1,166 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Suara — the customer journey</title>
+<style>
+/* The loop that matters. The brief is explicit: these owners will not open a
+   dashboard weekly. We message, they approve or tweak in the thread, we send a
+   pack. The dashboard is the fuller view for when they want it. */
+@font-face{font-family:'PJS';src:url('fonts/PlusJakartaSans.ttf') format('truetype');font-weight:200 800;font-display:block}
+@font-face{font-family:'Gloock';src:url('fonts/Gloock-Regular.ttf') format('truetype');font-weight:400;font-display:block}
+:root{--bone:#F3F0E9;--ink:#1A1520;--stone:#5F5866;--hair:#E2DDD2;--coral:#FF6A45;
+      --coral-ink:#A8320F;--wa:#ECE5DD;--wain:#fff;--waout:#DCF8C6;--leaf:#2F6B4F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bone);font-family:'PJS',system-ui,sans-serif;color:var(--ink);
+  font-size:15px;line-height:1.55;padding:40px 28px 60px;-webkit-font-smoothing:antialiased}
+.sheet{display:flex;gap:26px;align-items:flex-start;max-width:none;overflow-x:auto;padding-bottom:10px}
+.scr{flex:0 0 300px;position:relative}
+.cap{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;padding:5px 13px;
+  font-size:12px;font-weight:600;margin-bottom:12px;letter-spacing:.01em}
+.phone{background:#fff;border:1px solid var(--hair);border-radius:24px;overflow:hidden;
+  box-shadow:rgba(26,21,32,.07) 0 8px 26px -10px}
+.bar{background:#075E54;color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.bar .av{width:30px;height:30px;border-radius:99px;background:#fff;display:grid;place-items:center}
+.bar .av svg{width:19px;height:19px}
+.bar b{font-size:14px;font-weight:600;display:block;line-height:1.25}
+.bar span{font-size:11.5px;opacity:.85}
+.thread{background:var(--wa);padding:14px 12px;display:flex;flex-direction:column;gap:9px;min-height:430px}
+.msg{max-width:88%;background:var(--wain);border-radius:12px;padding:10px 12px;font-size:13.5px;
+  line-height:1.55;box-shadow:rgba(0,0,0,.06) 0 1px 1px}
+.msg.out{align-self:flex-end;background:var(--waout)}
+.msg img{width:100%;border-radius:8px;margin:6px 0 4px}
+.msg .t{font-size:10.5px;color:#8b8b8b;text-align:right;margin-top:3px}
+.msg .tagline{color:var(--stone)}
+.btnrow{display:flex;flex-direction:column;gap:1px;margin-top:9px;border-top:1px solid #e9e9e9;padding-top:8px}
+.btnrow button{background:none;border:none;color:#1c7ed6;font:inherit;font-size:13.5px;font-weight:500;
+  padding:7px 0;cursor:default;text-align:center}
+.app{background:#fff;padding:0}
+.appbar{background:var(--bone);padding:11px 14px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--hair)}
+.appbar b{font-size:14px;font-weight:800;letter-spacing:-.02em}
+.appbody{padding:14px;display:flex;flex-direction:column;gap:11px;min-height:430px;background:var(--bone)}
+.card{background:#fff;border:1px solid var(--hair);border-radius:12px;overflow:hidden}
+.card img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.card .cb{padding:11px 12px}
+.card h4{font-size:14px;font-weight:600}
+.card p{font-size:12.5px;color:var(--stone);margin-top:4px;line-height:1.5}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--hair);background:#fff;
+  border-radius:999px;padding:3px 10px;font-size:11.5px;color:var(--stone)}
+.chip--flag{border-color:var(--coral);color:var(--coral-ink);font-weight:600}
+.chip--ok{border-color:rgba(47,107,79,.35);color:var(--leaf);font-weight:600}
+.pill{background:var(--ink);color:#fff;border-radius:999px;padding:10px;text-align:center;
+  font-size:13.5px;font-weight:500}
+h1{font-family:'Gloock',Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.01em;
+  line-height:1.1;margin-bottom:8px}
+.intro{color:var(--stone);max-width:70ch;margin-bottom:32px;font-size:15px}
+.note{border:1px solid var(--hair);border-radius:12px;padding:12px 14px;font-size:12.5px;
+  color:var(--stone);background:#fff;margin-top:12px}
+.note b{color:var(--ink);font-weight:600}
+</style></head><body>
+<h1>How it actually works</h1>
+<p class="intro">The owner of a kopitiam will not open a dashboard every week, so the product does not
+depend on her doing that. We message, she approves or corrects in the thread, and a ready-to-paste pack
+comes back. Nothing is published on her behalf — that is a promise we cannot keep yet, so we do not make it.</p>
+
+<div class="sheet">
+
+  <div class="scr"><span class="cap">1 · We message her</span>
+    <div class="phone">
+      <div class="bar"><span class="av"><svg viewBox="0 0 24 24">
+        <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#1A1520" stroke-width="2.8" stroke-linecap="round"/>
+        </svg></span><div><b>Suara</b><span>online</span></div></div>
+      <div class="thread">
+        <div class="msg">Morning Aina. Your three posts for this week are ready.
+          <div class="t">08:02</div></div>
+        <div class="msg"><img src="img/p1.jpg" alt="">
+          <b>The 4pm kopi</b><br>Kopi O kosong, pulled the way Pak Din has pulled it since 1998. Thick,
+          bitter, no sugar unless you ask.<br><span class="tagline">#kopitiam #bangsar</span>
+          <div class="btnrow"><button>Approve</button><button>Change something</button><button>See all three</button></div>
+          <div class="t">08:02</div></div>
+      </div></div>
+    <div class="note"><b>She has done nothing yet and already has the work.</b> No app, no login.</div>
+  </div>
+
+  <div class="scr"><span class="cap">2 · She corrects one, in the thread</span>
+    <div class="phone">
+      <div class="bar"><span class="av"><svg viewBox="0 0 24 24">
+        <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#1A1520" stroke-width="2.8" stroke-linecap="round"/>
+        </svg></span><div><b>Suara</b><span>online</span></div></div>
+      <div class="thread">
+        <div class="msg" style="max-width:80%"><img src="img/p2.jpg" alt=""><b>How the kaya is made</b><br>
+          Kaya takes four hours…<div class="t">08:02</div></div>
+        <div class="msg out">shorter please<div class="t">08:14 ✓✓</div></div>
+        <div class="msg">Done. Cut to thirty words, and I have added “shorter” to your brand so everything
+          after this follows it.<div class="t">08:14</div></div>
+        <div class="msg"><b>How the kaya is made</b><br>Kaya takes four hours. Pandan, coconut, egg, palm
+          sugar, stirred the whole time. That is why we only make it twice a week.
+          <div class="btnrow"><button>Approve</button><button>Change something</button></div>
+          <div class="t">08:14</div></div>
+      </div></div>
+    <div class="note"><b>Two words changed the product.</b> Not a ticket, not a form — the correction is
+    the training signal.</div>
+  </div>
+
+  <div class="scr"><span class="cap">3 · We stop, because she is shut</span>
+    <div class="phone">
+      <div class="bar"><span class="av"><svg viewBox="0 0 24 24">
+        <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#1A1520" stroke-width="2.8" stroke-linecap="round"/>
+        </svg></span><div><b>Suara</b><span>online</span></div></div>
+      <div class="thread">
+        <div class="msg">One I did not send.<div class="t">08:15</div></div>
+        <div class="msg"><img src="img/p4.jpg" alt=""><b>Merdeka</b><br>
+          Merdeka falls on Monday 31 August this year and you are closed on Mondays. The caption said
+          “open from 8”, so I stopped.
+          <div class="btnrow"><button>Move it to Sunday</button><button>Say “closed today” instead</button>
+            <button>Skip Merdeka</button></div>
+          <div class="t">08:15</div></div>
+        <div class="msg out">sunday<div class="t">08:16 ✓✓</div></div>
+      </div></div>
+    <div class="note"><b>This is the moment she tells people about.</b> Anyone can write a Merdeka caption.
+    Knowing she is shut, and stopping, is the thing worth paying for.</div>
+  </div>
+
+  <div class="scr"><span class="cap">4 · The pack comes back</span>
+    <div class="phone">
+      <div class="bar"><span class="av"><svg viewBox="0 0 24 24">
+        <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#1A1520" stroke-width="2.8" stroke-linecap="round"/>
+        </svg></span><div><b>Suara</b><span>online</span></div></div>
+      <div class="thread">
+        <div class="msg out">approve all<div class="t">08:17 ✓✓</div></div>
+        <div class="msg">All three approved. Here is your pack.<div class="t">08:17</div></div>
+        <div class="msg"><img src="img/p1.jpg" alt="">
+          <b>1 · The 4pm kopi</b><br>Caption below, ready to copy. Picture saved to your camera roll.<br>
+          <span class="tagline">#kopitiam #bangsar #kopiokosong</span>
+          <div class="t">08:17</div></div>
+        <div class="msg">Post them whenever suits. They are in your library too if you want them later.
+          <div class="t">08:17</div></div>
+      </div></div>
+    <div class="note"><b>Nothing was published for her.</b> Meta has not approved posting on a business's
+    behalf for us, so we hand over instead of promising. It takes her ten seconds.</div>
+  </div>
+
+  <div class="scr"><span class="cap">5 · The dashboard, when she wants it</span>
+    <div class="phone">
+      <div class="appbar"><svg viewBox="0 0 24 24" style="width:20px;height:20px">
+        <path d="M3 17.5a9 9 0 0 1 18 0" fill="none" stroke="#FF6A45" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M7.6 17.5a4.4 4.4 0 0 1 8.8 0" fill="none" stroke="#1A1520" stroke-width="2.8" stroke-linecap="round"/>
+        </svg><b>suara</b><span class="chip" style="margin-left:auto">This week</span></div>
+      <div class="appbody">
+        <div class="card"><img src="img/p1.jpg" alt="">
+          <div class="cb"><span class="chip chip--ok">Approved</span>
+            <h4 style="margin-top:7px">The 4pm kopi</h4>
+            <p>Handed off this morning</p></div></div>
+        <div class="card"><img src="img/p4.jpg" alt="">
+          <div class="cb"><span class="chip chip--flag">Moved to Sunday</span>
+            <h4 style="margin-top:7px">Merdeka</h4>
+            <p>You are closed Monday</p></div></div>
+        <div class="pill">See the month</div>
+      </div></div>
+    <div class="note"><b>The same week, fuller.</b> She never has to come here — but when she does,
+    nothing is new to learn.</div>
+  </div>
+
+</div>
+</body></html>
