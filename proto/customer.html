@@ -51,9 +51,12 @@ h3{font-size:16px;font-weight:600;letter-spacing:-.01em}
 .sub{color:var(--stone);font-size:13.5px}
 
 /* ---- shell ---- */
-.app{display:flex;min-height:100vh}
+/* align-items:flex-start is what makes the sticky rail work. A stretched flex item is already
+   as tall as the whole scroll area, so it has nowhere to travel and sticky does nothing. */
+.app{display:flex;min-height:100vh;align-items:flex-start}
 .side{width:228px;flex:0 0 228px;padding:26px 18px;display:flex;flex-direction:column;
-  border-right:1px solid var(--hair)}
+  border-right:1px solid var(--hair);
+  position:sticky;top:0;height:100vh;overflow-y:auto;overscroll-behavior:contain}
 .brand{display:flex;align-items:center;gap:9px;padding:0 6px 26px}
 .brand .mk{width:30px;height:30px;margin-left:-2px}
 .brand b{font-size:19px;font-weight:800;letter-spacing:-.02em}
@@ -69,8 +72,8 @@ h3{font-size:16px;font-weight:600;letter-spacing:-.01em}
 .side .who b{display:block;font-weight:600}
 .side .who span{color:var(--stone);font-size:12px}
 main{flex:1;min-width:0}
-.head{padding:34px 40px 0}
-.body{padding:26px 40px 56px}
+.head{padding:28px 40px 0}
+.body{padding:18px 40px 48px}
 
 /* ---- buttons: exactly one dark pill per screen ---- */
 .btn{border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:10px 17px;
@@ -94,7 +97,7 @@ main{flex:1;min-width:0}
 .chip--flag{border-color:var(--coral);color:var(--coral-ink);font-weight:600}
 
 /* ---- the post card: photo carries it, chrome recedes ---- */
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .post{background:var(--paper);border-radius:var(--r);overflow:hidden;border:1px solid var(--hair);
   display:flex;flex-direction:column}
 .shotwrap{position:relative;background:var(--bone)}
@@ -110,7 +113,7 @@ main{flex:1;min-width:0}
 /* ---- panels ---- */
 .panel{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);padding:20px}
 .panel+.panel{margin-top:16px}
-.sec{margin-top:44px}
+.sec{margin-top:34px}
 .sec:first-child{margin-top:0}
 .note{border:1px solid var(--hair);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--stone);
   background:var(--paper)}
@@ -143,7 +146,7 @@ main{flex:1;min-width:0}
 .tabs{display:inline-flex;background:var(--paper);border:1px solid var(--hair);border-radius:999px;padding:3px}
 .tabs button{border:none;background:none;border-radius:999px;padding:7px 15px;font-size:13.5px;color:var(--stone)}
 .tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;font-weight:500}
-.gridlib{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.gridlib{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .tile{background:var(--paper);border:1px solid var(--hair);border-radius:12px;overflow:hidden;text-align:left}
 .tile img{width:100%;aspect-ratio:1;object-fit:cover}
 .tile .tb{padding:11px 12px}
@@ -204,10 +207,45 @@ textarea{resize:vertical}
 .toast b{font-weight:600}
 .toast span{display:block;font-size:12px;color:#BDB4C4;margin-top:1px}
 
+/* ---- motion ----
+   Everything that changes state eases; nothing bounces. Durations are short on purpose —
+   this is a working dashboard, not a landing page, and a 400ms button is a slow button. */
+.side nav button,.btn,.chip,.post,.tile,.day,.opt,textarea,input[type=text]{
+  transition:background-color .16s ease,border-color .16s ease,color .16s ease,
+             box-shadow .18s ease,transform .16s cubic-bezier(.22,.61,.36,1)}
+.post:hover,.tile:hover{transform:translateY(-2px);
+  box-shadow:rgba(26,21,32,.10) 0 10px 26px -12px;border-color:#DCD6C9}
+/* the photo is inside .post{overflow:hidden}, so it crops rather than spills */
+.shotwrap img,.tile img{transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.post:hover .shotwrap img,.tile:hover img{transform:scale(1.035)}
+.btn:active,.side nav button:active,.opt:active{transform:scale(.985)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
+
+@keyframes su-rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes su-fade{from{opacity:0}to{opacity:1}}
+@keyframes su-pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes su-toast{from{opacity:0;transform:translate(-50%,14px)}
+                    to{opacity:1;transform:translate(-50%,0)}}
+/* .enter is re-applied by render() on every view change — see the reflow poke there */
+.enter{animation:su-rise .26s cubic-bezier(.22,.61,.36,1) both}
+.scrim{animation:su-fade .18s ease both}
+.mo{animation:su-pop .24s cubic-bezier(.22,.61,.36,1) both}
+.toast{animation:su-toast .24s cubic-bezier(.22,.61,.36,1) both}
+
+/* Motion here is decoration. If the OS has been asked for less of it, give none. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+  .post:hover,.tile:hover,.post:hover .shotwrap img,.tile:hover img{transform:none}
+}
+
 @media(max-width:1000px){
   .app{display:block}
+  /* the rail becomes a top bar — it still stays put, but it must NOT keep height:100vh
+     or the desktop rule leaves a full-screen-tall header on a phone */
   .side{width:auto;border-right:none;border-bottom:1px solid var(--hair);flex-direction:row;
-    align-items:center;gap:12px;padding:12px 18px;overflow-x:auto}
+    align-items:center;gap:12px;padding:12px 18px;overflow-x:auto;
+    height:auto;overflow-y:visible;z-index:20;background:var(--bone)}
   .brand{padding:0}.side nav{display:flex;gap:4px}.side .who{display:none}
   .side nav button{white-space:nowrap}
   .head{padding:22px 18px 0}.body{padding:18px 18px 44px}
@@ -339,7 +377,7 @@ function week(){
      <button class="btn btn--p" data-m="batch">Approve all ${waiting}</button>`);
   el("body").innerHTML=`
   ${POSTS.some(p=>p.state==="flagged")?`
-  <div class="note note--flag" style="margin-bottom:22px">
+  <div class="note note--flag" style="margin-bottom:16px">
     <b>One needs a decision from you.</b> ${POSTS.find(p=>p.state==="flagged").flag}
     <button class="btn btn--s" data-m="flag" style="margin-left:8px">Look at it</button></div>`:""}
   <div class="grid3">
@@ -361,7 +399,7 @@ function week(){
         </div>
       </div></article>`).join("")}
   </div>
-  <div class="note" style="margin-top:24px"><b>Nothing posts itself.</b> Approving bundles the picture,
+  <div class="note" style="margin-top:18px"><b>Nothing posts itself.</b> Approving bundles the picture,
   the caption and the hashtags into a pack and sends it to your WhatsApp. You paste it when you want it up.</div>`;
 }
 
@@ -836,7 +874,16 @@ help(){
 
 /* ============================================================ wiring ==== */
 const VIEWS={week,cal,lib,brand,set};
-function render(){nav();VIEWS[view]();window.scrollTo(0,0);}
+function render(){
+  nav(); VIEWS[view]();
+  // Re-trigger the enter animation. Removing the class is not enough on its own — the browser
+  // batches both writes into one style pass and sees no change, so nothing replays. Reading
+  // offsetWidth in between forces the reflow that makes the removal real.
+  for(const id of ["head","body"]){
+    const n=el(id); n.classList.remove("enter"); void n.offsetWidth; n.classList.add("enter");
+  }
+  window.scrollTo({top:0,behavior:"auto"});
+}
 function openModal(name,arg){
   if(!M[name])return;
   modal=name;
